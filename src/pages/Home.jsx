@@ -6,8 +6,8 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 
 const Home = () => {
     const [activeCategory, setActiveCategory] = useState('all');
@@ -22,7 +22,7 @@ const Home = () => {
 
     // Filter products by category
     const filteredProducts = products?.filter(product =>
-        activeCategory === 'all' || product.category === activeCategory
+        activeCategory === 'all' || product.category_id === activeCategory
     );
 
     // Cart functions
@@ -119,9 +119,9 @@ const Home = () => {
                                 {filteredProducts?.map(product => (
                                     <Card key={product._id} className="overflow-hidden flex flex-col">
                                         <div className="h-48 bg-gray-200 flex items-center justify-center">
-                                            {product.image ? (
+                                            {product.image_url ? (
                                                 <img
-                                                    src={product.image}
+                                                    src={product.image_url}
                                                     alt={product.name}
                                                     className="h-full w-full object-cover"
                                                 />
