@@ -10,7 +10,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import Login from './pages/Login';
 import Categories from './pages/Categories';
 import NotFound from './pages/NotFound';
