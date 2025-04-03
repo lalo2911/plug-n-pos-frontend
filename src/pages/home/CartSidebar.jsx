@@ -6,7 +6,7 @@ import CartItem from './CartItem';
 
 const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity }) => {
     return (
-        <div className="hidden md:block w-64 fixed right-4 top-24 bottom-4 bg-white rounded-lg shadow-lg border">
+        <div className="w-full bg-white rounded-lg shadow-lg border">
             <div className="p-4 border-b flex justify-between items-center">
                 <h2 className="font-semibold">Carrito</h2>
                 <Badge>{cart.length}</Badge>
@@ -18,7 +18,7 @@ const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity }) => {
                 </div>
             ) : (
                 <>
-                    <ScrollArea className="h-[calc(100%-140px)]">
+                    <ScrollArea className="h-[calc(100vh-280px)]">
                         <div className="p-4 space-y-4">
                             {cart.map(item => (
                                 <CartItem

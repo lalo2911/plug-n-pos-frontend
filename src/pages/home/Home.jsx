@@ -65,35 +65,42 @@ const Home = () => {
     };
 
     return (
-        <div className="relative pb-16 md:pb-0">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-6">Productos</h1>
+        <div className="relative pb-16 md:pb-0 max-w-full">
+            <h1 className="text-3xl font-bold mb-6">Productos</h1>
 
-                <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-                    {/* Categories Tabs */}
-                    <CategoryTabs
-                        categories={categories}
-                        isLoading={categoriesLoading}
-                    />
+            {/* Two column layout for desktop */}
+            <div className="flex flex-col md:flex-row">
+                {/* Products column - takes available space minus cart width */}
+                <div className="w-full md:w-[calc(100%-18rem)] md:pr-6">
+                    <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
+                        {/* Categories Tabs */}
+                        <CategoryTabs
+                            categories={categories}
+                            isLoading={categoriesLoading}
+                        />
 
-                    {/* Products Grid */}
-                    <ProductList
-                        products={filteredProducts}
-                        isLoading={productsLoading}
-                        onAddToCart={addToCart}
-                        activeCategory={activeCategory}
-                    />
-                </Tabs>
+                        {/* Products Grid */}
+                        <ProductList
+                            products={filteredProducts}
+                            isLoading={productsLoading}
+                            onAddToCart={addToCart}
+                            activeCategory={activeCategory}
+                        />
+                    </Tabs>
+                </div>
 
+                {/* Desktop Cart column - fixed width */}
+                <div className="hidden md:block md:w-72 md:flex-shrink-0">
+                    <div className="sticky top-24 w-full">
+                        <CartSidebar
+                            cart={cart}
+                            cartTotal={cartTotal}
+                            onRemoveItem={removeFromCart}
+                            onUpdateQuantity={updateQuantity}
+                        />
+                    </div>
+                </div>
             </div>
-
-            {/* Desktop Cart (Right sidebar) */}
-            <CartSidebar
-                cart={cart}
-                cartTotal={cartTotal}
-                onRemoveItem={removeFromCart}
-                onUpdateQuantity={updateQuantity}
-            />
 
             {/* Mobile Cart Button */}
             <div className="md:hidden fixed bottom-4 right-4 left-4 z-10">
