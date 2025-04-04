@@ -45,6 +45,10 @@ const Home = () => {
         setCart(cart.filter(item => item._id !== productId));
     };
 
+    const clearCart = () => {
+        setCart([]);
+    };
+
     const updateQuantity = (productId, amount) => {
         setCart(cart.map(item => {
             if (item._id === productId) {
@@ -70,7 +74,7 @@ const Home = () => {
 
             {/* Two column layout for desktop */}
             <div className="flex flex-col md:flex-row">
-                {/* Products column - takes available space minus cart width */}
+                {/* Products column */}
                 <div className="w-full md:w-[calc(100%-18rem)] md:pr-6">
                     <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
                         {/* Categories Tabs */}
@@ -89,7 +93,7 @@ const Home = () => {
                     </Tabs>
                 </div>
 
-                {/* Desktop Cart column - fixed width */}
+                {/* Desktop Cart column */}
                 <div className="hidden md:block md:w-72 md:flex-shrink-0">
                     <div className="sticky top-24 w-full">
                         <CartSidebar
@@ -97,6 +101,7 @@ const Home = () => {
                             cartTotal={cartTotal}
                             onRemoveItem={removeFromCart}
                             onUpdateQuantity={updateQuantity}
+                            onClearCart={clearCart}
                         />
                     </div>
                 </div>

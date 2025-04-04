@@ -3,13 +3,28 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CartItem from './CartItem';
+import { Trash2 } from 'lucide-react';
 
-const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity }) => {
+const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearCart }) => {
     return (
         <div className="w-full bg-white rounded-lg shadow-lg border">
-            <div className="p-4 border-b flex justify-between items-center">
-                <h2 className="font-semibold">Carrito</h2>
-                <Badge>{cart.length}</Badge>
+            <div className="p-4 border-b flex items-center">
+                <div className="flex items-center">
+                    <h2 className="font-semibold">Carrito</h2>
+                    <Badge className="ml-3">{cart.length}</Badge>
+                </div>
+                <div className="flex-grow"></div>
+                {cart.length > 0 && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
+                        onClick={onClearCart}
+                        title="Vaciar carrito"
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                )}
             </div>
 
             {cart.length === 0 ? (
