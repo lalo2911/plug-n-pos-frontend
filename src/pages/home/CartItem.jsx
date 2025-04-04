@@ -14,6 +14,7 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                         size="icon"
                         className="h-6 w-6"
                         onClick={() => onUpdateQuantity(item._id, -1)}
+                        title="Quitar un elemento"
                     >
                         <Minus className="h-3 w-3" />
                     </Button>
@@ -23,6 +24,7 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                         size="icon"
                         className="h-6 w-6"
                         onClick={() => onUpdateQuantity(item._id, 1)}
+                        title="Sumar un elemento"
                     >
                         <Plus className="h-3 w-3" />
                     </Button>
@@ -33,6 +35,7 @@ const CartItem = ({ item, onRemove, onUpdateQuantity }) => {
                 size="icon"
                 className="h-6 w-6 self-start"
                 onClick={() => onRemove(item._id)}
+                title="Quitar producto"
             >
                 <X className="h-4 w-4" />
             </Button>
