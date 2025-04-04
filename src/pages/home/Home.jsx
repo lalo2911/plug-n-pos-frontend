@@ -69,7 +69,7 @@ const Home = () => {
     };
 
     return (
-        <div className="relative pb-16 md:pb-0 max-w-full">
+        <div className="relative pb-16 md:pb-0 max-w-full select-none">
             <h1 className="text-3xl font-bold mb-6">Productos</h1>
 
             {/* Two column layout for desktop */}
