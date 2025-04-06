@@ -64,8 +64,8 @@ const Home = () => {
     const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
     // Toggle cart view on mobile
-    const toggleCart = () => {
-        setIsCartOpen(!isCartOpen);
+    const toggleCart = (isOpen) => {
+        setIsCartOpen(isOpen ?? !isCartOpen);
     };
 
     return (
@@ -126,6 +126,7 @@ const Home = () => {
                 onClose={toggleCart}
                 onRemoveItem={removeFromCart}
                 onUpdateQuantity={updateQuantity}
+                onClearCart={clearCart}
             />
         </div>
     );
