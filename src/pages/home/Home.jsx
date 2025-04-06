@@ -45,6 +45,10 @@ const Home = () => {
         setCart(cart.filter(item => item._id !== productId));
     };
 
+    const clearCart = () => {
+        setCart([]);
+    };
+
     const updateQuantity = (productId, amount) => {
         setCart(cart.map(item => {
             if (item._id === productId) {
@@ -60,40 +64,48 @@ const Home = () => {
     const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
     // Toggle cart view on mobile
-    const toggleCart = () => {
-        setIsCartOpen(!isCartOpen);
+    const toggleCart = (isOpen) => {
+        setIsCartOpen(isOpen ?? !isCartOpen);
     };
 
     return (
-        <div className="relative pb-16 md:pb-0">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-6">Productos</h1>
+        <div className="relative pb-16 md:pb-0 max-w-full select-none">
+            <h1 className="text-3xl font-bold mb-6">Productos</h1>
 
-                <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
-                    {/* Categories Tabs */}
-                    <CategoryTabs
-                        categories={categories}
-                        isLoading={categoriesLoading}
-                    />
+            {/* Two column layout for desktop */}
+            <div className="flex flex-col md:flex-row">
+                {/* Products column */}
+                <div className="w-full md:w-[calc(100%-18rem)] md:pr-6">
+                    <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
+                        {/* Categories Tabs */}
+                        <CategoryTabs
+                            categories={categories}
+                            isLoading={categoriesLoading}
+                        />
 
-                    {/* Products Grid */}
-                    <ProductList
-                        products={filteredProducts}
-                        isLoading={productsLoading}
-                        onAddToCart={addToCart}
-                        activeCategory={activeCategory}
-                    />
-                </Tabs>
+                        {/* Products Grid */}
+                        <ProductList
+                            products={filteredProducts}
+                            isLoading={productsLoading}
+                            onAddToCart={addToCart}
+                            activeCategory={activeCategory}
+                        />
+                    </Tabs>
+                </div>
 
+                {/* Desktop Cart column */}
+                <div className="hidden md:block md:w-72 md:flex-shrink-0">
+                    <div className="sticky top-24 w-full">
+                        <CartSidebar
+                            cart={cart}
+                            cartTotal={cartTotal}
+                            onRemoveItem={removeFromCart}
+                            onUpdateQuantity={updateQuantity}
+                            onClearCart={clearCart}
+                        />
+                    </div>
+                </div>
             </div>
-
-            {/* Desktop Cart (Right sidebar) */}
-            <CartSidebar
-                cart={cart}
-                cartTotal={cartTotal}
-                onRemoveItem={removeFromCart}
-                onUpdateQuantity={updateQuantity}
-            />
 
             {/* Mobile Cart Button */}
             <div className="md:hidden fixed bottom-4 right-4 left-4 z-10">
@@ -114,6 +126,7 @@ const Home = () => {
                 onClose={toggleCart}
                 onRemoveItem={removeFromCart}
                 onUpdateQuantity={updateQuantity}
+                onClearCart={clearCart}
             />
         </div>
     );

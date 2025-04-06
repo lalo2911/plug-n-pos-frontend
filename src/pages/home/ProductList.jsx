@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TabsContent } from '@/components/ui/tabs';
 
@@ -9,12 +9,8 @@ const ProductList = ({ products, isLoading, onAddToCart, activeCategory }) => {
             {isLoading ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                     {Array(12).fill(0).map((_, i) => (
-                        <Card key={i} className="overflow-hidden">
-                            <Skeleton className="h-32 w-full" />
-                            <CardContent className="p-2">
-                                <Skeleton className="h-4 w-full mb-1" />
-                                <Skeleton className="h-4 w-1/2" />
-                            </CardContent>
+                        <Card key={i} className="overflow-hidden aspect-square">
+                            <Skeleton className="h-full w-full" />
                         </Card>
                     ))}
                 </div>
@@ -23,10 +19,10 @@ const ProductList = ({ products, isLoading, onAddToCart, activeCategory }) => {
                     {products?.map(product => (
                         <Card
                             key={product._id}
-                            className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200"
+                            className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-200 relative aspect-square"
                             onClick={() => onAddToCart(product)}
                         >
-                            <div className="h-32 bg-gray-100 flex items-center justify-center">
+                            <div className="h-full w-full bg-gray-100 flex items-center justify-center">
                                 {product.image_url ? (
                                     <img
                                         src={product.image_url}
@@ -37,10 +33,11 @@ const ProductList = ({ products, isLoading, onAddToCart, activeCategory }) => {
                                     <span className="text-gray-400 text-xs">Sin imagen</span>
                                 )}
                             </div>
-                            <CardContent className="p-2">
+                            {/* Overlay with gradient for product info */}
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
                                 <h3 className="font-medium text-sm truncate">{product.name}</h3>
                                 <p className="font-bold text-sm mt-1">${product.price.toFixed(2)}</p>
-                            </CardContent>
+                            </div>
                         </Card>
                     ))}
 
