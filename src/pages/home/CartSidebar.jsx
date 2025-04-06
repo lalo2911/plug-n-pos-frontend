@@ -50,7 +50,7 @@ const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearC
                             <span className="font-semibold">Total:</span>
                             <span className="font-bold">${cartTotal.toFixed(2)}</span>
                         </div>
-                        <Button className="w-full">Finalizar compra</Button>
+                        <Button className="w-full">Confirmar pedido</Button>
                     </div>
                 </>
             )}
