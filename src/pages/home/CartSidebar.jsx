@@ -18,7 +18,7 @@ const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearC
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
+                        className="h-6 w-6"
                         onClick={onClearCart}
                         title="Vaciar carrito"
                     >
