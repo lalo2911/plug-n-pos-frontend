@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CartItem from './CartItem';
-import { Trash2 } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearCart }) => {
     return (
@@ -22,7 +22,7 @@ const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearC
                         onClick={onClearCart}
                         title="Vaciar carrito"
                     >
-                        <Trash2 className="h-4 w-4" />
+                        <X className="h-4 w-4" />
                     </Button>
                 )}
             </div>

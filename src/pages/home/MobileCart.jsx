@@ -10,7 +10,6 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 import { Badge } from '@/components/ui/badge';
-import { Trash2 } from 'lucide-react';
 
 const MobileCart = ({ isOpen, cart, cartTotal, onClose, onRemoveItem, onUpdateQuantity, onClearCart }) => {
     return (
