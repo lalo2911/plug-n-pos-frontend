@@ -7,11 +7,13 @@ import {
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { CartProvider } from './context/CartContext';
 
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
 import Home from './pages/home/Home';
 import Login from './pages/Login';
+import OrderSummary from './pages/OrderSummary';
 import Categories from './pages/Categories';
 import NotFound from './pages/NotFound';
 
@@ -30,6 +32,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
+      <Route path="order-summary" element={<OrderSummary />} />
       <Route path="categories" element={<Categories />} />
       <Route path="*" element={<NotFound />} />
     </Route>
@@ -39,7 +42,9 @@ const router = createBrowserRouter(
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

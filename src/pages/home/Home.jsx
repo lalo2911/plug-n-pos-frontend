@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useCategories } from '../../hooks/useCategories';
+import { useCart } from '../../context/CartContext';
 import CategoryTabs from './CategoryTabs';
 import ProductList from './ProductList';
 import CartSidebar from './CartSidebar';
@@ -12,8 +13,10 @@ import { ShoppingCart } from 'lucide-react';
 
 const Home = () => {
     const [activeCategory, setActiveCategory] = useState('all');
-    const [cart, setCart] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+
+    // Get cart context
+    const { cart, cartTotal, addToCart, removeFromCart, clearCart, updateQuantity } = useCart();
 
     // Fetch categories
     const { categories, isLoading: categoriesLoading } = useCategories();
@@ -25,43 +28,6 @@ const Home = () => {
     const filteredProducts = products?.filter(product =>
         activeCategory === 'all' || product.category_id === activeCategory
     );
-
-    // Cart functions
-    const addToCart = (product) => {
-        const existingItem = cart.find(item => item._id === product._id);
-
-        if (existingItem) {
-            setCart(cart.map(item =>
-                item._id === product._id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            ));
-        } else {
-            setCart([...cart, { ...product, quantity: 1 }]);
-        }
-    };
-
-    const removeFromCart = (productId) => {
-        setCart(cart.filter(item => item._id !== productId));
-    };
-
-    const clearCart = () => {
-        setCart([]);
-    };
-
-    const updateQuantity = (productId, amount) => {
-        setCart(cart.map(item => {
-            if (item._id === productId) {
-                const newQuantity = item.quantity + amount;
-                return newQuantity > 0
-                    ? { ...item, quantity: newQuantity }
-                    : null;
-            }
-            return item;
-        }).filter(Boolean));
-    };
-
-    const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
     // Toggle cart view on mobile
     const toggleCart = (isOpen) => {
