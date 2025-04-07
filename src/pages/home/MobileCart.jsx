@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CartItem from './CartItem';
@@ -45,7 +46,9 @@ const MobileCart = ({ isOpen, cart, cartTotal, onClose, onRemoveItem, onUpdateQu
                                 <span className="font-semibold">Total:</span>
                                 <span className="font-bold">${cartTotal.toFixed(2)}</span>
                             </div>
-                            <Button className="w-full">Confirmar pedido</Button>
+                            <Link to="/order-summary">
+                                <Button className="w-full">Confirmar pedido</Button>
+                            </Link>
                         </>
                     )}
                     <div className="flex gap-2 w-full">
