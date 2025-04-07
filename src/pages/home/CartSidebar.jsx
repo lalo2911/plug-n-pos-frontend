@@ -8,7 +8,7 @@ import { X } from 'lucide-react';
 
 const CartSidebar = ({ cart, cartTotal, onRemoveItem, onUpdateQuantity, onClearCart }) => {
     return (
-        <div className="w-full bg-white rounded-lg shadow-lg border">
+        <div className="w-full bg-white rounded-lg shadow-sm border">
             <div className="p-4 border-b flex items-center">
                 <div className="flex items-center">
                     <h2 className="font-semibold">Carrito</h2>
