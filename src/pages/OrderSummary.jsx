@@ -41,7 +41,7 @@ function OrderSummary() {
                     <div className="lg:col-span-2">
                         <Card>
                             <CardHeader className="border-b bg-gray-50/50">
-                                <CardTitle className="flex items-center pt-3">
+                                <CardTitle className="flex items-center pt-4">
                                     <ShoppingBag className="h-5 w-5 mr-2" />
                                     Productos ({cart.length})
                                 </CardTitle>
@@ -49,9 +49,11 @@ function OrderSummary() {
                             <CardContent className="p-0">
                                 <div>
                                     {cart.map((item, index) => (
-                                        <div key={item._id} className="p-4 hover:bg-gray-50/75 transition-colors">
-                                            <div className="flex flex-col sm:flex-row items-start gap-4">
-                                                <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                                        <div key={item._id} className="p-3 hover:bg-gray-50/75 transition-colors border-b last:border-b-0">
+                                            {/* Vista de escritorio - una sola fila */}
+                                            <div className="hidden md:flex md:items-center gap-3">
+                                                {/* Imagen (solo en escritorio) */}
+                                                <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                                                     {item.image_url ? (
                                                         <img
                                                             src={item.image_url}
@@ -60,47 +62,96 @@ function OrderSummary() {
                                                         />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                            <ShoppingBag className="h-8 w-8" />
+                                                            <ShoppingBag className="h-6 w-6" />
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="flex-grow">
-                                                    <h3 className="font-medium text-lg mb-1">{item.name}</h3>
-                                                    <p className="text-gray-500">${item.price.toFixed(2)} cada uno</p>
 
-                                                    <div className="flex items-center mt-3 space-x-6">
+                                                {/* Nombre y precio unitario */}
+                                                <div className="flex-grow">
+                                                    <h3 className="font-medium text-base mb-0">{item.name}</h3>
+                                                    <p className="text-gray-500 text-sm">${item.price.toFixed(2)} c/u</p>
+                                                </div>
+
+                                                {/* Controles de cantidad y eliminar */}
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center border rounded-md">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-7 w-7 rounded-r-none"
+                                                            onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}
+                                                        >
+                                                            <Minus className="h-3 w-3" />
+                                                        </Button>
+                                                        <span className="w-7 text-center text-sm">{item.quantity}</span>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-7 w-7 rounded-l-none"
+                                                            onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                                        >
+                                                            <Plus className="h-3 w-3" />
+                                                        </Button>
+                                                    </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7"
+                                                        onClick={() => removeFromCart(item._id)}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+
+                                                {/* Precio total */}
+                                                <div className="font-semibold text-lg ml-2 w-20 text-right flex items-center justify-end">
+                                                    ${(item.price * item.quantity).toFixed(2)}
+                                                </div>
+                                            </div>
+
+                                            {/* Vista de móvil - dos filas */}
+                                            <div className="md:hidden flex flex-col gap-2">
+                                                {/* Fila 1: Nombre del producto y precio total */}
+                                                <div className="flex justify-between items-start">
+                                                    <h3 className="font-medium text-lg">{item.name}</h3>
+                                                    <p className="text-gray-500 text-sm">${item.price.toFixed(2)} c/u</p>
+                                                </div>
+
+                                                {/* Fila 2: Precio unitario, controles, eliminar */}
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
                                                         <div className="flex items-center border rounded-md">
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                className="h-8 w-8 rounded-r-none"
+                                                                className="h-7 w-7 rounded-r-none"
                                                                 onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}
                                                             >
-                                                                <Minus className="h-4 w-4" />
+                                                                <Minus className="h-3 w-3" />
                                                             </Button>
-                                                            <span className="w-8 text-center">{item.quantity}</span>
+                                                            <span className="w-7 text-center text-sm">{item.quantity}</span>
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                className="h-8 w-8 rounded-l-none"
+                                                                className="h-7 w-7 rounded-l-none"
                                                                 onClick={() => updateQuantity(item._id, item.quantity + 1)}
                                                             >
-                                                                <Plus className="h-4 w-4" />
+                                                                <Plus className="h-3 w-3" />
                                                             </Button>
                                                         </div>
                                                         <Button
                                                             variant="ghost"
-                                                            size="sm"
-                                                            className="px-2"
+                                                            size="icon"
+                                                            className="h-7 w-7"
                                                             onClick={() => removeFromCart(item._id)}
                                                         >
-                                                            <Trash2 className="h-4 w-4 mr-1" />
-                                                            Eliminar
+                                                            <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </div>
-                                                </div>
-                                                <div className="font-semibold text-lg sm:text-right mt-2 sm:mt-0">
-                                                    ${(item.price * item.quantity).toFixed(2)}
+                                                    <div className="font-semibold text-lg text-right">
+                                                        ${(item.price * item.quantity).toFixed(2)}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,7 +164,7 @@ function OrderSummary() {
                     <div className="lg:col-span-1">
                         <div className="sticky top-6">
                             <Card>
-                                <CardHeader className="mt-4">
+                                <CardHeader className="py-4">
                                     <CardTitle className="text-lg">Resumen de compra</CardTitle>
                                 </CardHeader>
                                 <CardContent>
@@ -134,11 +185,11 @@ function OrderSummary() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="flex flex-col gap-3">
-                                    <Button className="w-full py-6">
+                                    <Button className="w-full py-5">
                                         Terminar pedido
                                     </Button>
-                                    <Link to="/" className="w-full">
-                                        <Button variant="outline" className="w-full mb-4">
+                                    <Link to="/" className="w-full mb-4">
+                                        <Button variant="outline" className="w-full">
                                             <ArrowLeft className="mr-2 h-4 w-4" />
                                             Agregar productos
                                         </Button>
