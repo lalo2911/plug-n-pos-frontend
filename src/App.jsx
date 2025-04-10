@@ -11,9 +11,9 @@ import { CartProvider } from './context/CartContext';
 
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
-import Home from './pages/home/Home';
 import Login from './pages/Login';
-import OrderSummary from './pages/OrderSummary';
+import Home from './pages/home/Home';
+import OrderSummary from './pages/order-summary/OrderSummary';
 import Categories from './pages/Categories';
 import NotFound from './pages/NotFound';
 
