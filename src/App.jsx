@@ -8,10 +8,15 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
 
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
 import Login from './pages/Login';
+import LoginSuccess from './pages/LoginSuccess';
+import Register from './pages/Register';
+import ProtectedRoute from './components/ProtectedRoute';
+import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
 import Categories from './pages/Categories';
@@ -29,12 +34,18 @@ const queryClient = new QueryClient({
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<RootLayout />}>
-      <Route index element={<Home />} />
-      <Route path="login" element={<Login />} />
-      <Route path="order-summary" element={<OrderSummary />} />
-      <Route path="categories" element={<Categories />} />
-      <Route path="*" element={<NotFound />} />
+    <Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login/success" element={<LoginSuccess />} />
+
+      <Route path="/" element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
+        <Route index element={<Home />} />
+        <Route path="order-summary" element={<OrderSummary />} />
+        <Route path="categories" element={<Categories />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
     </Route>
   )
 );
@@ -42,9 +53,11 @@ const router = createBrowserRouter(
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <RouterProvider router={router} />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
