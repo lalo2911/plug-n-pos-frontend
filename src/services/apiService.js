@@ -27,8 +27,16 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            // Opcional: redirigir a login si el token expiró
+        // Solo redirigir si:
+        // 1. Es un error 401 (No autorizado)
+        // 2. No estamos en la ruta de login (/auth/login)
+        // 3. Hay un usuario almacenado localmente (token expirado)
+        if (
+            error.response?.status === 401 &&
+            !error.config.url.includes('/auth/login') &&
+            localStorage.getItem('user')
+        ) {
+            // Token expirado: eliminar usuario y redirigir a login
             localStorage.removeItem('user');
             window.location.href = '/login';
         }

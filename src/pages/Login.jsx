@@ -6,6 +6,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { authApi } from '../services/authApiService';
 import { useAuth } from '../context/AuthContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { AlertCircle } from "lucide-react"
 
 // Definir esquema de validación con Zod
 const loginSchema = z.object({
@@ -41,96 +48,102 @@ function Login() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-                <div className="text-center">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        Iniciar Sesión
-                    </h1>
-                    <p className="mt-4 text-gray-500">
+        <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4 select-none">
+            <Card className="w-full max-w-md">
+                <CardHeader className="space-y-2 text-center mt-4">
+                    <CardTitle className="text-3xl font-bold">Iniciar Sesión</CardTitle>
+                    <CardDescription>
                         Ingresa tus credenciales para acceder a tu cuenta
-                    </p>
-                </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                Correo Electrónico
-                            </label>
-                            <input
+                    </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Correo Electrónico</Label>
+                            <Input
                                 id="email"
                                 type="email"
+                                placeholder="nombre@ejemplo.com"
                                 {...register('email')}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                                <p className="text-sm text-destructive">{errors.email.message}</p>
                             )}
                         </div>
 
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Contraseña
-                            </label>
-                            <input
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="password">Contraseña</Label>
+                                <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                                    ¿Olvidaste tu contraseña?
+                                </Link>
+                            </div>
+                            <Input
                                 id="password"
                                 type="password"
+                                placeholder="••••••••"
                                 {...register('password')}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             />
                             {errors.password && (
-                                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                                <p className="text-sm text-destructive">{errors.password.message}</p>
                             )}
                         </div>
-                    </div>
 
-                    <div>
-                        <button
-                            type="submit"
+                        {loginMutation.isError && (
+                            <Alert variant="destructive">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle>Error al iniciar sesión</AlertTitle>
+                                <AlertDescription>
+                                    Verifica tus credenciales e intenta de nuevo.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        <Button 
+                            type="submit" 
+                            className="w-full" 
                             disabled={loginMutation.isPending}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >
-                            {loginMutation.isPending ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-                        </button>
-                    </div>
-                </form>
+                            {loginMutation.isPending ? 'Cargando...' : 'Iniciar Sesión'}
+                        </Button>
+                    </form>
 
-                <div className="mt-6">
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300" />
+                            <Separator className="w-full" />
                         </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white text-gray-500">O continúa con</span>
+                        <div className="relative flex justify-center">
+                            <span className="bg-background px-2 text-muted-foreground text-sm">
+                                O continúa con
+                            </span>
                         </div>
                     </div>
 
-                    <div className="mt-6">
-                        <button
-                            onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
-                                <path
-                                    d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
-                                    fill="#4285F4"
-                                />
-                            </svg>
-                            Continuar con Google
-                        </button>
-                    </div>
-                </div>
-
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={handleGoogleLogin}
+                    >
+                        <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+                            <path
+                                d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"
+                            />
+                        </svg>
+                        Continuar con Google
+                    </Button>
+                </CardContent>
+                
+                <CardFooter className="flex justify-center mb-4">
+                    <p className="text-sm text-muted-foreground">
                         ¿No tienes una cuenta?{' '}
-                        <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        <Link to="/register" className="text-primary font-medium hover:underline">
                             Regístrate
                         </Link>
                     </p>
-                </div>
-            </div>
+                </CardFooter>
+            </Card>
         </div>
     );
 }
