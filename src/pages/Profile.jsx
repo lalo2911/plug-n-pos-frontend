@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, ArrowLeft } from "lucide-react";
 
 // Definir esquema de validación con Zod
 const profileSchema = z.object({
@@ -94,7 +95,7 @@ function Profile() {
     return (
         <div className="flex items-center justify-center min-h-screen select-none">
             <Card className="w-full max-w-md">
-                <CardHeader className="space-y-2 text-center mt-4">
+                <CardHeader className="text-center mt-4">
                     <CardTitle className="text-3xl font-bold">Mi Perfil</CardTitle>
                 </CardHeader>
 
@@ -208,6 +209,12 @@ function Profile() {
                                     Guardando...
                                 </>
                             ) : 'Guardar Cambios'}
+                        </Button>
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link to="/">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Regresar
+                            </Link>
                         </Button>
                     </form>
                 </CardContent>
