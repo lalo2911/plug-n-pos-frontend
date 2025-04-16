@@ -95,11 +95,7 @@ function Profile() {
     return (
         <div className="flex items-center justify-center min-h-screen select-none">
             <Card className="w-full max-w-md">
-                <CardHeader className="text-center mt-4">
-                    <CardTitle className="text-3xl font-bold">Mi Perfil</CardTitle>
-                </CardHeader>
-
-                <CardContent className="space-y-6 mb-4">
+                <CardContent className="space-y-6 my-4">
                     <div className="flex items-center justify-center flex-col space-y-2">
                         <Avatar className="h-20 w-20">
                             <AvatarImage src={currentUser?.avatar} alt={currentUser?.name} />
