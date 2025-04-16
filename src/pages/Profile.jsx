@@ -96,9 +96,6 @@ function Profile() {
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-2 text-center mt-4">
                     <CardTitle className="text-3xl font-bold">Mi Perfil</CardTitle>
-                    <CardDescription>
-                        Gestiona tu información personal
-                    </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6 mb-4">
