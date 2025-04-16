@@ -35,8 +35,8 @@ function CartItem({ item }) {
                 <div className="flex items-center gap-2">
                     <QuantityControl
                         quantity={item.quantity}
-                        onDecrease={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}
-                        onIncrease={() => updateQuantity(item._id, item.quantity + 1)}
+                        onDecrease={() => updateQuantity(item._id, -1)}
+                        onIncrease={() => updateQuantity(item._id, 1)}
                     />
                     <Button
                         variant="ghost"
@@ -67,8 +67,8 @@ function CartItem({ item }) {
                     <div className="flex items-center gap-2">
                         <QuantityControl
                             quantity={item.quantity}
-                            onDecrease={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}
-                            onIncrease={() => updateQuantity(item._id, item.quantity + 1)}
+                            onDecrease={() => updateQuantity(item._id, -1)}
+                            onIncrease={() => updateQuantity(item._id, 1)}
                         />
                         <Button
                             variant="ghost"
