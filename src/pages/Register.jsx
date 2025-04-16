@@ -12,35 +12,42 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle } from "lucide-react"
+import { AlertCircle } from "lucide-react";
 
 // Definir esquema de validación con Zod
-const loginSchema = z.object({
+const registerSchema = z.object({
+    name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
     email: z.string().email('Correo electrónico inválido'),
     password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+    confirmPassword: z.string().min(6, 'La confirmación de contraseña debe tener al menos 6 caracteres'),
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
 });
 
-function Login() {
+function Register() {
     const navigate = useNavigate();
     const { login } = useAuth();
 
     const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: zodResolver(loginSchema),
+        resolver: zodResolver(registerSchema),
     });
 
-    const loginMutation = useMutation({
-        mutationFn: (credentials) => authApi.login(credentials),
+    const registerMutation = useMutation({
+        mutationFn: (userData) => authApi.register(userData),
         onSuccess: (data) => {
             login(data.data);
             navigate('/');
         },
         onError: (error) => {
-            console.error('Error de inicio de sesión:', error);
+            console.error('Error de registro:', error);
         },
     });
 
     const onSubmit = (data) => {
-        loginMutation.mutate(data);
+        // Eliminar confirmPassword antes de enviar
+        const { confirmPassword, ...userData } = data;
+        registerMutation.mutate(userData);
     };
 
     const handleGoogleLogin = () => {
@@ -51,14 +58,27 @@ function Login() {
         <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4 select-none">
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-2 text-center mt-4">
-                    <CardTitle className="text-3xl font-bold">Iniciar Sesión</CardTitle>
+                    <CardTitle className="text-3xl font-bold">Crear Cuenta</CardTitle>
                     <CardDescription>
-                        Ingresa tus credenciales para acceder a tu cuenta
+                        Regístrate para comenzar a usar nuestra plataforma
                     </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Nombre Completo</Label>
+                            <Input
+                                id="name"
+                                type="text"
+                                placeholder="Juan Pérez"
+                                {...register('name')}
+                            />
+                            {errors.name && (
+                                <p className="text-sm text-destructive">{errors.name.message}</p>
+                            )}
+                        </div>
+
                         <div className="space-y-2">
                             <Label htmlFor="email">Correo Electrónico</Label>
                             <Input
@@ -73,12 +93,7 @@ function Login() {
                         </div>
 
                         <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="password">Contraseña</Label>
-                                <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-                                    ¿Olvidaste tu contraseña?
-                                </Link>
-                            </div>
+                            <Label htmlFor="password">Contraseña</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -90,22 +105,35 @@ function Login() {
                             )}
                         </div>
 
-                        {loginMutation.isError && (
+                        <div className="space-y-2">
+                            <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
+                            <Input
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="••••••••"
+                                {...register('confirmPassword')}
+                            />
+                            {errors.confirmPassword && (
+                                <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                            )}
+                        </div>
+
+                        {registerMutation.isError && (
                             <Alert variant="destructive">
                                 <AlertCircle className="h-4 w-4" />
-                                <AlertTitle>Error al iniciar sesión</AlertTitle>
+                                <AlertTitle>Error al registrarse</AlertTitle>
                                 <AlertDescription>
-                                    Verifica tus credenciales e intenta de nuevo.
+                                    Ha ocurrido un error al crear la cuenta. Por favor, intente nuevamente.
                                 </AlertDescription>
                             </Alert>
                         )}
 
-                        <Button 
-                            type="submit" 
-                            className="w-full" 
-                            disabled={loginMutation.isPending}
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={registerMutation.isPending}
                         >
-                            {loginMutation.isPending ? 'Cargando...' : 'Iniciar Sesión'}
+                            {registerMutation.isPending ? 'Registrando...' : 'Crear Cuenta'}
                         </Button>
                     </form>
 
@@ -134,12 +162,12 @@ function Login() {
                         Continuar con Google
                     </Button>
                 </CardContent>
-                
+
                 <CardFooter className="flex justify-center mb-4">
                     <p className="text-sm text-muted-foreground">
-                        ¿No tienes una cuenta?{' '}
-                        <Link to="/register" className="text-primary font-medium hover:underline">
-                            Regístrate
+                        ¿Ya tienes una cuenta?{' '}
+                        <Link to="/login" className="text-primary font-medium hover:underline">
+                            Inicia Sesión
                         </Link>
                     </p>
                 </CardFooter>
@@ -148,4 +176,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Register;
