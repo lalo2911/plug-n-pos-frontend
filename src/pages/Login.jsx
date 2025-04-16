@@ -65,6 +65,7 @@ function Login() {
                                 id="email"
                                 type="email"
                                 placeholder="nombre@ejemplo.com"
+                                tabIndex={1}
                                 {...register('email')}
                             />
                             {errors.email && (
@@ -75,7 +76,7 @@ function Login() {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <Label htmlFor="password">Contraseña</Label>
-                                <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                                <Link to="/forgot-password" className="text-xs text-primary hover:underline" tabIndex={4}>
                                     ¿Olvidaste tu contraseña?
                                 </Link>
                             </div>
@@ -83,6 +84,7 @@ function Login() {
                                 id="password"
                                 type="password"
                                 placeholder="••••••••"
+                                tabIndex={2}
                                 {...register('password')}
                             />
                             {errors.password && (
@@ -103,6 +105,7 @@ function Login() {
                         <Button 
                             type="submit" 
                             className="w-full" 
+                            tabIndex={3}
                             disabled={loginMutation.isPending}
                         >
                             {loginMutation.isPending ? 'Cargando...' : 'Iniciar Sesión'}

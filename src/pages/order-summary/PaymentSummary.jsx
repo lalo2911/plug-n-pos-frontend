@@ -55,19 +55,19 @@ function PaymentSummary() {
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex flex-col gap-3">
+            <CardFooter className="flex flex-col gap-3 mb-4">
                 <Button
                     className="w-full py-5"
                     disabled={isShortage || payment === ''}
                 >
                     Terminar pedido
                 </Button>
-                <Link to="/" className="w-full mb-4">
-                    <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" asChild>
+                    <Link to="/">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Agregar productos
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </CardFooter>
         </Card>
     );

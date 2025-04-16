@@ -1,10 +1,19 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { authApi } from '../services/authApiService';
 import { useAuth } from '../context/AuthContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { AlertCircle, Loader2, ArrowLeft } from "lucide-react";
 
 // Definir esquema de validación con Zod
 const profileSchema = z.object({
@@ -76,116 +85,136 @@ function Profile() {
     };
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-full">Cargando...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
     }
 
     return (
-        <div className="max-w-lg mx-auto my-10 p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold mb-6">Mi Perfil</h1>
-
-            <div className="flex items-center mb-6">
-                {currentUser?.avatar ? (
-                    <img
-                        src={currentUser.avatar}
-                        alt={currentUser.name}
-                        className="h-16 w-16 rounded-full mr-4"
-                    />
-                ) : (
-                    <div className="h-16 w-16 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-                        <span className="text-xl font-bold text-gray-600">
-                            {currentUser?.name?.charAt(0).toUpperCase()}
-                        </span>
+        <div className="flex items-center justify-center min-h-screen select-none">
+            <Card className="w-full max-w-md">
+                <CardContent className="space-y-6 my-4">
+                    <div className="flex items-center justify-center flex-col space-y-2">
+                        <Avatar className="h-20 w-20">
+                            <AvatarImage src={currentUser?.avatar} alt={currentUser?.name} />
+                            <AvatarFallback className="text-lg">
+                                {currentUser?.name?.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="text-center">
+                            <p className="font-medium">{currentUser?.name}</p>
+                            <p className="text-sm text-muted-foreground">{currentUser?.email}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                Inicio de sesión: {currentUser?.authSource === 'google' ? 'Google' : 'Email y contraseña'}
+                            </p>
+                        </div>
                     </div>
-                )}
 
-                <div>
-                    <p className="font-medium">{currentUser?.name}</p>
-                    <p className="text-sm text-gray-500">{currentUser?.email}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                        Inicio de sesión: {currentUser?.authSource === 'google' ? 'Google' : 'Email y contraseña'}
-                    </p>
-                </div>
-            </div>
+                    <Separator />
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Nombre Completo
-                    </label>
-                    <input
-                        id="name"
-                        type="text"
-                        {...register('name')}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    {errors.name && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-                    )}
-                </div>
-
-                <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        Correo Electrónico
-                    </label>
-                    <input
-                        id="email"
-                        type="email"
-                        {...register('email')}
-                        disabled={currentUser?.authSource === 'google'}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
-                    />
-                    {errors.email && (
-                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                    )}
-                    {currentUser?.authSource === 'google' && (
-                        <p className="mt-1 text-xs text-gray-500">El correo no se puede cambiar para cuentas de Google</p>
-                    )}
-                </div>
-
-                {currentUser?.authSource === 'local' && (
-                    <>
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Nueva Contraseña (dejar en blanco para no cambiar)
-                            </label>
-                            <input
-                                id="password"
-                                type="password"
-                                {...register('password')}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Nombre Completo</Label>
+                            <Input
+                                id="name"
+                                type="text"
+                                placeholder="Tu nombre"
+                                {...register('name')}
                             />
-                            {errors.password && (
-                                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                            {errors.name && (
+                                <p className="text-sm text-destructive">{errors.name.message}</p>
                             )}
                         </div>
 
-                        <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                                Confirmar Nueva Contraseña
-                            </label>
-                            <input
-                                id="confirmPassword"
-                                type="password"
-                                {...register('confirmPassword')}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Correo Electrónico</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="nombre@ejemplo.com"
+                                {...register('email')}
+                                disabled={currentUser?.authSource === 'google'}
                             />
-                            {errors.confirmPassword && (
-                                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+                            {errors.email && (
+                                <p className="text-sm text-destructive">{errors.email.message}</p>
+                            )}
+                            {currentUser?.authSource === 'google' && (
+                                <p className="text-xs text-muted-foreground">El correo no se puede cambiar para cuentas de Google</p>
                             )}
                         </div>
-                    </>
-                )}
 
-                <div className="pt-2">
-                    <button
-                        type="submit"
-                        disabled={updateProfileMutation.isPending}
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        {updateProfileMutation.isPending ? 'Guardando...' : 'Guardar Cambios'}
-                    </button>
-                </div>
-            </form>
+                        {currentUser?.authSource === 'local' && (
+                            <>
+                                <div className="space-y-2">
+                                    <Label htmlFor="password">Nueva Contraseña</Label>
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        placeholder="Dejar en blanco para no cambiar"
+                                        {...register('password')}
+                                    />
+                                    {errors.password && (
+                                        <p className="text-sm text-destructive">{errors.password.message}</p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="confirmPassword">Confirmar Nueva Contraseña</Label>
+                                    <Input
+                                        id="confirmPassword"
+                                        type="password"
+                                        placeholder="Confirma tu nueva contraseña"
+                                        {...register('confirmPassword')}
+                                    />
+                                    {errors.confirmPassword && (
+                                        <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        {updateProfileMutation.isError && (
+                            <Alert variant="destructive">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle>Error al actualizar perfil</AlertTitle>
+                                <AlertDescription>
+                                    Ha ocurrido un error al guardar los cambios. Por favor, intente nuevamente.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        {updateProfileMutation.isSuccess && (
+                            <Alert className="bg-green-50 border-green-200">
+                                <AlertTitle className="text-green-800">Perfil actualizado</AlertTitle>
+                                <AlertDescription className="text-green-700">
+                                    Los cambios han sido guardados correctamente.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={updateProfileMutation.isPending}
+                        >
+                            {updateProfileMutation.isPending ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Guardando...
+                                </>
+                            ) : 'Guardar Cambios'}
+                        </Button>
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link to="/">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Regresar
+                            </Link>
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
     );
 }
