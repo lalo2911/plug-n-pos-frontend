@@ -13,12 +13,12 @@ function EmptyCart() {
                 <p className="text-gray-500 mb-8 max-w-md mx-auto">
                     Parece que aún no has agregado productos al carrito.
                 </p>
-                <Link to="/">
-                    <Button size="lg" className="px-8">
+                <Button size="lg" className="px-8" asChild>
+                    <Link to="/">
                         <ArrowLeft className="mr-2 h-5 w-5" />
                         Regresar
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </CardContent>
         </Card>
     );
