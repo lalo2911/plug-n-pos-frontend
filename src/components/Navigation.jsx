@@ -1,6 +1,15 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserCircle, Settings, LogOut } from "lucide-react";
 
 function Navigation() {
     const { currentUser, logout } = useAuth();
@@ -11,61 +20,58 @@ function Navigation() {
         navigate('/login');
     };
 
+    const handleProfileClick = () => {
+        navigate('/profile');
+    };
+
     return (
-        <nav className="bg-white shadow">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex">
-                        <div className="flex-shrink-0 flex items-center">
-                            <Link to="/" className="text-xl font-bold text-gray-800">
-                                Mi Tienda
-                            </Link>
-                        </div>
-                        <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <Link to="/" className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Inicio
-                            </Link>
-                            <Link to="/categories" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Categorías
-                            </Link>
-                            <Link to="/order-summary" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Carrito
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                        <div className="ml-3 relative">
-                            <div className="flex items-center">
-                                {currentUser?.avatar ? (
-                                    <img
-                                        className="h-8 w-8 rounded-full"
-                                        src={currentUser.avatar}
-                                        alt={currentUser.name}
-                                    />
-                                ) : (
-                                    <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <span className="text-sm font-medium text-gray-700">
-                                            {currentUser?.name?.charAt(0).toUpperCase()}
-                                        </span>
-                                    </div>
-                                )}
-                                <div className="ml-3">
-                                    <Link to="/profile" className="text-sm font-medium text-gray-700 hover:text-gray-900">
-                                        {currentUser?.name}
-                                    </Link>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="ml-3 text-xs text-gray-500 hover:text-gray-700"
-                                    >
-                                        Cerrar Sesión
-                                    </button>
-                                </div>
-                            </div>
+        <div className="fixed top-4 right-4 z-50">
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
+                        <Avatar className="h-12 w-12 border-2 border-white hover:shadow-md transition-shadow">
+                            {currentUser?.avatar ? (
+                                <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+                            ) : (
+                                <AvatarFallback className="bg-indigo-100 text-indigo-800">
+                                    {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
+                                </AvatarFallback>
+                            )}
+                        </Avatar>
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                    <div className="flex items-center p-3 gap-3">
+                        {/* <Avatar className="h-10 w-10">
+                            {currentUser?.avatar ? (
+                                <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+                            ) : (
+                                <AvatarFallback className="bg-indigo-100 text-indigo-800">
+                                    {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
+                                </AvatarFallback>
+                            )}
+                        </Avatar> */}
+                        <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium">
+                                {currentUser?.name || 'Usuario'}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                                {currentUser?.email || ''}
+                            </p>
                         </div>
                     </div>
-                </div>
-            </div>
-        </nav>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Configurar perfil</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Cerrar sesión</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     );
 }
 
