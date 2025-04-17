@@ -3,17 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2 } from "lucide-react";
+import { useAuth } from '../context/AuthContext';
 
 function LoginSuccess() {
     const navigate = useNavigate();
     const [progress, setProgress] = useState(0);
+    const { currentUser } = useAuth();
 
     const totalTime = 800; // Duración total (en ms) para la barra y la redirección
     const interval = 40; // Cada cuánto se actualiza la barra
     const increment = 100 / (totalTime / interval); // Cantidad que se suma en cada paso
-
-    // Esta página es para la redirección después del login con Google
-    // La lógica principal se maneja en AuthContext
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -23,16 +22,26 @@ function LoginSuccess() {
             });
         }, interval);
 
-        // Redirección
+        // Redirección basada en si el usuario ha completado el setup
         const redirectTimer = setTimeout(() => {
-            navigate('/');
+            if (currentUser) {
+                // Si hasCompletedSetup es false o undefined, redirigir a setup
+                if (!currentUser.hasCompletedSetup) {
+                    navigate('/setup');
+                } else {
+                    navigate('/');
+                }
+            } else {
+                // Si no hay usuario, redirigir a login
+                navigate('/login');
+            }
         }, totalTime);
 
         return () => {
             clearInterval(timer);
             clearTimeout(redirectTimer);
         };
-    }, [navigate]);
+    }, [navigate, currentUser]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
@@ -46,7 +55,7 @@ function LoginSuccess() {
                 <CardContent className="space-y-4 mb-4">
                     <Progress value={progress} className="h-2" />
                     <p className="text-center text-sm text-muted-foreground">
-                        Redirigiendo a la página principal en unos segundos...
+                        Redirigiendo en unos segundos...
                     </p>
                 </CardContent>
             </Card>

@@ -41,8 +41,7 @@ export const AuthProvider = ({ children }) => {
                 const user = { ...data.data, token };
                 localStorage.setItem('user', JSON.stringify(user));
                 setCurrentUser(user);
-                // No usar navigate aquí - la redirección se manejará con window.location
-                window.location.href = '/';
+                // La redirección se manejará en LoginSuccess.jsx
             }
         } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -65,12 +64,19 @@ export const AuthProvider = ({ children }) => {
         return !!currentUser;
     };
 
+    const updateUser = (userData) => {
+        const updatedUser = { ...currentUser, ...userData };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setCurrentUser(updatedUser);
+    };
+
     const value = {
         currentUser,
         loading,
         login,
         logout,
-        isAuthenticated
+        isAuthenticated,
+        updateUser
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
