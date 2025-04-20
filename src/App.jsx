@@ -16,6 +16,7 @@ import Login from './pages/Login';
 import LoginSuccess from './pages/LoginSuccess';
 import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
+import Setup from './pages/Setup';
 import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
@@ -38,6 +39,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login/success" element={<LoginSuccess />} />
+      <Route path="/setup" element={<ProtectedRoute><Setup /></ProtectedRoute>} />
 
       <Route path="/" element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
         <Route index element={<Home />} />
