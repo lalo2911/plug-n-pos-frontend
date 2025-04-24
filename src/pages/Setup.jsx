@@ -22,7 +22,12 @@ function Setup() {
     // Redirigir si el usuario ya completó el setup
     useEffect(() => {
         if (currentUser?.hasCompletedSetup && location.pathname === '/setup') {
-            navigate('/');
+            // Si el usuario es owner, redirigir a admin
+            if (currentUser.role === 'owner') {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
         }
     }, [currentUser, navigate, location.pathname]);
 
@@ -60,7 +65,7 @@ function Setup() {
                 });
 
                 toast.success('Configuración completada exitosamente');
-                navigate('/');
+                navigate('/admin');
             }
         } catch (error) {
             console.error('Error al completar la configuración:', error);
