@@ -63,9 +63,8 @@ function CategoriesManagement() {
         mutationFn: (newCategory) => apiClient.post('/categories', newCategory),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['categories'] });
-            toast({
-                title: "Categoría creada",
-                description: "La categoría ha sido creada exitosamente",
+            toast("Categoría creada", {
+                description: "La categoría ha sido creada exitosamente"
             });
             setCategoryName('');
             setIsAddDialogOpen(false);
@@ -308,13 +307,13 @@ function CategoriesManagement() {
 
             {/* Lista de categorías */}
             <Card>
-                <CardHeader>
+                <CardHeader className="mt-4">
                     <CardTitle>Lista de Categorías</CardTitle>
                     <CardDescription>
                         {categories?.length} categorías registradas en total
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mb-4">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />

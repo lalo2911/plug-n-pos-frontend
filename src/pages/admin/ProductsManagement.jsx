@@ -88,13 +88,13 @@ function ProductsManagement() {
 
             {/* Lista de productos */}
             <Card>
-                <CardHeader>
+                <CardHeader className="mt-4">
                     <CardTitle>Inventario de Productos</CardTitle>
                     <CardDescription>
                         {products?.length} productos registrados en total
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mb-4">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />

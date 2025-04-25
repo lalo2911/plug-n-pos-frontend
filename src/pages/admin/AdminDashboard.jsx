@@ -85,7 +85,7 @@ function AdminDashboard() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 select-none">
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -96,44 +96,44 @@ function AdminDashboard() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 mt-4">
                         <CardTitle className="text-sm font-medium">Productos</CardTitle>
                         <Package className="h-4 w-4 text-gray-500" />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="text-2xl font-bold">{stats.products}</div>
                         <p className="text-xs text-gray-500">Productos registrados</p>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 mt-4">
                         <CardTitle className="text-sm font-medium">Categorías</CardTitle>
                         <Tag className="h-4 w-4 text-gray-500" />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="text-2xl font-bold">{stats.categories}</div>
                         <p className="text-xs text-gray-500">Categorías activas</p>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 mt-4">
                         <CardTitle className="text-sm font-medium">Empleados</CardTitle>
                         <Users className="h-4 w-4 text-gray-500" />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="text-2xl font-bold">{stats.employees}</div>
                         <p className="text-xs text-gray-500">Equipo de trabajo</p>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 mt-4">
                         <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
                         <ShoppingBag className="h-4 w-4 text-gray-500" />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="text-2xl font-bold">{stats.orders}</div>
                         <p className="text-xs text-gray-500">Total de pedidos</p>
                     </CardContent>
@@ -144,29 +144,29 @@ function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Sales Overview */}
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="mt-4">
                         <CardTitle className="text-xl">Resumen de Ventas</CardTitle>
                         <CardDescription>Ventas y tendencias de los últimos 30 días</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="space-y-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <BadgeDollarSign className="h-5 w-5 mr-2 text-green-500" />
+                                    <BadgeDollarSign className="h-5 w-5 mr-2" />
                                     <span>Ingresos totales</span>
                                 </div>
                                 <span className="font-semibold">$14,580.00</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <ShoppingBag className="h-5 w-5 mr-2 text-blue-500" />
+                                    <ShoppingBag className="h-5 w-5 mr-2" />
                                     <span>Pedidos completados</span>
                                 </div>
                                 <span className="font-semibold">126</span>
                             </div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
-                                    <TrendingUp className="h-5 w-5 mr-2 text-purple-500" />
+                                    <TrendingUp className="h-5 w-5 mr-2" />
                                     <span>Ticket promedio</span>
                                 </div>
                                 <span className="font-semibold">$115.71</span>
@@ -177,7 +177,7 @@ function AdminDashboard() {
 
                 {/* Invite Employees Section */}
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="mt-6">
                         <CardTitle className="text-xl">Invitar Empleados</CardTitle>
                         <CardDescription>Genera un código único para que tus empleados se unan a tu negocio</CardDescription>
                     </CardHeader>
