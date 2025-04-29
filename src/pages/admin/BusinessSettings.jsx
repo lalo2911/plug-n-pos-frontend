@@ -134,7 +134,7 @@ function BusinessSettings() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Información del negocio */}
                 <Card className="md:col-span-2">
-                    <CardHeader>
+                    <CardHeader className="mt-4">
                         <CardTitle className="flex items-center">
                             <Building2 className="mr-2 h-5 w-5" />
                             Información del Negocio
@@ -143,7 +143,7 @@ function BusinessSettings() {
                             Actualiza los datos básicos de tu negocio
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         {isLoading ? (
                             <div className="flex justify-center items-center py-8">
                                 <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
@@ -223,7 +223,7 @@ function BusinessSettings() {
 
                 {/* Información del propietario */}
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="mt-4">
                         <CardTitle className="flex items-center">
                             <User className="mr-2 h-5 w-5" />
                             Propietario
@@ -232,7 +232,7 @@ function BusinessSettings() {
                             Información del dueño del negocio
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="mb-4">
                         <div className="space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Nombre</p>
@@ -254,7 +254,7 @@ function BusinessSettings() {
 
                 {/* Códigos de invitación */}
                 <Card className="md:col-span-3">
-                    <CardHeader>
+                    <CardHeader className="mt-4">
                         <CardTitle className="flex items-center">
                             <Clipboard className="mr-2 h-5 w-5" />
                             Códigos de Invitación
@@ -263,25 +263,23 @@ function BusinessSettings() {
                             Genera códigos para que tus empleados se unan al negocio
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <div className="mb-4">
-                            <Button
-                                onClick={generateInviteCode}
-                                disabled={isGeneratingCode}
-                            >
-                                {isGeneratingCode ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Generando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <RefreshCw className="mr-2 h-4 w-4" />
-                                        Generar Nuevo Código
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                    <CardContent className="mb-4">
+                        <Button
+                            onClick={generateInviteCode}
+                            disabled={isGeneratingCode}
+                        >
+                            {isGeneratingCode ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Generando...
+                                </>
+                            ) : (
+                                <>
+                                    <RefreshCw className="mr-2 h-4 w-4" />
+                                    Generar Nuevo Código
+                                </>
+                            )}
+                        </Button>
 
                         <Separator className="my-4" />
 

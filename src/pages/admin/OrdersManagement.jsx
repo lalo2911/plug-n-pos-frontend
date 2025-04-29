@@ -197,13 +197,13 @@ function OrdersManagement() {
 
             {/* Lista de órdenes */}
             <Card>
-                <CardHeader>
+                <CardHeader className="mt-4">
                     <CardTitle>Historial de Pedidos</CardTitle>
                     <CardDescription>
                         {orders?.length} pedidos registrados en total
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mb-4">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />

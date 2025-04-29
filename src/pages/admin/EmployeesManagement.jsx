@@ -191,13 +191,13 @@ function EmployeesManagement() {
 
             {/* Lista de empleados */}
             <Card>
-                <CardHeader>
+                <CardHeader className="mt-4">
                     <CardTitle>Lista de Empleados</CardTitle>
                     <CardDescription>
                         {employees?.length} empleados registrados en tu negocio
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="mb-4">
                     {isLoading ? (
                         <div className="flex justify-center items-center py-8">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
