@@ -18,7 +18,7 @@ import LoginSuccess from './pages/LoginSuccess';
 import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import OwnerRoute from './components/OwnerRoute';
-import Setup from './pages/Setup';
+import Setup from './pages/setup/Setup';
 import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
