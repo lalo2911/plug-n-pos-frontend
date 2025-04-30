@@ -22,7 +22,6 @@ import Setup from './pages/setup/Setup';
 import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
-import Categories from './pages/Categories';
 import NotFound from './pages/NotFound';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import EmployeesManagement from './pages/admin/EmployeesManagement';
@@ -53,7 +52,6 @@ const router = createBrowserRouter(
       <Route path="/" element={<ProtectedRoute><RootLayout /></ProtectedRoute>}>
         <Route index element={<Home />} />
         <Route path="order-summary" element={<OrderSummary />} />
-        <Route path="categories" element={<Categories />} />
         <Route path="profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Route>
