@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../../services/apiService';
+import { useCategories } from '../../hooks/useCategories';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,7 +35,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 function CategoriesManagement() {
-    const queryClient = useQueryClient();
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -44,111 +42,91 @@ function CategoriesManagement() {
     const [categoryName, setCategoryName] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Obtener categorías
-    const { data: categories, isLoading, error } = useQuery({
-        queryKey: ['categories'],
-        queryFn: async () => {
-            const response = await apiClient.get('/categories');
-            return response.data.data;
-        }
-    });
+    const {
+        categories,
+        isLoading,
+        isError,
+        error,
+        createCategory,
+        updateCategory,
+        deleteCategory
+    } = useCategories();
 
     // Filtrar categorías por término de búsqueda
     const filteredCategories = categories?.filter(category =>
         category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Mutación para crear categoría
-    const createMutation = useMutation({
-        mutationFn: (newCategory) => apiClient.post('/categories', newCategory),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
-            toast("Categoría creada", {
-                description: "La categoría ha sido creada exitosamente"
-            });
-            setCategoryName('');
-            setIsAddDialogOpen(false);
-        },
-        onError: (error) => {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo crear la categoría",
-                variant: "destructive"
-            });
-        }
-    });
-
-    // Mutación para actualizar categoría
-    const updateMutation = useMutation({
-        mutationFn: (category) => apiClient.put(`/categories/${category._id}`, { name: category.name }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
-            toast({
-                title: "Categoría actualizada",
-                description: "La categoría ha sido actualizada exitosamente",
-            });
-            setIsEditDialogOpen(false);
-        },
-        onError: (error) => {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo actualizar la categoría",
-                variant: "destructive"
-            });
-        }
-    });
-
-    // Mutación para eliminar categoría
-    const deleteMutation = useMutation({
-        mutationFn: (id) => apiClient.delete(`/categories/${id}`),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
-            toast({
-                title: "Categoría eliminada",
-                description: "La categoría ha sido eliminada exitosamente",
-            });
-            setIsDeleteDialogOpen(false);
-        },
-        onError: (error) => {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo eliminar la categoría",
-                variant: "destructive"
-            });
-        }
-    });
-
     // Manejar crear categoría
     const handleCreateCategory = () => {
         if (!categoryName.trim()) {
-            toast({
-                title: "Error",
+            toast.error("Error", {
                 description: "El nombre de la categoría es requerido",
-                variant: "destructive"
             });
             return;
         }
 
-        createMutation.mutate({ name: categoryName.trim() });
+        createCategory.mutate({ name: categoryName.trim() }, {
+            onSuccess: () => {
+                toast.success("Categoría creada", {
+                    description: "La categoría ha sido creada exitosamente"
+                });
+                setCategoryName('');
+                setIsAddDialogOpen(false);
+            },
+            onError: (error) => {
+                toast.error("Error", {
+                    description: error.response?.data?.message || "No se pudo crear la categoría",
+                });
+            }
+        });
     };
 
     // Manejar actualizar categoría
     const handleUpdateCategory = () => {
         if (!categoryName.trim()) {
-            toast({
-                title: "Error",
+            toast.error("Error", {
                 description: "El nombre de la categoría es requerido",
-                variant: "destructive"
             });
             return;
         }
 
-        updateMutation.mutate({ _id: selectedCategory._id, name: categoryName.trim() });
+        updateCategory.mutate(
+            {
+                id: selectedCategory._id,
+                data: { name: categoryName.trim() }
+            },
+            {
+                onSuccess: () => {
+                    toast.success("Categoría actualizada", {
+                        description: "La categoría ha sido actualizada exitosamente",
+                    });
+                    setIsEditDialogOpen(false);
+                },
+                onError: (error) => {
+                    toast.error("Error", {
+                        description: error.response?.data?.message || "No se pudo actualizar la categoría",
+                    });
+                }
+            }
+        );
     };
 
     // Manejar eliminar categoría
     const handleDeleteCategory = () => {
-        deleteMutation.mutate(selectedCategory._id);
+        deleteCategory.mutate(selectedCategory._id, {
+            onSuccess: () => {
+                toast.success("Categoría eliminada", {
+                    description: "La categoría ha sido eliminada exitosamente",
+                });
+                setIsDeleteDialogOpen(false);
+            },
+            onError: (error) => {
+                toast.error("Error", {
+                    description: error.response?.data?.message || "No se pudo eliminar la categoría",
+                });
+            }
+        });
     };
 
     // Abrir modal de edición
@@ -213,9 +191,9 @@ function CategoriesManagement() {
                             </Button>
                             <Button
                                 onClick={handleCreateCategory}
-                                disabled={createMutation.isPending}
+                                disabled={createCategory.isPending}
                             >
-                                {createMutation.isPending ? (
+                                {createCategory.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Guardando...
@@ -254,9 +232,9 @@ function CategoriesManagement() {
                             </Button>
                             <Button
                                 onClick={handleUpdateCategory}
-                                disabled={updateMutation.isPending}
+                                disabled={updateCategory.isPending}
                             >
-                                {updateMutation.isPending ? (
+                                {updateCategory.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Actualizando...
@@ -282,7 +260,7 @@ function CategoriesManagement() {
                                 onClick={handleDeleteCategory}
                                 className="bg-red-500 hover:bg-red-600"
                             >
-                                {deleteMutation.isPending ? (
+                                {deleteCategory.isPending ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                         Eliminando...
