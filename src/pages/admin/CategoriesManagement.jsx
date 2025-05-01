@@ -31,7 +31,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
 function CategoriesManagement() {
@@ -51,11 +50,6 @@ function CategoriesManagement() {
         updateCategory,
         deleteCategory
     } = useCategories();
-
-    // Filtrar categorías por término de búsqueda
-    const filteredCategories = categories?.filter(category =>
-        category.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     // Manejar crear categoría
     const handleCreateCategory = () => {
@@ -128,6 +122,11 @@ function CategoriesManagement() {
             }
         });
     };
+
+    // Filtrar categorías por término de búsqueda
+    const filteredCategories = categories?.filter(category =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     // Abrir modal de edición
     const openEditDialog = (category) => {
