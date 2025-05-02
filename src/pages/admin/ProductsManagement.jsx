@@ -55,7 +55,6 @@ function ProductsManagement() {
     const {
         products,
         isLoading,
-        isError,
         error,
         createProduct,
         updateProduct,
