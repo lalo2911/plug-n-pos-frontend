@@ -1,28 +1,13 @@
 import { useState } from 'react';
 import { useEmployees } from '../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { toast } from "sonner";
-import { Loader2, Search, Plus, Copy, Check, Mail, User } from 'lucide-react';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Loader2, Search, Mail } from 'lucide-react';
 
 function EmployeesManagement() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [isGeneratingCode, setIsGeneratingCode] = useState(false);
-    const [inviteCode, setInviteCode] = useState('');
-    const [isCopied, setIsCopied] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const {
         employees,
@@ -37,49 +22,6 @@ function EmployeesManagement() {
         (employee.email || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Generar un código de invitación (simulado ya que no tenemos apiClient)
-    const generateInviteCode = async () => {
-        setIsGeneratingCode(true);
-        try {
-            // Simulamos la generación de un código aleatorio
-            // En una implementación real, esto vendría de una API
-            setTimeout(() => {
-                const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
-                setInviteCode(randomCode);
-                setIsCopied(false);
-                toast({
-                    title: "Código generado",
-                    description: "El código de invitación ha sido generado exitosamente",
-                });
-                setIsGeneratingCode(false);
-            }, 1000);
-        } catch (error) {
-            console.error('Error al generar código de invitación:', error);
-            toast({
-                title: "Error",
-                description: "No se pudo generar el código de invitación",
-                variant: "destructive"
-            });
-            setIsGeneratingCode(false);
-        }
-    };
-
-    // Copiar el código de invitación al portapapeles
-    const copyInviteCode = () => {
-        navigator.clipboard.writeText(inviteCode)
-            .then(() => {
-                setIsCopied(true);
-                toast({
-                    title: "Código copiado",
-                    description: "El código ha sido copiado al portapapeles",
-                });
-                setTimeout(() => setIsCopied(false), 3000);
-            })
-            .catch((error) => {
-                console.error('Error al copiar:', error);
-            });
-    };
-
     // Función para obtener las iniciales de un nombre
     const getInitials = (name) => {
         if (!name) return 'U';
@@ -93,7 +35,7 @@ function EmployeesManagement() {
 
     // Determinar el tipo de cuenta (local o Google)
     const getAccountType = (employee) => {
-        if (employee?.google_id) {
+        if (employee?.googleId) {
             return 'Google';
         }
         return 'Local';
@@ -117,85 +59,6 @@ function EmployeesManagement() {
                     <h1 className="text-3xl font-bold">Empleados</h1>
                     <p className="text-gray-500">Gestiona los empleados de tu negocio</p>
                 </div>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Invitar Empleado
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Invitar Nuevo Empleado</DialogTitle>
-                            <DialogDescription>
-                                Genera un código único para que un nuevo empleado se una a tu negocio.
-                                Este código será válido por 7 días.
-                            </DialogDescription>
-                        </DialogHeader>
-
-                        {inviteCode ? (
-                            <div className="space-y-4">
-                                <div className="p-4 bg-gray-50 rounded-md border">
-                                    <div className="text-center">
-                                        <p className="text-sm text-gray-500 mb-2">Código de invitación:</p>
-                                        <div className="font-mono text-xl tracking-wider mb-2">{inviteCode}</div>
-                                        <div className="text-xs text-gray-500">Válido por 7 días</div>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col space-y-2">
-                                    <p className="text-sm text-gray-500">
-                                        Comparte este código con tu empleado para que pueda unirse a tu negocio.
-                                    </p>
-
-                                    <Button
-                                        onClick={copyInviteCode}
-                                        variant="outline"
-                                        className="flex items-center"
-                                    >
-                                        {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-                                        {isCopied ? 'Código copiado' : 'Copiar código'}
-                                    </Button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col space-y-4">
-                                <p className="text-sm text-gray-500">
-                                    Genera un código de invitación para que un nuevo empleado se una a tu negocio.
-                                    Cada código solo puede ser utilizado una vez.
-                                </p>
-                                <Button
-                                    onClick={generateInviteCode}
-                                    disabled={isGeneratingCode}
-                                >
-                                    {isGeneratingCode ? (
-                                        <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                            Generando...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Plus className="mr-2 h-4 w-4" />
-                                            Generar Código
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        )}
-
-                        <DialogFooter>
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setIsDialogOpen(false);
-                                    setInviteCode('');
-                                }}
-                            >
-                                Cerrar
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
             </div>
 
             {/* Barra de búsqueda */}
