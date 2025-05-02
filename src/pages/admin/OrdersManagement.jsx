@@ -1,88 +1,105 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../services/apiService';
+import { useOrders } from '../../hooks/useOrders';
+import { useOrderDetails } from '../../hooks/useOrderDetails';
+import { useProducts } from '../../hooks/useProducts';
+import { useEmployees } from '../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
-    ShoppingBag,
+    ImageIcon,
     Search,
-    Filter,
     Loader2,
-    ChevronDown,
     Eye,
-    Clock,
-    Check,
-    XCircle,
-    Truck
+    User,
+    Calendar,
+    Package
 } from 'lucide-react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-    DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogFooter,
 } from "@/components/ui/dialog";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 function OrdersManagement() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
-    const [currentOrder, setCurrentOrder] = useState(null);
-    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+    const [isOrderDetailsDialogOpen, setIsOrderDetailsDialogOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
-    // Obtener órdenes
-    const { data: orders, isLoading, error, refetch } = useQuery({
-        queryKey: ['orders'],
-        queryFn: async () => {
-            const response = await apiClient.get('/orders/business');
-            return response.data.data;
-        }
-    });
+    const {
+        orders,
+        isLoading,
+        isError,
+        error,
+    } = useOrders();
 
-    // Actualizar estado de orden
-    const updateOrderStatus = async (orderId, status) => {
+    const { employees } = useEmployees();
+
+    const { fetchOrderDetailByOrderId } = useOrderDetails();
+
+    const { products } = useProducts();
+
+    const getProductInfo = (id) => products?.find(p => p._id === id);
+
+    const getEmployeeNameById = (id) => {
+        const employee = employees?.find(e => e._id === id);
+        return employee?.name || 'Empleado desconocido';
+    };
+
+    // Ver detalles de la orden
+    const handleViewOrderDetails = async (order) => {
+        setSelectedOrder(order);
+        setIsLoadingDetails(true);
+
         try {
-            await apiClient.put(`/orders/${orderId}/status`, { status });
-            toast({
-                title: "Estado actualizado",
-                description: `La orden ha sido marcada como ${getStatusLabel(status)}`,
-            });
-            refetch();
+            const result = await fetchOrderDetailByOrderId(order._id);
+            if (result.data) {
+                setOrderDetails(result.data);
+            } else {
+                setOrderDetails([]);
+            }
         } catch (error) {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo actualizar el estado",
-                variant: "destructive"
+            toast.error("Error", {
+                description: "No se pudieron cargar los detalles de la orden",
             });
+            setOrderDetails([]);
+        } finally {
+            setIsLoadingDetails(false);
+            setIsOrderDetailsDialogOpen(true);
         }
     };
 
-    // Filtrar órdenes por término de búsqueda y estado
+    // Filtrar órdenes por término de búsqueda
     const filteredOrders = orders?.filter(order => {
-        const matchesSearch =
-            order.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+        const employeeName = getEmployeeNameById(order.user_id)?.toLowerCase() || '';
+        const orderDate = new Date(order.createdAt).toLocaleDateString() || '';
 
-        const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-
-        return matchesSearch && matchesStatus;
+        return (
+            order._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.user_id?.toString()?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            employeeName.includes(searchTerm.toLowerCase()) ||
+            orderDate.includes(searchTerm.toLowerCase())
+        );
     });
 
-    // Formatear precio
+
+    // Formatear precio desde Decimal128
     const formatPrice = (price) => {
+        if (!price) return '$0.00';
+
+        // Si es un objeto Decimal128, extraer el valor
+        const numericValue = price.$numberDecimal ? parseFloat(price.$numberDecimal) : parseFloat(price);
+
         return new Intl.NumberFormat('es-MX', {
             style: 'currency',
             currency: 'MXN'
-        }).format(price);
+        }).format(numericValue);
     };
 
     // Formatear fecha
@@ -97,45 +114,9 @@ function OrdersManagement() {
         }).format(date);
     };
 
-    // Obtener etiqueta y color para el estado
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'pending':
-                return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pendiente</Badge>;
-            case 'processing':
-                return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">En proceso</Badge>;
-            case 'completed':
-                return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Completada</Badge>;
-            case 'cancelled':
-                return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Cancelada</Badge>;
-            case 'delivered':
-                return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Entregada</Badge>;
-            default:
-                return <Badge variant="outline">Desconocido</Badge>;
-        }
-    };
-
-    // Obtener etiqueta para el estado (texto)
-    const getStatusLabel = (status) => {
-        switch (status) {
-            case 'pending': return 'Pendiente';
-            case 'processing': return 'En proceso';
-            case 'completed': return 'Completada';
-            case 'cancelled': return 'Cancelada';
-            case 'delivered': return 'Entregada';
-            default: return 'Desconocido';
-        }
-    };
-
-    // Ver detalles de la orden
-    const handleViewOrder = (order) => {
-        setCurrentOrder(order);
-        setIsViewDialogOpen(true);
-    };
-
-    // Calcular total de la orden
-    const calculateOrderTotal = (items) => {
-        return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    // Generar un ID corto para mostrar
+    const getShortId = (id) => {
+        return id ? `#${id.substring(0, 8)}` : 'N/A';
     };
 
     return (
@@ -147,52 +128,15 @@ function OrdersManagement() {
                 </div>
             </div>
 
-            {/* Filtros y búsqueda */}
-            <div className="flex flex-col md:flex-row gap-4">
-                <div className="relative flex-grow">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <Input
-                        className="pl-10"
-                        placeholder="Buscar por número de orden o cliente..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="flex items-center">
-                            <Filter className="mr-2 h-4 w-4" />
-                            {statusFilter === 'all' ? 'Todos los estados' : getStatusLabel(statusFilter)}
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => setStatusFilter('all')}>
-                            Todos los estados
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => setStatusFilter('pending')}>
-                            <Clock className="mr-2 h-4 w-4 text-yellow-500" />
-                            Pendiente
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setStatusFilter('processing')}>
-                            <Clock className="mr-2 h-4 w-4 text-blue-500" />
-                            En proceso
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setStatusFilter('completed')}>
-                            <Check className="mr-2 h-4 w-4 text-green-500" />
-                            Completada
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setStatusFilter('delivered')}>
-                            <Truck className="mr-2 h-4 w-4 text-purple-500" />
-                            Entregada
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setStatusFilter('cancelled')}>
-                            <XCircle className="mr-2 h-4 w-4 text-red-500" />
-                            Cancelada
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+            {/* Búsqueda */}
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Input
+                    className="pl-10"
+                    placeholder="Buscar por ID de orden, responsable o fecha..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
             </div>
 
             {/* Lista de órdenes */}
@@ -208,9 +152,9 @@ function OrdersManagement() {
                         <div className="flex justify-center items-center py-8">
                             <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
                         </div>
-                    ) : error ? (
+                    ) : isError ? (
                         <div className="text-center py-8 text-red-500">
-                            Error al cargar los pedidos
+                            Error al cargar los pedidos: {error?.message || "Error desconocido"}
                         </div>
                     ) : filteredOrders?.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
@@ -221,11 +165,12 @@ function OrdersManagement() {
                             <table className="w-full caption-bottom text-sm">
                                 <thead className="[&_tr]:border-b">
                                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Orden</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Cliente</th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">ID</th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Responsable</th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Fecha</th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Total</th>
-                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Estado</th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Pago</th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Cambio</th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Acciones</th>
                                     </tr>
                                 </thead>
@@ -233,72 +178,40 @@ function OrdersManagement() {
                                     {filteredOrders?.map((order) => (
                                         <tr key={order._id} className="border-b transition-colors hover:bg-muted/50">
                                             <td className="p-4 align-middle font-medium">
-                                                {order.orderNumber || `#${order._id.substring(0, 8)}`}
+                                                {getShortId(order._id)}
                                             </td>
                                             <td className="p-4 align-middle">
-                                                {order.customer?.name || 'Cliente anónimo'}
+                                                <div className="flex items-center">
+                                                    <User className="h-4 w-4 mr-2 text-gray-400" />
+                                                    {getEmployeeNameById(order.user_id)}
+                                                </div>
                                             </td>
                                             <td className="p-4 align-middle">
-                                                {formatDate(order.createdAt)}
+                                                <div className="flex items-center">
+                                                    <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                                                    {formatDate(order.createdAt)}
+                                                </div>
+                                            </td>
+                                            <td className="p-4 align-middle font-medium">
+                                                <div className="flex items-center">
+                                                    {formatPrice(order.total)}
+                                                </div>
                                             </td>
                                             <td className="p-4 align-middle">
-                                                {formatPrice(calculateOrderTotal(order.items))}
+                                                {formatPrice(order.payment)}
                                             </td>
                                             <td className="p-4 align-middle">
-                                                {getStatusBadge(order.status)}
+                                                {formatPrice(order.change)}
                                             </td>
                                             <td className="p-4 align-middle">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="sm">
-                                                            <span className="sr-only">Abrir menu</span>
-                                                            <ChevronDown className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuItem
-                                                            className="flex items-center"
-                                                            onClick={() => handleViewOrder(order)}
-                                                        >
-                                                            <Eye className="mr-2 h-4 w-4" />
-                                                            <span>Ver detalles</span>
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        {order.status === 'pending' && (
-                                                            <DropdownMenuItem
-                                                                onClick={() => updateOrderStatus(order._id, 'processing')}
-                                                            >
-                                                                <Clock className="mr-2 h-4 w-4 text-blue-500" />
-                                                                <span>Marcar en proceso</span>
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        {['pending', 'processing'].includes(order.status) && (
-                                                            <DropdownMenuItem
-                                                                onClick={() => updateOrderStatus(order._id, 'completed')}
-                                                            >
-                                                                <Check className="mr-2 h-4 w-4 text-green-500" />
-                                                                <span>Marcar completada</span>
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        {order.status === 'completed' && (
-                                                            <DropdownMenuItem
-                                                                onClick={() => updateOrderStatus(order._id, 'delivered')}
-                                                            >
-                                                                <Truck className="mr-2 h-4 w-4 text-purple-500" />
-                                                                <span>Marcar entregada</span>
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                        {['pending', 'processing'].includes(order.status) && (
-                                                            <DropdownMenuItem
-                                                                onClick={() => updateOrderStatus(order._id, 'cancelled')}
-                                                                className="text-red-500"
-                                                            >
-                                                                <XCircle className="mr-2 h-4 w-4" />
-                                                                <span>Cancelar orden</span>
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleViewOrderDetails(order)}
+                                                >
+                                                    <Eye className="h-4 w-4 mr-1" />
+                                                    Detalles
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))}
@@ -310,98 +223,102 @@ function OrdersManagement() {
             </Card>
 
             {/* Dialog para ver detalles de la orden */}
-            <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-                <DialogContent className="max-w-2xl">
+            <Dialog open={isOrderDetailsDialogOpen} onOpenChange={setIsOrderDetailsDialogOpen}>
+                <DialogContent className="max-w-3xl">
                     <DialogHeader>
                         <DialogTitle>Detalles del Pedido</DialogTitle>
                         <DialogDescription>
-                            {currentOrder?.orderNumber || (currentOrder && `#${currentOrder._id.substring(0, 8)}`)}
+                            {selectedOrder && getShortId(selectedOrder._id)}
                         </DialogDescription>
                     </DialogHeader>
-                    {currentOrder && (
+                    {selectedOrder && (
                         <div className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <h3 className="font-medium text-sm text-gray-500">Cliente</h3>
-                                    <p>{currentOrder.customer?.name || 'Cliente anónimo'}</p>
+                                    <h3 className="font-medium text-sm text-gray-500">Responsable</h3>
+                                    <p className="flex items-center">
+                                        <User className="h-4 w-4 mr-2 text-gray-400" />
+                                        {getEmployeeNameById(selectedOrder.user_id)}
+                                    </p>
                                 </div>
                                 <div>
                                     <h3 className="font-medium text-sm text-gray-500">Fecha</h3>
-                                    <p>{formatDate(currentOrder.createdAt)}</p>
-                                </div>
-                                <div>
-                                    <h3 className="font-medium text-sm text-gray-500">Estado</h3>
-                                    <div className="mt-1">{getStatusBadge(currentOrder.status)}</div>
+                                    <p className="flex items-center">
+                                        <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                                        {formatDate(selectedOrder.createdAt)}
+                                    </p>
                                 </div>
                                 <div>
                                     <h3 className="font-medium text-sm text-gray-500">Total</h3>
-                                    <p className="font-medium">
-                                        {formatPrice(calculateOrderTotal(currentOrder.items))}
+                                    <p className="font-medium flex items-center">
+                                        {formatPrice(selectedOrder.total)}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 className="font-medium text-sm text-gray-500">Pago / Cambio</h3>
+                                    <p>
+                                        {formatPrice(selectedOrder.payment)} / {formatPrice(selectedOrder.change)}
                                     </p>
                                 </div>
                             </div>
 
                             <div>
-                                <h3 className="font-medium mb-2">Productos</h3>
-                                <div className="bg-gray-50 rounded-md p-4 space-y-3">
-                                    {currentOrder.items.map((item, index) => (
-                                        <div key={index} className="flex justify-between items-center">
-                                            <div className="flex items-center">
-                                                <div className="ml-3">
-                                                    <p className="font-medium">{item.name}</p>
-                                                    <p className="text-sm text-gray-500">
-                                                        {item.quantity} x {formatPrice(item.price)}
+                                <h3 className="font-medium mb-2 flex items-center">
+                                    <Package className="h-5 w-5 mr-2" />
+                                    Productos en este pedido
+                                </h3>
+                                {isLoadingDetails ? (
+                                    <div className="flex justify-center items-center py-8">
+                                        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                                    </div>
+                                ) : orderDetails.length === 0 ? (
+                                    <div className="bg-gray-50 rounded-md p-4 text-gray-500 text-center">
+                                        No se encontraron detalles para esta orden
+                                    </div>
+                                ) : (
+                                    <div className="bg-gray-50 rounded-md p-4 space-y-3">
+                                        {orderDetails.map((detail) => {
+                                            const product = getProductInfo(detail.product_id);
+                                            return (
+                                                <div key={detail._id} className="flex justify-between items-center pb-2 last:pb-0">
+                                                    <div className="flex items-center space-x-3">
+                                                        {product?.image_url ? (
+                                                            <img
+                                                                src={product.image_url}
+                                                                alt={product.name}
+                                                                className="h-10 w-10 object-cover rounded-md"
+                                                            />
+                                                        ) : (
+                                                            <ImageIcon className="h-10 w-10 text-gray-400" />
+                                                        )}
+                                                        <div>
+                                                            <p className="font-medium">{product?.name || 'Producto desconocido'}</p>
+                                                            <p className="text-sm text-gray-500">
+                                                                Cantidad: {detail.quantity}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <p className="font-medium">
+                                                        {formatPrice(detail.subtotal)}
                                                     </p>
                                                 </div>
-                                            </div>
+                                            );
+                                        })}
+                                        <div className="border-t pt-3 flex justify-between">
+                                            <p className="font-medium">Total</p>
                                             <p className="font-medium">
-                                                {formatPrice(item.price * item.quantity)}
+                                                {formatPrice(selectedOrder.total)}
                                             </p>
                                         </div>
-                                    ))}
-                                    <div className="border-t pt-3 flex justify-between">
-                                        <p className="font-medium">Total</p>
-                                        <p className="font-medium">
-                                            {formatPrice(calculateOrderTotal(currentOrder.items))}
-                                        </p>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
-                            {currentOrder.notes && (
-                                <div>
-                                    <h3 className="font-medium mb-2">Notas</h3>
-                                    <p className="bg-gray-50 rounded-md p-4 text-gray-700">
-                                        {currentOrder.notes}
-                                    </p>
-                                </div>
-                            )}
-
-                            <div className="flex gap-4 justify-end">
-                                <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+                            <DialogFooter>
+                                <Button variant="outline" onClick={() => setIsOrderDetailsDialogOpen(false)}>
                                     Cerrar
                                 </Button>
-                                {currentOrder.status === 'pending' && (
-                                    <Button
-                                        onClick={() => {
-                                            updateOrderStatus(currentOrder._id, 'processing');
-                                            setIsViewDialogOpen(false);
-                                        }}
-                                    >
-                                        Marcar en proceso
-                                    </Button>
-                                )}
-                                {['pending', 'processing'].includes(currentOrder.status) && (
-                                    <Button
-                                        onClick={() => {
-                                            updateOrderStatus(currentOrder._id, 'completed');
-                                            setIsViewDialogOpen(false);
-                                        }}
-                                    >
-                                        Marcar completada
-                                    </Button>
-                                )}
-                            </div>
+                            </DialogFooter>
                         </div>
                     )}
                 </DialogContent>
