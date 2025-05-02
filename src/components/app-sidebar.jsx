@@ -20,8 +20,8 @@ export function AppSidebar() {
 
     const menuItems = [
         { icon: BarChart3, label: "Dashboard", path: "/admin" },
-        { icon: Package, label: "Productos", path: "/admin/products" },
         { icon: LucideTag, label: "Categorías", path: "/admin/categories" },
+        { icon: Package, label: "Productos", path: "/admin/products" },
         { icon: ListOrdered, label: "Pedidos", path: "/admin/orders" },
         { icon: Users, label: "Empleados", path: "/admin/employees" },
         { icon: Settings, label: "Configuración", path: "/admin/settings" },
