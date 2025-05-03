@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../../services/apiService';
+import { useBusiness } from '../../hooks/useBusiness';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,79 +29,50 @@ import {
 import { toast } from "sonner"
 
 function BusinessSettings() {
-    const queryClient = useQueryClient();
-
+    // Estado para los campos editables del negocio
     const [businessData, setBusinessData] = useState({
         name: '',
         address: '',
         phone: ''
     });
 
-    const [isGeneratingCode, setIsGeneratingCode] = useState(false);
+    // Estado para información adicional (solo lectura)
+    const [businessInfo, setBusinessInfo] = useState({
+        owner: '',
+        email: '',
+        noEmployees: 0,
+        noCodes: 0
+    });
+
     const [copiedCode, setCopiedCode] = useState(null);
 
-    // Obtener datos del negocio
-    const { data: business, isLoading, error } = useQuery({
-        queryKey: ['currentBusiness'],
-        queryFn: async () => {
-            const response = await apiClient.get('/business/me');
-            return response.data.data;
-        }
-    });
+    // Usar el hook useBusiness
+    const {
+        userBusiness: business,
+        isLoading,
+        error,
+        updateBusiness,
+        generateInviteCode
+    } = useBusiness();
 
     useEffect(() => {
         if (business) {
+            // Solo guardar los campos editables en businessData
             setBusinessData({
                 name: business.name || '',
                 address: business.address || '',
-                phone: business.phone || '',
-                owner: business.owner.name || '',
-                email: business.owner.email || '',
+                phone: business.phone || ''
+            });
+
+            // Guardar la información adicional en un estado separado
+            setBusinessInfo({
+                owner: business.owner?.name || '',
+                email: business.owner?.email || '',
                 noEmployees: business.employees?.length || 0,
                 noCodes: business.inviteCodes?.length || 0
             });
         }
     }, [business]);
-
-    // Mutación para actualizar negocio
-    const updateMutation = useMutation({
-        mutationFn: (updatedData) => apiClient.put(`/business/${business._id}`, updatedData),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['currentBusiness'] });
-            toast({
-                title: "Negocio actualizado",
-                description: "Los datos de tu negocio han sido actualizados exitosamente",
-            });
-        },
-        onError: (error) => {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo actualizar el negocio",
-                variant: "destructive"
-            });
-        }
-    });
-
-    // Generar código de invitación
-    const generateInviteCode = async () => {
-        setIsGeneratingCode(true);
-        try {
-            const response = await apiClient.post('/business/invite-code');
-            queryClient.invalidateQueries({ queryKey: ['currentBusiness'] });
-            toast({
-                title: "Código generado",
-                description: "Se ha generado un nuevo código de invitación",
-            });
-        } catch (error) {
-            toast({
-                title: "Error",
-                description: error.response?.data?.message || "No se pudo generar el código de invitación",
-                variant: "destructive"
-            });
-        } finally {
-            setIsGeneratingCode(false);
-        }
-    };
 
     // Manejar cambios en los inputs
     const handleChange = (e) => {
@@ -116,7 +86,48 @@ function BusinessSettings() {
     // Manejar envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
-        updateMutation.mutate(businessData);
+
+        // Solo enviar los campos editables al backend
+        const updateData = {
+            name: businessData.name,
+            address: businessData.address,
+            phone: businessData.phone
+        };
+
+        updateBusiness.mutate(
+            { id: business._id, data: updateData },
+            {
+                onSuccess: () => {
+                    toast.success("Negocio actualizado", {
+                        description: "Los datos de tu negocio han sido actualizados exitosamente",
+                    });
+                },
+                onError: (error) => {
+                    toast.error("Error", {
+                        description: error.response?.data?.message || "No se pudo actualizar el negocio",
+                    });
+                }
+            }
+        );
+    };
+
+    // Generar código de invitación
+    const handleGenerateInviteCode = () => {
+        generateInviteCode.mutate(
+            {},
+            {
+                onSuccess: () => {
+                    toast.success("Código generado", {
+                        description: "Se ha generado un nuevo código de invitación",
+                    });
+                },
+                onError: (error) => {
+                    toast.error("Error", {
+                        description: error.response?.data?.message || "No se pudo generar el código de invitación",
+                    });
+                }
+            }
+        );
     };
 
     // Copiar código al portapapeles
@@ -126,8 +137,7 @@ function BusinessSettings() {
         setTimeout(() => {
             setCopiedCode(null);
         }, 3000);
-        toast({
-            title: "Código copiado",
+        toast.success("Código copiado", {
             description: "El código ha sido copiado al portapapeles",
         });
     };
@@ -210,9 +220,9 @@ function BusinessSettings() {
                                 <Button
                                     type="submit"
                                     className="w-full"
-                                    disabled={updateMutation.isPending}
+                                    disabled={updateBusiness.isPending}
                                 >
-                                    {updateMutation.isPending ? (
+                                    {updateBusiness.isPending ? (
                                         <>
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                             Guardando...
@@ -244,19 +254,19 @@ function BusinessSettings() {
                         <div className="space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Nombre</p>
-                                <p>{businessData?.owner || 'No disponible'}</p>
+                                <p>{businessInfo?.owner || 'No disponible'}</p>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Email</p>
-                                <p>{businessData?.email || 'No disponible'}</p>
+                                <p>{businessInfo?.email || 'No disponible'}</p>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Empleados</p>
-                                <p>{businessData?.noEmployees || 'No disponible'}</p>
+                                <p>{businessInfo?.noEmployees || 'No disponible'}</p>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Códigos</p>
-                                <p>{businessData?.noCodes || 'No disponible'}</p>
+                                <p>{businessInfo?.noCodes || 'No disponible'}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -290,10 +300,10 @@ function BusinessSettings() {
                     </CardHeader>
                     <CardContent className="mb-4">
                         <Button
-                            onClick={generateInviteCode}
-                            disabled={isGeneratingCode}
+                            onClick={handleGenerateInviteCode}
+                            disabled={generateInviteCode.isPending}
                         >
-                            {isGeneratingCode ? (
+                            {generateInviteCode.isPending ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Generando...
