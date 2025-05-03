@@ -6,6 +6,7 @@ import { useEmployees } from '../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     ImageIcon,
     Search,
@@ -276,35 +277,39 @@ function OrdersManagement() {
                                         No se encontraron detalles para esta orden
                                     </div>
                                 ) : (
-                                    <div className="bg-gray-50 rounded-md p-4 space-y-3">
-                                        {orderDetails.map((detail) => {
-                                            const product = getProductInfo(detail.product_id);
-                                            return (
-                                                <div key={detail._id} className="flex justify-between items-center pb-2 last:pb-0">
-                                                    <div className="flex items-center space-x-3">
-                                                        {product?.image_url ? (
-                                                            <img
-                                                                src={product.image_url}
-                                                                alt={product.name}
-                                                                className="h-10 w-10 object-cover rounded-md"
-                                                            />
-                                                        ) : (
-                                                            <ImageIcon className="h-10 w-10 text-gray-400" />
-                                                        )}
-                                                        <div>
-                                                            <p className="font-medium">{product?.name || 'Producto desconocido'}</p>
-                                                            <p className="text-sm text-gray-500">
-                                                                Cantidad: {detail.quantity}
+                                    <div className="bg-gray-50/75 rounded-md">
+                                        <ScrollArea className="h-48">
+                                            <div className="p-4 space-y-3">
+                                                {orderDetails.map((detail) => {
+                                                    const product = getProductInfo(detail.product_id);
+                                                    return (
+                                                        <div key={detail._id} className="flex justify-between items-center pb-2 last:pb-0">
+                                                            <div className="flex items-center space-x-3">
+                                                                {product?.image_url ? (
+                                                                    <img
+                                                                        src={product.image_url}
+                                                                        alt={product.name}
+                                                                        className="h-10 w-10 object-cover rounded-md"
+                                                                    />
+                                                                ) : (
+                                                                    <ImageIcon className="h-10 w-10 text-gray-400" />
+                                                                )}
+                                                                <div>
+                                                                    <p className="font-medium">{product?.name || 'Producto desconocido'}</p>
+                                                                    <p className="text-sm text-gray-500">
+                                                                        Cantidad: {detail.quantity}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <p className="font-medium">
+                                                                {formatPrice(detail.subtotal)}
                                                             </p>
                                                         </div>
-                                                    </div>
-                                                    <p className="font-medium">
-                                                        {formatPrice(detail.subtotal)}
-                                                    </p>
-                                                </div>
-                                            );
-                                        })}
-                                        <div className="border-t pt-3 flex justify-between">
+                                                    );
+                                                })}
+                                            </div>
+                                        </ScrollArea>
+                                        <div className="border-t p-4 flex justify-between rounded-b-md">
                                             <p className="font-medium">Total</p>
                                             <p className="font-medium">
                                                 {formatPrice(selectedOrder.total)}
