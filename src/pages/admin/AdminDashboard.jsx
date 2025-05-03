@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { apiClient } from '../../services/apiService';
 import { useAuth } from '../../context/AuthContext';
+import { useBusiness } from '../../hooks/useBusiness';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,9 +10,11 @@ import {
     ShoppingBag,
     Tag,
     Copy,
-    Check,
+    CheckCircle,
     TrendingUp,
-    BadgeDollarSign
+    BadgeDollarSign,
+    RefreshCw,
+    Loader2
 } from 'lucide-react';
 import { toast } from "sonner"
 
@@ -26,9 +28,12 @@ function AdminDashboard() {
         orders: 0
     });
 
-    const [inviteCode, setInviteCode] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [isCopied, setIsCopied] = useState(false);
+    const [copiedCode, setCopiedCode] = useState(null);
+
+    // Estado para almacenar el código de invitación
+    const [inviteCode, setInviteCode] = useState(null);
+
+    const { generateInviteCode } = useBusiness();
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -49,39 +54,37 @@ function AdminDashboard() {
         fetchStats();
     }, []);
 
-    const generateInviteCode = async () => {
-        setIsLoading(true);
-        try {
-            const response = await apiClient.post('/business/invite-code');
-            if (response.data && response.data.success) {
-                setInviteCode(response.data.data.code);
-                setIsCopied(false);
+    // Generar código de invitación
+    const handleGenerateInviteCode = () => {
+        generateInviteCode.mutate(
+            {},
+            {
+                onSuccess: (data) => {
+                    // Guardar el código generado en el estado
+                    setInviteCode(data.data);
+                    toast.success("Código generado", {
+                        description: "Se ha generado un nuevo código de invitación",
+                    });
+                },
+                onError: (error) => {
+                    toast.error("Error", {
+                        description: error.response?.data?.message || "No se pudo generar el código de invitación",
+                    });
+                }
             }
-        } catch (error) {
-            console.error('Error al generar código de invitación:', error);
-            toast({
-                title: "Error",
-                description: "No se pudo generar el código de invitación",
-                variant: "destructive"
-            });
-        } finally {
-            setIsLoading(false);
-        }
+        );
     };
 
-    const copyInviteCode = () => {
-        navigator.clipboard.writeText(inviteCode)
-            .then(() => {
-                setIsCopied(true);
-                toast({
-                    title: "Código copiado",
-                    description: "El código ha sido copiado al portapapeles",
-                });
-                setTimeout(() => setIsCopied(false), 3000);
-            })
-            .catch((error) => {
-                console.error('Error al copiar:', error);
-            });
+    // Copiar código al portapapeles
+    const copyToClipboard = (code) => {
+        navigator.clipboard.writeText(code);
+        setCopiedCode(code);
+        setTimeout(() => {
+            setCopiedCode(null);
+        }, 3000);
+        toast.success("Código copiado", {
+            description: "El código ha sido copiado al portapapeles",
+        });
     };
 
     return (
@@ -189,26 +192,39 @@ function AdminDashboard() {
                                 <div className="flex items-center mt-2">
                                     <div className="relative flex-1">
                                         <div className="flex items-center justify-between border rounded-md px-3 py-2 bg-gray-50">
-                                            <span className="font-mono text-lg tracking-wider">{inviteCode}</span>
+                                            <span className="font-mono text-lg tracking-wider">{inviteCode.code}</span>
                                             <Badge variant="outline" className="ml-2">Válido por 7 días</Badge>
                                         </div>
                                     </div>
                                     <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="ml-2"
-                                        onClick={copyInviteCode}
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => copyToClipboard(inviteCode.code)}
                                     >
-                                        {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                        {copiedCode === inviteCode.code ? (
+                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                            <Copy className="h-4 w-4" />
+                                        )}
                                     </Button>
                                 </div>
                             ) : (
                                 <Button
-                                    onClick={generateInviteCode}
-                                    disabled={isLoading}
+                                    onClick={handleGenerateInviteCode}
+                                    disabled={generateInviteCode.isPending}
                                     className="mt-2"
                                 >
-                                    {isLoading ? 'Generando...' : 'Generar Código de Invitación'}
+                                    {generateInviteCode.isPending ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Generando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <RefreshCw className="mr-2 h-4 w-4" />
+                                            Generar Código de Invitación
+                                        </>
+                                    )}
                                 </Button>
                             )}
                         </div>
