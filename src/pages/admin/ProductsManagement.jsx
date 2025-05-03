@@ -282,6 +282,7 @@ function ProductsManagement() {
                                 <Textarea
                                     id="description"
                                     name="description"
+                                    className="resize-none"
                                     placeholder="Describe tu producto"
                                     value={formData.description}
                                     onChange={handleFormChange}
@@ -378,6 +379,7 @@ function ProductsManagement() {
                                 <Textarea
                                     id="edit-description"
                                     name="description"
+                                    className="resize-none"
                                     placeholder="Describe tu producto"
                                     value={formData.description}
                                     onChange={handleFormChange}
