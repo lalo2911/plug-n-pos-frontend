@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../services/apiService';
-import { useAuth } from '../../context/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import {
     Building2,
     User,
+    Info,
     Phone,
     MapPin,
     Save,
@@ -25,7 +30,6 @@ import {
 import { toast } from "sonner"
 
 function BusinessSettings() {
-    const { user } = useAuth();
     const queryClient = useQueryClient();
 
     const [businessData, setBusinessData] = useState({
@@ -52,6 +56,10 @@ function BusinessSettings() {
                 name: business.name || '',
                 address: business.address || '',
                 phone: business.phone || '',
+                owner: business.owner.name || '',
+                email: business.owner.email || '',
+                noEmployees: business.employees?.length || 0,
+                noCodes: business.inviteCodes?.length || 0
             });
         }
     }, [business]);
@@ -176,7 +184,7 @@ function BusinessSettings() {
                                         <Textarea
                                             id="address"
                                             name="address"
-                                            className="pl-10 min-h-[80px]"
+                                            className="pl-10 min-h-[80px] resize-none"
                                             value={businessData.address}
                                             onChange={handleChange}
                                             placeholder="Dirección de tu negocio"
@@ -236,17 +244,19 @@ function BusinessSettings() {
                         <div className="space-y-4">
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Nombre</p>
-                                <p>{user?.name || 'No disponible'}</p>
+                                <p>{businessData?.owner || 'No disponible'}</p>
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Email</p>
-                                <p>{user?.email || 'No disponible'}</p>
+                                <p>{businessData?.email || 'No disponible'}</p>
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-gray-500">Rol</p>
-                                <Badge variant="outline" className="mt-1">
-                                    Propietario
-                                </Badge>
+                                <p className="text-sm font-medium text-gray-500">Empleados</p>
+                                <p>{businessData?.noEmployees || 'No disponible'}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-gray-500">Códigos</p>
+                                <p>{businessData?.noCodes || 'No disponible'}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -255,9 +265,24 @@ function BusinessSettings() {
                 {/* Códigos de invitación */}
                 <Card className="md:col-span-3">
                     <CardHeader className="mt-4">
-                        <CardTitle className="flex items-center">
-                            <Clipboard className="mr-2 h-5 w-5" />
+                        <CardTitle className="flex items-center gap-2">
+                            <Clipboard className="h-5 w-5" />
                             Códigos de Invitación
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button className="text-gray-500 hover:text-black">
+                                            <Info className="h-4 w-4" />
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs text-sm">
+                                        Los códigos de invitación permiten a tus empleados unirse a tu negocio.
+                                        Comparte un código con cada empleado y ellos deberán ingresarlo durante
+                                        el proceso de registro. Los códigos son válidos por 7 días y solo se
+                                        pueden usar una vez.
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </CardTitle>
                         <CardDescription>
                             Genera códigos para que tus empleados se unan al negocio
@@ -360,21 +385,6 @@ function BusinessSettings() {
                                         ))}
                                 </div>
                             )}
-                        </div>
-
-                        <div className="mt-6 p-4 bg-blue-50 rounded-md border border-blue-100">
-                            <h3 className="text-sm font-medium flex items-center text-blue-700">
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                ¿Cómo funcionan los códigos de invitación?
-                            </h3>
-                            <p className="mt-2 text-sm text-blue-700">
-                                Los códigos de invitación permiten a tus empleados unirse a tu negocio.
-                                Comparte un código con cada empleado y ellos deberán ingresarlo durante
-                                el proceso de registro. Los códigos son válidos por 7 días y solo se
-                                pueden usar una vez.
-                            </p>
                         </div>
                     </CardContent>
                 </Card>
