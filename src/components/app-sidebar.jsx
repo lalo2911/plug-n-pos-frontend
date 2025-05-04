@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { useBusiness } from '../hooks/useBusiness';
 import { Store, Package, ListOrdered, Users, Settings, LogOut, BarChart3, LucideTag } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from '@/components/ui/skeleton';
 import {
     Sidebar,
     SidebarContent,
@@ -17,6 +18,8 @@ import {
 
 export function AppSidebar() {
     const { currentUser, logout } = useAuth()
+
+    const { userBusiness } = useBusiness();
 
     const menuItems = [
         { icon: BarChart3, label: "Dashboard", path: "/admin" },
@@ -48,7 +51,11 @@ export function AppSidebar() {
                                     <Store className="size-4" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none ml-2">
-                                    <span className="font-semibold">Mi Negocio</span>
+                                    {userBusiness ? (
+                                        <span className="font-semibold text-xl">{userBusiness.name}</span>
+                                    ) : (
+                                        <Skeleton className="h-6 w-32" />
+                                    )}
                                 </div>
                             </div>
                         </SidebarMenuButton>
