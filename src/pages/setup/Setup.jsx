@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { apiClient } from '../../services/apiService';
+import { useSetup } from '../../hooks/useSetup';
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
@@ -13,11 +13,18 @@ import EmployeeSetup from './EmployeeSetup';
 function Setup() {
     const [selectedRole, setSelectedRole] = useState(null);
     const [step, setStep] = useState(1); // 1: Selección de rol, 2: Configuración específica
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { currentUser, updateUser } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
+    // Utilizamos el hook useSetup
+    const {
+        setOwner,
+        isSettingOwner,
+        setEmployee,
+        isSettingEmployee,
+    } = useSetup();
 
     // Redirigir si el usuario ya completó el setup
     useEffect(() => {
@@ -50,17 +57,16 @@ function Setup() {
             return;
         }
 
-        setIsSubmitting(true);
         try {
-            const response = await apiClient.post('/users/setup', {
+            const result = await setOwner.mutateAsync({
                 role: selectedRole,
                 businessName: businessName.trim()
             });
 
-            if (response.data && response.data.success) {
+            if (result && result.success) {
                 // Actualizar el usuario en el contexto
                 updateUser({
-                    ...response.data.data,
+                    ...result.data,
                     hasCompletedSetup: true
                 });
 
@@ -69,9 +75,7 @@ function Setup() {
             }
         } catch (error) {
             console.error('Error al completar la configuración:', error);
-            toast.error('Hubo un error al guardar tu configuración');
-        } finally {
-            setIsSubmitting(false);
+            toast.error(error.response?.data?.message || 'Hubo un error al guardar tu configuración');
         }
     };
 
@@ -82,16 +86,15 @@ function Setup() {
             return;
         }
 
-        setIsSubmitting(true);
         try {
-            const response = await apiClient.post('/users/join-business', {
+            const result = await setEmployee.mutateAsync({
                 inviteCode: inviteCode.trim()
             });
 
-            if (response.data && response.data.success) {
+            if (result && result.success) {
                 // Actualizar el usuario en el contexto
                 updateUser({
-                    ...response.data.data,
+                    ...result.data,
                     hasCompletedSetup: true
                 });
 
@@ -101,26 +104,24 @@ function Setup() {
         } catch (error) {
             console.error('Error al unirse al negocio:', error);
             toast.error(error.response?.data?.message || 'Error al procesar el código de invitación');
-        } finally {
-            setIsSubmitting(false);
         }
     };
 
     // Renderizar el contenido según el paso actual
     const renderContent = () => {
         if (step === 1) {
-            return <RoleSelection selectedRole={selectedRole} onRoleSelect={handleRoleSelect} />;
+            return <RoleSelection onRoleSelect={handleRoleSelect} />;
         } else if (step === 2 && selectedRole === 'owner') {
             return <OwnerSetup
                 onSubmit={handleOwnerSetup}
                 onBack={handleBack}
-                isSubmitting={isSubmitting}
+                isSubmitting={isSettingOwner}
             />;
         } else if (step === 2 && selectedRole === 'employee') {
             return <EmployeeSetup
                 onSubmit={handleEmployeeSetup}
                 onBack={handleBack}
-                isSubmitting={isSubmitting}
+                isSubmitting={isSettingEmployee}
             />;
         }
         return null;

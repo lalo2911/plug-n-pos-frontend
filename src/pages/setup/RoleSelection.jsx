@@ -1,7 +1,7 @@
 import { CardContent } from "@/components/ui/card";
 import { Store, Users } from "lucide-react";
 
-function RoleSelection({ selectedRole, onRoleSelect }) {
+function RoleSelection({ onRoleSelect }) {
     return (
         <CardContent className="space-y-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
