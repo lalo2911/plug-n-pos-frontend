@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useBusiness } from '../hooks/useBusiness';
-import { Store, Package, ListOrdered, Users, Settings, LogOut, BarChart3, LucideTag } from "lucide-react"
+import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from '@/components/ui/skeleton';
@@ -22,11 +22,12 @@ export function AppSidebar() {
     const { userBusiness } = useBusiness();
 
     const menuItems = [
-        { icon: BarChart3, label: "Dashboard", path: "/admin" },
+        { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
         { icon: LucideTag, label: "Categorías", path: "/admin/categories" },
         { icon: Package, label: "Productos", path: "/admin/products" },
         { icon: ListOrdered, label: "Pedidos", path: "/admin/orders" },
         { icon: Users, label: "Empleados", path: "/admin/employees" },
+        { icon: ChartNoAxesCombined, label: "Gráficas", path: "/admin/charts" },
         { icon: Settings, label: "Configuración", path: "/admin/settings" },
     ]
 

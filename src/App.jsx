@@ -28,6 +28,7 @@ import EmployeesManagement from './pages/admin/EmployeesManagement';
 import ProductsManagement from './pages/admin/ProductsManagement';
 import CategoriesManagement from './pages/admin/CategoriesManagement';
 import OrdersManagement from './pages/admin/OrdersManagement';
+import AdminCharts from './pages/admin/AdminCharts';
 import BusinessSettings from './pages/admin/BusinessSettings';
 
 // Configurar React Query
@@ -64,6 +65,7 @@ const router = createBrowserRouter(
         <Route path="products" element={<ProductsManagement />} />
         <Route path="categories" element={<CategoriesManagement />} />
         <Route path="orders" element={<OrdersManagement />} />
+        <Route path="charts" element={<AdminCharts />} />
         <Route path="settings" element={<BusinessSettings />} />
       </Route>
     </Route>
