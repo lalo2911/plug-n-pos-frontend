@@ -1,16 +1,14 @@
+import React, { useState } from 'react';
 import { useMetrics } from '../../hooks/useMetrics';
 import {
     Loader2,
     Activity,
-    BarChart3,
-    PieChart,
     TrendingUp,
-    Clock,
     Calendar,
     ArrowUp,
     ArrowDown
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     LineChart,
     Line,
@@ -28,39 +26,62 @@ import {
     Area,
     AreaChart
 } from 'recharts';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 
 // Colores para las gráficas
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff8042'];
 
 function AdminCharts() {
+    // Estado para limitar productos top
+    const [topProductsLimit, setTopProductsLimit] = useState(3);
+
+    // Estado para limitar los dias de la tendencia de ventas
+    const [salesTrendDays, setSalesTrendDays] = useState(6);
+
+    const [selectedTrendView, setSelectedTrendView] = useState('sales');
+
+    // Usar el hook con los parámetros
     const {
         totalSales,
         isTotalSalesLoading,
         isTotalSalesError,
+
         topSellingProducts,
         isTopSellingProductsLoading,
         isTopSellingProductsError,
+
         salesByCategory,
         isSalesByCategoryLoading,
         isSalesByCategoryError,
+
         salesTrend,
         isSalesTrendLoading,
         isSalesTrendError,
+
         salesByHour,
         isSalesByHourLoading,
         isSalesByHourError,
+
         monthlyComparison,
         isMonthlyComparisonLoading,
         isMonthlyComparisonError,
+
         salesByDayOfWeek,
         isSalesByDayOfWeekLoading,
-        isSalesByDayOfWeekError
-    } = useMetrics();
+        isSalesByDayOfWeekError,
 
-    const [selectedTrendView, setSelectedTrendView] = useState('sales');
+        // // Funciones de recarga
+        // refetchTopSellingProducts,
+        // refetchSalesTrend
+    } = useMetrics({
+        topProducts: {
+            limit: topProductsLimit
+        },
+        trendDays: {
+            days: salesTrendDays
+        }
+    });
 
     // Formatear fechas para ventas por tendencia
     const formattedSalesTrend = salesTrend?.map(item => ({
