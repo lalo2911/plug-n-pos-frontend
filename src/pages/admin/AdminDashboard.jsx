@@ -161,12 +161,12 @@ function AdminDashboard() {
             {/* Main Content Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Top Products */}
-                <Card>
+                <Card className="flex flex-col">
                     <CardHeader className="mt-4">
                         <CardTitle className="text-xl">Top Productos</CardTitle>
                         <CardDescription>Los productos más vendidos este mes</CardDescription>
                     </CardHeader>
-                    <CardContent className="mb-4">
+                    <CardContent className="mb-4 flex-grow">
                         <div className="space-y-4">
                             {topProducts.slice(0, 5).map((product, index) => (
                                 <div key={product._id} className="flex items-center justify-between">
@@ -192,12 +192,12 @@ function AdminDashboard() {
                 </Card>
 
                 {/* Invite Employees Section */}
-                <Card>
+                <Card className="flex flex-col">
                     <CardHeader className="mt-4">
                         <CardTitle className="text-xl">Invitar Empleados</CardTitle>
                         <CardDescription>Genera un código único para que tus empleados se unan a tu negocio</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4 mb-4">
+                    <CardContent className="flex-grow flex flex-col justify-center mb-4">
                         <div className="flex flex-col space-y-2">
                             <span className="text-sm text-gray-500">Este código será válido por 7 días y solo puede ser usado una vez.</span>
 
