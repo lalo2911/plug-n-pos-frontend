@@ -23,11 +23,11 @@ export function AppSidebar() {
 
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
+        { icon: ChartNoAxesCombined, label: "Gráficas", path: "/admin/charts" },
         { icon: LucideTag, label: "Categorías", path: "/admin/categories" },
         { icon: Package, label: "Productos", path: "/admin/products" },
         { icon: ListOrdered, label: "Pedidos", path: "/admin/orders" },
         { icon: Users, label: "Empleados", path: "/admin/employees" },
-        { icon: ChartNoAxesCombined, label: "Gráficas", path: "/admin/charts" },
         { icon: Settings, label: "Configuración", path: "/admin/settings" },
     ]
 

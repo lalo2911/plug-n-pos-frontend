@@ -4,8 +4,9 @@ import { businessService } from '../services/metricService';
 export function useMetrics(options = {}) {
     const {
         filters = {}, // Filtros globales (startDate, endDate)
-        topProducts = {}, // Opciones específicas para productos top
-        trendDays = {}, // Dias que muestra salesTrend
+        filtersPerQuery = {}, // Filtros específicos por query
+        topProducts = {},
+        trendDays = {},
         enabled = {
             dashboard: true,
             totalSales: true,
@@ -18,67 +19,63 @@ export function useMetrics(options = {}) {
         }
     } = options;
 
-    // Preparar parámetros globales
+    // Filtros generales
     const globalParams = {
         startDate: filters.startDate || null,
         endDate: filters.endDate || null,
     };
 
-    // Obtener el resumen del dashboard
+    // Parámetros por cada consulta (combinan global + específicos)
+    const totalSalesParams = { ...globalParams, ...(filtersPerQuery.totalSales || {}) };
+    const topProductsParams = { ...globalParams, ...(filtersPerQuery.topSellingProducts || {}), limit: topProducts.limit };
+    const salesByCategoryParams = { ...globalParams, ...(filtersPerQuery.salesByCategory || {}) };
+    const salesTrendParams = { ...globalParams, ...(filtersPerQuery.salesTrend || {}), days: trendDays.days };
+    const salesByHourParams = { ...globalParams, ...(filtersPerQuery.salesByHour || {}) };
+    const salesByDayParams = { ...globalParams, ...(filtersPerQuery.salesByDayOfWeek || {}) };
+
+    // Queries
     const dashboardSummaryQuery = useQuery({
         queryKey: ['metrics', 'dashboard'],
         queryFn: () => businessService.getDashboardSummary(),
-        select: (data) => data.data, // Extrae el objeto data de la respuesta
+        select: (data) => data.data,
         enabled: enabled.dashboard,
     });
 
-    // Obtener ventas totales
     const totalSalesQuery = useQuery({
-        queryKey: ['metrics', 'sales', globalParams],
-        queryFn: () => businessService.getTotalSales(globalParams),
+        queryKey: ['metrics', 'sales', totalSalesParams],
+        queryFn: () => businessService.getTotalSales(totalSalesParams),
         select: (data) => data.data,
         enabled: enabled.totalSales,
     });
 
-    // Obtener productos más vendidos
     const topSellingProductsQuery = useQuery({
-        queryKey: ['metrics', 'top-products', { ...globalParams, limit: topProducts.limit }],
-        queryFn: () => businessService.getTopSellingProducts({
-            ...globalParams,
-            limit: topProducts.limit
-        }),
+        queryKey: ['metrics', 'top-products', topProductsParams],
+        queryFn: () => businessService.getTopSellingProducts(topProductsParams),
         select: (data) => data.data,
         enabled: enabled.topSellingProducts,
     });
 
-    // Obtener ventas por categoría
     const salesByCategoryQuery = useQuery({
-        queryKey: ['metrics', 'sales-by-category', globalParams],
-        queryFn: () => businessService.getSalesByCategory(globalParams),
+        queryKey: ['metrics', 'sales-by-category', salesByCategoryParams],
+        queryFn: () => businessService.getSalesByCategory(salesByCategoryParams),
         select: (data) => data.data,
         enabled: enabled.salesByCategory,
     });
 
-    // Obtener tendencia de ventas
     const salesTrendQuery = useQuery({
-        queryKey: ['metrics', 'sales-trend', {...globalParams, days: trendDays.days }],
-        queryFn: () => businessService.getSalesTrend({
-            ...globalParams,
-            days: trendDays.days
-        }),
+        queryKey: ['metrics', 'sales-trend', salesTrendParams],
+        queryFn: () => businessService.getSalesTrend(salesTrendParams),
         select: (data) => data.data,
         enabled: enabled.salesTrend,
     });
 
-    // Obtener ventas por hora del día
     const salesByHourQuery = useQuery({
-        queryKey: ['metrics', 'sales-by-hour', globalParams],
-        queryFn: () => businessService.getSalesByHourOfDay(globalParams),
+        queryKey: ['metrics', 'sales-by-hour', salesByHourParams],
+        queryFn: () => businessService.getSalesByHourOfDay(salesByHourParams),
         select: (data) => data.data,
         enabled: enabled.salesByHour,
     });
 
-    // Obtener comparación mensual
     const monthlyComparisonQuery = useQuery({
         queryKey: ['metrics', 'monthly-comparison'],
         queryFn: () => businessService.getMonthlyComparison(),
@@ -86,14 +83,14 @@ export function useMetrics(options = {}) {
         enabled: enabled.monthlyComparison,
     });
 
-    // Obtener ventas por día de la semana
     const salesByDayOfWeekQuery = useQuery({
-        queryKey: ['metrics', 'sales-by-day', globalParams],
-        queryFn: () => businessService.getSalesByDayOfWeek(globalParams),
+        queryKey: ['metrics', 'sales-by-day', salesByDayParams],
+        queryFn: () => businessService.getSalesByDayOfWeek(salesByDayParams),
         select: (data) => data.data,
         enabled: enabled.salesByDayOfWeek,
     });
 
+    // Retorno estructurado
     return {
         // Dashboard summary
         dashboardSummary: dashboardSummaryQuery.data,

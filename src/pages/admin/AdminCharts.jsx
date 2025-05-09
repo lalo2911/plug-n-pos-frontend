@@ -26,7 +26,13 @@ import {
     Area,
     AreaChart
 } from 'recharts';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart"
 import { cn } from '@/lib/utils';
 
 // Colores para las gráficas
@@ -39,7 +45,11 @@ function AdminCharts() {
     // Estado para limitar los dias de la tendencia de ventas
     const [salesTrendDays, setSalesTrendDays] = useState(6);
 
-    const [selectedTrendView, setSelectedTrendView] = useState('sales');
+    // Obtener fecha de hoy solo una vez (cuando se monta el componente)
+    const [todayDate] = useState(() => {
+        const today = new Date();
+        return today.toISOString().split('T')[0]; // formato 'YYYY-MM-DD'
+    });
 
     // Usar el hook con los parámetros
     const {
@@ -75,6 +85,12 @@ function AdminCharts() {
         // refetchTopSellingProducts,
         // refetchSalesTrend
     } = useMetrics({
+        filtersPerQuery: {
+            salesByHour: {
+                startDate: todayDate,
+                endDate: todayDate
+            }
+        },
         topProducts: {
             limit: topProductsLimit
         },
@@ -197,12 +213,6 @@ function AdminCharts() {
                     <CardHeader className="mt-4">
                         <CardTitle>Tendencia de Ventas</CardTitle>
                         <CardDescription>Últimos 7 días</CardDescription>
-                        <Tabs defaultValue="sales" className="w-full">
-                            <TabsList className="grid grid-cols-2 w-64">
-                                <TabsTrigger value="sales" onClick={() => setSelectedTrendView('sales')}>Ventas</TabsTrigger>
-                                <TabsTrigger value="orders" onClick={() => setSelectedTrendView('orders')}>Pedidos</TabsTrigger>
-                            </TabsList>
-                        </Tabs>
                     </CardHeader>
                     <CardContent className="h-72 mb-4">
                         {isSalesTrendLoading ? (
@@ -214,26 +224,52 @@ function AdminCharts() {
                                 <p className="text-red-500">Error al cargar tendencia de ventas</p>
                             </div>
                         ) : (
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={formattedSalesTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <ChartContainer
+                                className="h-full w-full"
+                                config={{
+                                    totalSales: {
+                                        label: "Ventas",
+                                        color: "var(--chart-2)",
+                                    },
+                                    orderCount: {
+                                        label: "Pedidos",
+                                        color: "var(--chart-1)",
+                                    },
+                                }}>
+                                <AreaChart accessibilityLayer data={formattedSalesTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="date" />
-                                    <YAxis />
-                                    <Tooltip
-                                        formatter={(value) => selectedTrendView === 'sales' ?
-                                            [`$${value.toLocaleString('es-MX')}`, 'Ventas'] :
-                                            [value, 'Pedidos']}
-                                        labelFormatter={(label) => `Fecha: ${label}`}
+                                    <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
+                                    <YAxis
+                                        yAxisId="left"
+                                        orientation="left"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        tickFormatter={(value) => `$${value.toLocaleString("es-MX")}`}
+                                    />
+                                    <YAxis yAxisId="right" orientation="right" tickLine={false} axisLine={false} tickMargin={8} />
+                                    <ChartTooltip
+                                        content={<ChartTooltipContent indicator="line" labelFormatter={(label) => `Fecha: ${label}`} />}
                                     />
                                     <Area
+                                        yAxisId="left"
+                                        dataKey="totalSales"
                                         type="monotone"
-                                        dataKey={selectedTrendView === 'sales' ? 'totalSales' : 'orderCount'}
-                                        stroke="#8884d8"
-                                        fill="#8884d8"
-                                        fillOpacity={0.3}
+                                        fill="var(--color-totalSales)"
+                                        fillOpacity={0.4}
+                                        stroke="var(--color-totalSales)"
                                     />
+                                    <Area
+                                        yAxisId="right"
+                                        dataKey="orderCount"
+                                        type="monotone"
+                                        fill="var(--color-orderCount)"
+                                        fillOpacity={0.4}
+                                        stroke="var(--color-orderCount)"
+                                    />
+                                    <ChartLegend content={<ChartLegendContent />} />
                                 </AreaChart>
-                            </ResponsiveContainer>
+                            </ChartContainer>
                         )}
                     </CardContent>
                 </Card>
