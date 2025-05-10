@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { businessService } from '../services/metricService';
+import { metricService } from '../services/metricService';
 
 export function useMetrics(options = {}) {
     const {
@@ -36,56 +36,56 @@ export function useMetrics(options = {}) {
     // Queries
     const dashboardSummaryQuery = useQuery({
         queryKey: ['metrics', 'dashboard'],
-        queryFn: () => businessService.getDashboardSummary(),
+        queryFn: () => metricService.getDashboardSummary(),
         select: (data) => data.data,
         enabled: enabled.dashboard,
     });
 
     const totalSalesQuery = useQuery({
         queryKey: ['metrics', 'sales', totalSalesParams],
-        queryFn: () => businessService.getTotalSales(totalSalesParams),
+        queryFn: () => metricService.getTotalSales(totalSalesParams),
         select: (data) => data.data,
         enabled: enabled.totalSales,
     });
 
     const topSellingProductsQuery = useQuery({
         queryKey: ['metrics', 'top-products', topProductsParams],
-        queryFn: () => businessService.getTopSellingProducts(topProductsParams),
+        queryFn: () => metricService.getTopSellingProducts(topProductsParams),
         select: (data) => data.data,
         enabled: enabled.topSellingProducts,
     });
 
     const salesByCategoryQuery = useQuery({
         queryKey: ['metrics', 'sales-by-category', salesByCategoryParams],
-        queryFn: () => businessService.getSalesByCategory(salesByCategoryParams),
+        queryFn: () => metricService.getSalesByCategory(salesByCategoryParams),
         select: (data) => data.data,
         enabled: enabled.salesByCategory,
     });
 
     const salesTrendQuery = useQuery({
         queryKey: ['metrics', 'sales-trend', salesTrendParams],
-        queryFn: () => businessService.getSalesTrend(salesTrendParams),
+        queryFn: () => metricService.getSalesTrend(salesTrendParams),
         select: (data) => data.data,
         enabled: enabled.salesTrend,
     });
 
     const salesByHourQuery = useQuery({
         queryKey: ['metrics', 'sales-by-hour', salesByHourParams],
-        queryFn: () => businessService.getSalesByHourOfDay(salesByHourParams),
+        queryFn: () => metricService.getSalesByHourOfDay(salesByHourParams),
         select: (data) => data.data,
         enabled: enabled.salesByHour,
     });
 
     const monthlyComparisonQuery = useQuery({
         queryKey: ['metrics', 'monthly-comparison'],
-        queryFn: () => businessService.getMonthlyComparison(),
+        queryFn: () => metricService.getMonthlyComparison(),
         select: (data) => data.data,
         enabled: enabled.monthlyComparison,
     });
 
     const salesByDayOfWeekQuery = useQuery({
         queryKey: ['metrics', 'sales-by-day', salesByDayParams],
-        queryFn: () => businessService.getSalesByDayOfWeek(salesByDayParams),
+        queryFn: () => metricService.getSalesByDayOfWeek(salesByDayParams),
         select: (data) => data.data,
         enabled: enabled.salesByDayOfWeek,
     });

@@ -1,7 +1,7 @@
 import { apiClient } from './apiService';
 import queryString from 'query-string';
 
-export const businessService = {
+export const metricService = {
     // Función auxiliar para manejar parámetros
     buildUrlWithParams: (endpoint, params = {}) => {
         // Filtra los parámetros que tienen valores (ignora null, undefined, '')
@@ -26,31 +26,31 @@ export const businessService = {
     },
 
     getTotalSales: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/sales', params);
+        const url = metricService.buildUrlWithParams('/metrics/sales', params);
         const response = await apiClient.get(url);
         return response.data;
     },
 
     getTopSellingProducts: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/top-products', params);
+        const url = metricService.buildUrlWithParams('/metrics/top-products', params);
         const response = await apiClient.get(url);
         return response.data;
     },
 
     getSalesByCategory: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/sales-by-category', params);
+        const url = metricService.buildUrlWithParams('/metrics/sales-by-category', params);
         const response = await apiClient.get(url);
         return response.data;
     },
 
     getSalesTrend: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/sales-trend', params);
+        const url = metricService.buildUrlWithParams('/metrics/sales-trend', params);
         const response = await apiClient.get(url);
         return response.data;
     },
 
     getSalesByHourOfDay: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/sales-by-hour', params);
+        const url = metricService.buildUrlWithParams('/metrics/sales-by-hour', params);
         const response = await apiClient.get(url);
         return response.data;
     },
@@ -61,7 +61,7 @@ export const businessService = {
     },
 
     getSalesByDayOfWeek: async (params = {}) => {
-        const url = businessService.buildUrlWithParams('/metrics/sales-by-day', params);
+        const url = metricService.buildUrlWithParams('/metrics/sales-by-day', params);
         const response = await apiClient.get(url);
         return response.data;
     },
