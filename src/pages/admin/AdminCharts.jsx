@@ -48,7 +48,7 @@ function AdminCharts() {
     // Obtener fecha de hoy solo una vez (cuando se monta el componente)
     const [todayDate] = useState(() => {
         const today = new Date();
-        return today.toISOString().split('T')[0]; // formato 'YYYY-MM-DD'
+        return today.toISOString();
     });
 
     // Usar el hook con los parámetros
@@ -102,8 +102,13 @@ function AdminCharts() {
     // Formatear fechas para ventas por tendencia
     const formattedSalesTrend = salesTrend?.map(item => ({
         ...item,
-        date: new Date(item.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' })
+        date: new Date(item.date).toLocaleDateString('es-MX', {
+            day: '2-digit',
+            month: '2-digit',
+            timeZone: 'America/Mexico_City'
+        })
     }));
+
 
     // Formatear horas para ventas por hora
     const formattedSalesByHour = salesByHour?.map(item => ({
@@ -236,7 +241,7 @@ function AdminCharts() {
                                         color: "var(--chart-1)",
                                     },
                                 }}>
-                                <AreaChart accessibilityLayer data={formattedSalesTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                <LineChart accessibilityLayer data={formattedSalesTrend} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
                                     <YAxis
@@ -251,24 +256,24 @@ function AdminCharts() {
                                     <ChartTooltip
                                         content={<ChartTooltipContent indicator="line" labelFormatter={(label) => `Fecha: ${label}`} />}
                                     />
-                                    <Area
+                                    <Line
                                         yAxisId="left"
                                         dataKey="totalSales"
                                         type="monotone"
-                                        fill="var(--color-totalSales)"
-                                        fillOpacity={0.4}
                                         stroke="var(--color-totalSales)"
+                                        strokeWidth={1}
+                                        dot={false}
                                     />
-                                    <Area
+                                    <Line
                                         yAxisId="right"
                                         dataKey="orderCount"
                                         type="monotone"
-                                        fill="var(--color-orderCount)"
-                                        fillOpacity={0.4}
                                         stroke="var(--color-orderCount)"
+                                        strokeWidth={1}
+                                        dot={false}
                                     />
                                     <ChartLegend content={<ChartLegendContent />} />
-                                </AreaChart>
+                                </LineChart>
                             </ChartContainer>
                         )}
                     </CardContent>
