@@ -19,12 +19,9 @@ export function useDashboardData({
         salesTrendDays
     });
 
-    // Obtener fecha de hoy en la zona horaria local (del navegador)
-    // No necesitamos ajustar a UTC, ya que el backend hará los cálculos adecuados
     const [todayDates] = useState(() => {
         const today = new Date();
 
-        // La fecha tal como es - el backend se encargará de interpretarla en la zona horaria correcta
         return {
             startDate: today.toISOString(),
             endDate: today.toISOString()
