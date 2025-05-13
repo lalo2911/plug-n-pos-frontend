@@ -75,16 +75,6 @@ function SalesTrendChart({ data, isLoading, isError }) {
                         axisLine={false}
                         tickMargin={8}
                     />
-                    <ChartTooltip
-                        content={<ChartTooltipContent
-                            indicator="line"
-                            labelFormatter={(_, payload) => {
-                                // payload es un array de elementos, accede al primero
-                                const originalDate = payload?.[0]?.payload?.date;
-                                return formatLongDate(originalDate);
-                            }}
-                        />}
-                    />
                     <Line
                         yAxisId="left"
                         dataKey="totalSales"
@@ -100,6 +90,16 @@ function SalesTrendChart({ data, isLoading, isError }) {
                         stroke="var(--color-orderCount)"
                         strokeWidth={1}
                         dot={false}
+                    />
+                    <ChartTooltip
+                        content={<ChartTooltipContent
+                            indicator="line"
+                            labelFormatter={(_, payload) => {
+                                // payload es un array de elementos, accede al primero
+                                const originalDate = payload?.[0]?.payload?.date;
+                                return formatLongDate(originalDate);
+                            }}
+                        />}
                     />
                     <ChartLegend content={<ChartLegendContent />} />
                 </LineChart>
