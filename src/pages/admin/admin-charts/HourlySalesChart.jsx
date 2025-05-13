@@ -1,13 +1,15 @@
 import {
-    LineChart,
-    Line,
+    AreaChart,
+    Area,
     XAxis,
     YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer
+    CartesianGrid
 } from 'recharts';
+import {
+    ChartContainer as RechartContainer,
+    ChartTooltip,
+    ChartTooltipContent
+} from "@/components/ui/chart";
 import ChartContainer from './ChartContainer';
 import { formatHour } from '../../../utils/formatters';
 
@@ -20,6 +22,12 @@ import { formatHour } from '../../../utils/formatters';
  * @param {boolean} props.isError - Indica si hubo un error al cargar los datos
  */
 function HourlySalesChart({ data, isLoading, isError }) {
+    const chartConfig = {
+        totalSales: {
+            label: "Ventas"
+        }
+    }
+
     // Formatear horas para la gráfica
     const formattedData = data?.map(item => ({
         ...item,
@@ -34,25 +42,33 @@ function HourlySalesChart({ data, isLoading, isError }) {
             isError={isError}
             errorMessage="Error al cargar datos por hora"
         >
-            <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={formattedData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hourFormatted" />
-                    <YAxis />
-                    <Tooltip
-                        formatter={(value) => [`$${value.toLocaleString('es-MX')}`, 'Ventas']}
-                        labelFormatter={(label) => `Hora: ${label}`}
+            <RechartContainer
+                className="h-full w-full"
+                config={chartConfig}
+            >
+                <AreaChart accessibilityLayer data={formattedData}>
+                    <CartesianGrid />
+                    <XAxis
+                        dataKey="hourFormatted"
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
                     />
-                    <Legend />
-                    <Line
-                        type="monotone"
+                    <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                    />
+                    <Area
                         dataKey="totalSales"
-                        name="Ventas"
-                        stroke="#8884d8"
-                        activeDot={{ r: 8 }}
+                        type="monotone"
+                        fill="#ffa733"
+                        fillOpacity={0.4}
+                        stroke="#ffa733"
                     />
-                </LineChart>
-            </ResponsiveContainer>
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                </AreaChart>
+            </RechartContainer>
         </ChartContainer>
     );
 }
