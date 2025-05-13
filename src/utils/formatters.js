@@ -25,6 +25,20 @@ export const formatShortDate = (dateString) => {
 };
 
 /**
+ * Formatea una fecha ISO a formato largo con día, número y mes en español
+ * @param {string} dateString - Fecha en formato ISO
+ * @returns {string} - Fecha formateada como "Lunes 28 de Julio"
+ */
+export const formatLongDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('es-MX', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        timeZone: 'America/Mexico_City'
+    }).replace(/^\w/, c => c.toUpperCase()); // Capitaliza el primer carácter
+};
+
+/**
  * Formatea una hora a formato de 24 horas
  * @param {number} hour - Hora (0-23)
  * @returns {string} - Hora formateada (HH:00)
