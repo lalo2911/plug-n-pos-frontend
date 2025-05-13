@@ -13,7 +13,7 @@ import {
     ChartTooltipContent
 } from "@/components/ui/chart";
 import ChartContainer from './ChartContainer';
-import { formatShortDate } from '../../../utils/formatters';
+import { formatShortDate, formatLongDate } from '../../../utils/formatters';
 
 /**
  * Componente de gráfica de tendencia de ventas
@@ -24,10 +24,21 @@ import { formatShortDate } from '../../../utils/formatters';
  * @param {boolean} props.isError - Indica si hubo un error al cargar los datos
  */
 function SalesTrendChart({ data, isLoading, isError }) {
+    const chartConfig = {
+        totalSales: {
+            label: "Ventas",
+            color: "var(--chart-2)",
+        },
+        orderCount: {
+            label: "Pedidos",
+            color: "var(--chart-1)",
+        },
+    }
+
     // Formatear fechas para la gráfica
     const formattedData = data?.map(item => ({
         ...item,
-        date: formatShortDate(item.date)
+        dateFormatted: formatShortDate(item.date)
     })) || [];
 
     return (
@@ -40,16 +51,7 @@ function SalesTrendChart({ data, isLoading, isError }) {
         >
             <RechartContainer
                 className="h-full w-full"
-                config={{
-                    totalSales: {
-                        label: "Ventas",
-                        color: "var(--chart-2)",
-                    },
-                    orderCount: {
-                        label: "Pedidos",
-                        color: "var(--chart-1)",
-                    },
-                }}
+                config={chartConfig}
             >
                 <LineChart
                     accessibilityLayer
@@ -57,7 +59,7 @@ function SalesTrendChart({ data, isLoading, isError }) {
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
+                    <XAxis dataKey="dateFormatted" tickLine={false} axisLine={false} tickMargin={8} />
                     <YAxis
                         yAxisId="left"
                         orientation="left"
@@ -76,7 +78,11 @@ function SalesTrendChart({ data, isLoading, isError }) {
                     <ChartTooltip
                         content={<ChartTooltipContent
                             indicator="line"
-                            labelFormatter={(label) => `Fecha: ${label}`}
+                            labelFormatter={(_, payload) => {
+                                // payload es un array de elementos, accede al primero
+                                const originalDate = payload?.[0]?.payload?.date;
+                                return formatLongDate(originalDate);
+                            }}
                         />}
                     />
                     <Line
