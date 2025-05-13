@@ -2,12 +2,13 @@ import {
     BarChart,
     Bar,
     XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    Legend,
-    ResponsiveContainer
+    CartesianGrid
 } from 'recharts';
+import {
+    ChartContainer as RechartContainer,
+    ChartTooltip,
+    ChartTooltipContent
+} from "@/components/ui/chart";
 import ChartContainer from './ChartContainer';
 
 /**
@@ -19,8 +20,17 @@ import ChartContainer from './ChartContainer';
  * @param {boolean} props.isError - Indica si hubo un error al cargar los datos
  */
 function WeekdaySalesChart({ data, isLoading, isError }) {
-    // Ordenar los datos por número de día
-    const sortedData = data?.sort((a, b) => a.dayNumber - b.dayNumber) || [];
+    const chartConfig = {
+        totalSales: {
+            label: "Ventas",
+        }
+    }
+
+    // Reordenar para que Lunes sea el primero (día 2)
+    const reorderedData = [...(data || [])].sort((a, b) => {
+        const getCustomOrder = (n) => (n === 1 ? 7 : n - 1);
+        return getCustomOrder(a.dayNumber) - getCustomOrder(b.dayNumber);
+    });
 
     return (
         <ChartContainer
@@ -30,19 +40,25 @@ function WeekdaySalesChart({ data, isLoading, isError }) {
             isError={isError}
             errorMessage="Error al cargar datos por día"
         >
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={sortedData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip
-                        formatter={(value) => [`$${value.toLocaleString('es-MX')}`, 'Ventas']}
-                        labelFormatter={(label) => `Día: ${label}`}
+            <RechartContainer
+                className="h-full w-full"
+                config={chartConfig}
+            >
+                <BarChart accessibilityLayer data={reorderedData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                        dataKey="day"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        tickFormatter={(value) => value.slice(0, 3)}
                     />
-                    <Legend />
-                    <Bar dataKey="totalSales" name="Ventas" fill="#8884d8" />
+                    <ChartTooltip
+                        content={<ChartTooltipContent />}
+                    />
+                    <Bar dataKey="totalSales" fill="#8884d8" radius={8} />
                 </BarChart>
-            </ResponsiveContainer>
+            </RechartContainer>
         </ChartContainer>
     );
 }
