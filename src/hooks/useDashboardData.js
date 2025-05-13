@@ -11,7 +11,8 @@ import { useMetrics } from './useMetrics';
  */
 export function useDashboardData({
     topProductsLimit = 3,
-    salesTrendDays = 6
+    salesTrendDays = 6,
+    enabled = {}
 } = {}) {
     // Estado para controlar los filtros
     const [filters, setFilters] = useState({
@@ -30,6 +31,7 @@ export function useDashboardData({
 
     // Usar el hook de métricas con los parámetros
     const metricsData = useMetrics({
+        enabled,
         filtersPerQuery: {
             salesByHour: {
                 startDate: todayDates.startDate,

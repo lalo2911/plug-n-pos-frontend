@@ -7,17 +7,23 @@ export function useMetrics(options = {}) {
         filtersPerQuery = {}, // Filtros específicos por query
         topProducts = {},
         trendDays = {},
-        enabled = {
-            dashboard: true,
-            totalSales: true,
-            topSellingProducts: true,
-            salesByCategory: true,
-            salesTrend: true,
-            salesByHour: true,
-            monthlyComparison: true,
-            salesByDayOfWeek: true,
-        }
+        enabled: userEnabled = {}
     } = options;
+
+    const defaultEnabled = {
+        dashboard: false,
+        totalSales: false,
+        topSellingProducts: false,
+        salesByCategory: false,
+        salesTrend: false,
+        salesByHour: false,
+        monthlyComparison: false,
+        salesByDayOfWeek: false,
+    };
+
+    const enabled = { ...defaultEnabled, ...userEnabled };
+
+    console.log("Merged enabled flags:", enabled);
 
     // Filtros generales
     const globalParams = {

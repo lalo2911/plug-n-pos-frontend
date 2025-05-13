@@ -30,7 +30,11 @@ function AdminDashboard() {
         isDashboardLoading,
         isDashboardError,
         dashboardError
-    } = useMetrics();
+    } = useMetrics({
+        enabled: {
+            dashboard: true
+        }
+    });
 
     // Formatear moneda
     const formatCurrency = (amount) => {

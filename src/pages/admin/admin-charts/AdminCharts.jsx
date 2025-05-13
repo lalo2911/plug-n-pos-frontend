@@ -51,6 +51,15 @@ function AdminCharts() {
         isMonthlyComparisonError,
         isSalesByDayOfWeekError,
     } = useDashboardData({
+        enabled: {
+            totalSales: true,
+            topSellingProducts: true,
+            salesByCategory: true,
+            salesTrend: true,
+            salesByHour: true,
+            monthlyComparison: true,
+            salesByDayOfWeek: true,
+        },
         topProductsLimit,
         salesTrendDays
     });
