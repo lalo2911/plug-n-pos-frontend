@@ -32,7 +32,6 @@ function TopSellingProducts({ products, isLoading, isError, limit = 3 }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {products?.slice(0, limit).map((product, index) => (
                             <Card key={product._id} className={cn(
-                                "border-0 shadow-md",
                                 index === 0 ? "bg-amber-50" : index === 1 ? "bg-gray-50" : "bg-orange-50"
                             )}>
                                 <CardHeader className="pb-2 mt-4">
