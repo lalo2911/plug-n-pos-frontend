@@ -19,18 +19,24 @@ export function useDashboardData({
         salesTrendDays
     });
 
-    // Obtener fecha de hoy solo una vez (cuando se monta el componente)
-    const [todayDate] = useState(() => {
+    // Obtener fecha de hoy en la zona horaria local (del navegador)
+    // No necesitamos ajustar a UTC, ya que el backend hará los cálculos adecuados
+    const [todayDates] = useState(() => {
         const today = new Date();
-        return today.toISOString();
+
+        // La fecha tal como es - el backend se encargará de interpretarla en la zona horaria correcta
+        return {
+            startDate: today.toISOString(),
+            endDate: today.toISOString()
+        };
     });
 
     // Usar el hook de métricas con los parámetros
     const metricsData = useMetrics({
         filtersPerQuery: {
             salesByHour: {
-                startDate: todayDate,
-                endDate: todayDate
+                startDate: todayDates.startDate,
+                endDate: todayDates.endDate
             }
         },
         topProducts: {
