@@ -23,7 +23,7 @@ import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
 import NotFound from './pages/NotFound';
-import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminDashboard from './pages/admin/admin-dashboard/AdminDashboard';
 import EmployeesManagement from './pages/admin/EmployeesManagement';
 import ProductsManagement from './pages/admin/ProductsManagement';
 import CategoriesManagement from './pages/admin/CategoriesManagement';
