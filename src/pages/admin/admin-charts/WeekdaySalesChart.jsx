@@ -22,7 +22,7 @@ import ChartContainer from './ChartContainer';
 function WeekdaySalesChart({ data, isLoading, isError }) {
     const chartConfig = {
         totalSales: {
-            label: "Ventas",
+            label: "Ganancias",
         }
     }
 

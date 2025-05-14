@@ -26,7 +26,7 @@ import { formatShortDate, formatLongDate } from '../../../utils/formatters';
 function SalesTrendChart({ data, isLoading, isError }) {
     const chartConfig = {
         totalSales: {
-            label: "Ventas",
+            label: "Ganancias",
             color: "var(--chart-2)",
         },
         orderCount: {

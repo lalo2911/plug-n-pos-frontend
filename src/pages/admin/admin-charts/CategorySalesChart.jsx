@@ -25,7 +25,7 @@ const getCategoryColor = (index) => COLORS[index % COLORS.length];
 // Genera config dinámico para shadcn/ui
 const generateChartConfig = (data) => {
     const config = {
-        totalSales: { label: "Ventas" },
+        totalSales: { label: "Ganancias" },
     };
 
     data.forEach((item, index) => {

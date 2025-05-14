@@ -24,7 +24,7 @@ import { formatHour } from '../../../utils/formatters';
 function HourlySalesChart({ data, isLoading, isError }) {
     const chartConfig = {
         totalSales: {
-            label: "Ventas"
+            label: "Ganancias"
         }
     }
 
