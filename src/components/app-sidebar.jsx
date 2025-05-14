@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useBusiness } from '../hooks/useBusiness';
-import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag } from "lucide-react"
+import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag, ChevronsUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,12 +14,20 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
+    useSidebar
 } from "@/components/ui/sidebar"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function AppSidebar() {
     const { currentUser, logout } = useAuth()
-
     const { userBusiness } = useBusiness();
+    const { isMobile } = useSidebar();
 
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -42,7 +50,7 @@ export function AppSidebar() {
     }
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -67,9 +75,9 @@ export function AppSidebar() {
                 <SidebarMenu className="select-none">
                     {menuItems.map((item) => (
                         <SidebarMenuItem key={item.path}>
-                            <SidebarMenuButton asChild>
-                                <NavLink to={item.path} className={({ isActive }) => (isActive ? "data-[active=true]" : "")}>
-                                    <item.icon className="size-4" />
+                            <SidebarMenuButton asChild tooltip={item.label}>
+                                <NavLink to={item.path} >
+                                    <item.icon />
                                     <span>{item.label}</span>
                                 </NavLink>
                             </SidebarMenuButton>
@@ -78,22 +86,51 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
-                <div className="p-2 select-none">
-                    <div className="flex items-center p-2">
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
-                            <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
-                        </Avatar>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium">{currentUser?.name}</p>
-                            <p className="text-xs text-muted-foreground">Owner</p>
-                        </div>
-                    </div>
-                    {/* <Button variant="outline" className="w-full mt-2 text-destructive hover:bg-destructive/10" onClick={logout}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Cerrar sesión
-                    </Button> */}
-                </div>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton
+                                    size="lg"
+                                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                    tooltip={currentUser?.name || "Usuario"}
+                                >
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
+                                        <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="grid flex-1 text-left text-sm leading-tight ml-3">
+                                        <span className="truncate font-semibold">{currentUser?.name}</span>
+                                        <span className="truncate text-xs text-muted-foreground">Owner</span>
+                                    </div>
+                                    <ChevronsUpDown className="ml-auto size-4" />
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                side={isMobile ? "bottom" : "right"}
+                                align="end"
+                                sideOffset={4}
+                            >
+                                <DropdownMenuItem onClick={() => window.location.href = "/admin/profile"}>
+                                    <Avatar className="h-8 w-8 mr-2">
+                                        <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
+                                        <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
+                                    </Avatar>
+                                    <div className="grid flex-1">
+                                        <span className="font-semibold">{currentUser?.name}</span>
+                                        <span className="text-xs text-muted-foreground">Ver perfil</span>
+                                    </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-destructive flex items-center" onClick={logout}>
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Cerrar sesión
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>
