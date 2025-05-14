@@ -23,8 +23,6 @@ export function useMetrics(options = {}) {
 
     const enabled = { ...defaultEnabled, ...userEnabled };
 
-    console.log("Merged enabled flags:", enabled);
-
     // Filtros generales
     const globalParams = {
         startDate: filters.startDate || null,
