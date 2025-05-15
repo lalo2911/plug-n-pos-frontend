@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { User, Calendar, Package, ImageIcon, Loader2 } from "lucide-react";
-import { formatDate, formatPrice, getShortId } from "../../../../utils/formatters";
+import { formatOrderDate, formatPrice, getShortId } from "../../../../utils/formatters";
 
 function OrderDetailsDialog({ open, onClose, selectedOrder, orderDetails, isLoadingDetails, getEmployeeNameById, getProductInfo }) {
     if (!selectedOrder) return null;
@@ -23,7 +23,7 @@ function OrderDetailsDialog({ open, onClose, selectedOrder, orderDetails, isLoad
                         </div>
                         <div>
                             <h3 className="font-medium text-sm text-gray-500">Fecha</h3>
-                            <p className="flex items-center"><Calendar className="h-4 w-4 mr-2 text-gray-400" />{formatDate(selectedOrder.createdAt)}</p>
+                            <p className="flex items-center"><Calendar className="h-4 w-4 mr-2 text-gray-400" />{formatOrderDate(selectedOrder.createdAt)}</p>
                         </div>
                         <div>
                             <h3 className="font-medium text-sm text-gray-500">Total</h3>

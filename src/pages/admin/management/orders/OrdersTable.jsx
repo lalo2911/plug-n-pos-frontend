@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Loader2, User, Calendar, Eye } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatDate, formatPrice, getShortId } from '../../../../utils/formatters';
+import { formatOrderDate, formatPrice, getShortId } from '../../../../utils/formatters';
 
 function OrdersTable({ orders, isLoading, isError, error, filteredOrders, getEmployeeNameById, onViewDetails }) {
     if (isLoading) {
@@ -53,7 +53,7 @@ function OrdersTable({ orders, isLoading, isError, error, filteredOrders, getEmp
                                     <td className="p-4 align-middle">
                                         <div className="flex items-center">
                                             <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                                            {formatDate(order.createdAt)}
+                                            {formatOrderDate(order.createdAt)}
                                         </div>
                                     </td>
                                     <td className="p-4 align-middle font-medium">
