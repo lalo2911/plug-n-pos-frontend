@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useEmployees } from '../../../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import EmployeesHeader from './EmployeesHeader';
 import SearchBar from './SearchBar';
+import PageHeader from '../PageHeader';
 import EmployeesList from './EmployeesList';
 
 function EmployeesManagement() {
@@ -23,7 +23,10 @@ function EmployeesManagement() {
 
     return (
         <div className="space-y-6">
-            <EmployeesHeader />
+            <PageHeader
+                title="Empleados"
+                description="Gestiona los empleados de tu negocio"
+            />
 
             {/* Barra de búsqueda */}
             <SearchBar

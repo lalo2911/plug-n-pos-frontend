@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { useCategories } from '../../../../hooks/useCategories';
 import { useProducts } from '../../../../hooks/useProducts';
 import CategorySearchBar from './CategorySearchBar';
+import PageHeader from '../PageHeader';
 import CategoryList from './CategoryList';
 import AddCategoryDialog from './AddCategoryDialog';
 import EditCategoryDialog from './EditCategoryDialog';
 import DeleteCategoryDialog from './DeleteCategoryDialog';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import { toast } from "sonner";
 
 function CategoriesManagement() {
@@ -122,17 +121,12 @@ function CategoriesManagement() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold">Categorías</h1>
-                    <p className="text-gray-500">Gestiona las categorías de productos</p>
-                </div>
-
-                <Button onClick={() => setIsAddDialogOpen(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Nueva Categoría
-                </Button>
-            </div>
+            <PageHeader
+                title="Categorías"
+                description="Gestiona las categorías de productos"
+                onAddNew={() => setIsAddDialogOpen(true)}
+                addButtonText="Nueva Categoría"
+            />
 
             <AddCategoryDialog
                 isOpen={isAddDialogOpen}

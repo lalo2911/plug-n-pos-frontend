@@ -4,6 +4,7 @@ import { useOrderDetails } from '../../../../hooks/useOrderDetails';
 import { useProducts } from '../../../../hooks/useProducts';
 import { useEmployees } from '../../../../hooks/useEmployees';
 import SearchBar from './SearchBar';
+import PageHeader from '../PageHeader';
 import OrdersTable from './OrdersTable';
 import OrderDetailsDialog from './OrderDetailsDialog';
 import { toast } from "sonner";
@@ -51,10 +52,10 @@ function OrdersManagement() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold">Pedidos</h1>
-                <p className="text-gray-500">Gestiona los pedidos de tu negocio</p>
-            </div>
+            <PageHeader
+                title="Pedidos"
+                description="Gestiona los pedidos de tu negocio"
+            />
 
             <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
 
