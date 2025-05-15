@@ -24,7 +24,7 @@ import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
 import NotFound from './pages/NotFound';
 import AdminDashboard from './pages/admin/admin-dashboard/AdminDashboard';
-import EmployeesManagement from './pages/admin/EmployeesManagement';
+import EmployeesManagement from './pages/admin/management/employees/EmployeesManagement';
 import ProductsManagement from './pages/admin/management/products/ProductsManagement';
 import CategoriesManagement from './pages/admin/management/categories/CategoriesManagement';
 import OrdersManagement from './pages/admin/management/orders/OrdersManagement';

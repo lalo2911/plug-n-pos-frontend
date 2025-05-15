@@ -53,7 +53,7 @@ export const formatPrice = (price) => {
     return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(numericValue);
 };
 
-export const formatDate = (dateString) => {
+export const formatOrderDate = (dateString) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('es-MX', {
         day: '2-digit',
@@ -65,3 +65,33 @@ export const formatDate = (dateString) => {
 };
 
 export const getShortId = (id) => id ? `#${id.substring(0, 8)}` : 'N/A';
+
+// Función para obtener las iniciales de un nombre
+export const getInitials = (name) => {
+    if (!name) return 'U';
+    return name
+        .split(' ')
+        .map(part => part[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+};
+
+// Determinar el tipo de cuenta (local o Google)
+export const getAccountType = (employee) => {
+    if (employee?.googleId) {
+        return 'Google';
+    }
+    return 'Local';
+};
+
+// Formatear fecha de registro
+export const formatRegisterDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(date);
+};
