@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useBusiness } from '../hooks/useBusiness';
 import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag, ChevronsUpDown } from "lucide-react"
@@ -27,6 +27,7 @@ export function AppSidebar() {
     const { currentUser, logout } = useAuth()
     const { userBusiness } = useBusiness();
     const { isMobile } = useSidebar();
+    const location = useLocation();
 
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -72,16 +73,19 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarMenu>
-                    {menuItems.map((item) => (
-                        <SidebarMenuItem key={item.path}>
-                            <SidebarMenuButton asChild tooltip={item.label}>
-                                <NavLink to={item.path} >
-                                    <item.icon />
-                                    <span>{item.label}</span>
-                                </NavLink>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
+                    {menuItems.map((item) => {
+                        const isActive = location.pathname === item.path;
+                        return (
+                            <SidebarMenuItem key={item.path}>
+                                <SidebarMenuButton asChild tooltip={item.label} isActive={isActive}>
+                                    <NavLink to={item.path}>
+                                        <item.icon />
+                                        <span>{item.label}</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
