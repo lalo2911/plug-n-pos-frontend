@@ -1,0 +1,84 @@
+import { useState } from 'react';
+import { useOrders } from '../../../../hooks/useOrders';
+import { useOrderDetails } from '../../../../hooks/useOrderDetails';
+import { useProducts } from '../../../../hooks/useProducts';
+import { useEmployees } from '../../../../hooks/useEmployees';
+import SearchBar from './SearchBar';
+import OrdersTable from './OrdersTable';
+import OrderDetailsDialog from './OrderDetailsDialog';
+import { toast } from "sonner";
+
+function OrdersManagement() {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isOrderDetailsDialogOpen, setIsOrderDetailsDialogOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+
+    const { orders, isLoading, isError, error } = useOrders();
+    const { employees } = useEmployees();
+    const { fetchOrderDetailByOrderId } = useOrderDetails();
+    const { products } = useProducts();
+
+    const getProductInfo = (id) => products?.find(p => p._id === id);
+    const getEmployeeNameById = (id) => employees?.find(e => e._id === id)?.name || 'Empleado desconocido';
+
+    const handleViewOrderDetails = async (order) => {
+        setSelectedOrder(order);
+        setIsLoadingDetails(true);
+        try {
+            const result = await fetchOrderDetailByOrderId(order._id);
+            setOrderDetails(result.data || []);
+        } catch {
+            toast.error("Error", { description: "No se pudieron cargar los detalles de la orden" });
+            setOrderDetails([]);
+        } finally {
+            setIsLoadingDetails(false);
+            setIsOrderDetailsDialogOpen(true);
+        }
+    };
+
+    const filteredOrders = orders?.filter(order => {
+        const employeeName = getEmployeeNameById(order.user_id)?.toLowerCase() || '';
+        const orderDate = new Date(order.createdAt).toLocaleDateString() || '';
+        return (
+            order._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            order.user_id?.toString()?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            employeeName.includes(searchTerm.toLowerCase()) ||
+            orderDate.includes(searchTerm.toLowerCase())
+        );
+    }) || [];
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-3xl font-bold">Pedidos</h1>
+                <p className="text-gray-500">Gestiona los pedidos de tu negocio</p>
+            </div>
+
+            <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+
+            <OrdersTable
+                orders={orders}
+                isLoading={isLoading}
+                isError={isError}
+                error={error}
+                filteredOrders={filteredOrders}
+                getEmployeeNameById={getEmployeeNameById}
+                onViewDetails={handleViewOrderDetails}
+            />
+
+            <OrderDetailsDialog
+                open={isOrderDetailsDialogOpen}
+                onClose={() => setIsOrderDetailsDialogOpen(false)}
+                selectedOrder={selectedOrder}
+                orderDetails={orderDetails}
+                isLoadingDetails={isLoadingDetails}
+                getEmployeeNameById={getEmployeeNameById}
+                getProductInfo={getProductInfo}
+            />
+        </div>
+    );
+}
+
+export default OrdersManagement;

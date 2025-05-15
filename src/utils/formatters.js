@@ -46,3 +46,22 @@ export const formatLongDate = (dateString) => {
 export const formatHour = (hour) => {
     return `${hour}:00`;
 };
+
+export const formatPrice = (price) => {
+    if (!price) return '$0.00';
+    const numericValue = price.$numberDecimal ? parseFloat(price.$numberDecimal) : parseFloat(price);
+    return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(numericValue);
+};
+
+export const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    }).format(date);
+};
+
+export const getShortId = (id) => id ? `#${id.substring(0, 8)}` : 'N/A';
