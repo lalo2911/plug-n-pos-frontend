@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Loader2 } from 'lucide-react';
 import CategoryCard from './CategoryCard';
 
-function CategoryList({ categories, isLoading, isError, error, onEdit, onDelete, totalCount }) {
+function CategoryList({ categories, products, isLoading, isError, error, onEdit, onDelete, totalCount }) {
     return (
         <Card>
             <CardHeader className="mt-4">
@@ -30,6 +30,7 @@ function CategoryList({ categories, isLoading, isError, error, onEdit, onDelete,
                             <CategoryCard
                                 key={category._id}
                                 category={category}
+                                products={products}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                             />

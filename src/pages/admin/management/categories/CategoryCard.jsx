@@ -1,10 +1,19 @@
 import { Tag, Package, Edit, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-function CategoryCard({ category, onEdit, onDelete }) {
-    // Contar productos por categoría (placeholder)
+function CategoryCard({ category, products, onEdit, onDelete }) {
+    // Contar productos por categoría
     const getProductCount = () => {
-        return Math.floor(Math.random() * 20);
+        if (!products || !Array.isArray(products)) {
+            return 0;
+        }
+
+        // Filtrar productos por category_id
+        const categoryProducts = products.filter(
+            product => product.category_id === category._id
+        );
+
+        return categoryProducts.length;
     };
 
     return (

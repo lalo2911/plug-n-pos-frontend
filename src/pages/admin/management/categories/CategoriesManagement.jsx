@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCategories } from '../../../../hooks/useCategories';
+import { useProducts } from '../../../../hooks/useProducts';
 import CategorySearchBar from './CategorySearchBar';
 import CategoryList from './CategoryList';
 import AddCategoryDialog from './AddCategoryDialog';
@@ -26,6 +27,8 @@ function CategoriesManagement() {
         updateCategory,
         deleteCategory
     } = useCategories();
+
+    const { products } = useProducts();
 
     // Manejar crear categoría
     const handleCreateCategory = () => {
@@ -163,6 +166,7 @@ function CategoriesManagement() {
 
             <CategoryList
                 categories={filteredCategories}
+                products={products}
                 isLoading={isLoading}
                 isError={isError}
                 error={error}
