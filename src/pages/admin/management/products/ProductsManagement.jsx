@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useProducts } from '../../../../hooks/useProducts';
 import { Card } from "@/components/ui/card";
+import SearchBar from '../SearchBar';
 import PageHeader from '../PageHeader';
 import ProductsList from './ProductsList';
-import ProductSearch from './ProductSearch';
 import AddProductDialog from './AddProductDialog';
 import EditProductDialog from './EditProductDialog';
 import DeleteProductDialog from './DeleteProductDialog';
@@ -76,9 +76,10 @@ function ProductsManagement() {
                 addButtonText="Nuevo Producto"
             />
 
-            <ProductSearch
+            <SearchBar.withSearchTerm
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                placeholder="Buscar productos por nombre o descripción..."
             />
 
             <Card>

@@ -3,7 +3,7 @@ import { useOrders } from '../../../../hooks/useOrders';
 import { useOrderDetails } from '../../../../hooks/useOrderDetails';
 import { useProducts } from '../../../../hooks/useProducts';
 import { useEmployees } from '../../../../hooks/useEmployees';
-import SearchBar from './SearchBar';
+import SearchBar from '../SearchBar';
 import PageHeader from '../PageHeader';
 import OrdersTable from './OrdersTable';
 import OrderDetailsDialog from './OrderDetailsDialog';
@@ -57,7 +57,11 @@ function OrdersManagement() {
                 description="Gestiona los pedidos de tu negocio"
             />
 
-            <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <SearchBar
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por ID de orden, responsable o fecha..."
+            />
 
             <OrdersTable
                 orders={orders}

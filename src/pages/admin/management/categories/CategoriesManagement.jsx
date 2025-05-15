@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCategories } from '../../../../hooks/useCategories';
 import { useProducts } from '../../../../hooks/useProducts';
-import CategorySearchBar from './CategorySearchBar';
+import SearchBar from '../SearchBar';
 import PageHeader from '../PageHeader';
 import CategoryList from './CategoryList';
 import AddCategoryDialog from './AddCategoryDialog';
@@ -153,9 +153,10 @@ function CategoriesManagement() {
                 isPending={deleteCategory.isPending}
             />
 
-            <CategorySearchBar
+            <SearchBar.withSearchTerm
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                placeholder="Buscar categorías..."
             />
 
             <CategoryList

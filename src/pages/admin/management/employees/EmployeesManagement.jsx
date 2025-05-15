@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useEmployees } from '../../../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import SearchBar from './SearchBar';
+import SearchBar from '../SearchBar';
 import PageHeader from '../PageHeader';
 import EmployeesList from './EmployeesList';
 
@@ -28,10 +28,10 @@ function EmployeesManagement() {
                 description="Gestiona los empleados de tu negocio"
             />
 
-            {/* Barra de búsqueda */}
-            <SearchBar
+            <SearchBar.withSearchTerm
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                placeholder="Buscar empleados por nombre o correo..."
             />
 
             {/* Lista de empleados */}
