@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import PageHeader from './PageHeader';
 import {
     Tooltip,
     TooltipContent,
@@ -144,10 +145,10 @@ function BusinessSettings() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold">Configuración del Negocio</h1>
-                <p className="text-gray-500">Administra la información de tu negocio y códigos de invitación</p>
-            </div>
+            <PageHeader
+                title="Configuración del Negocio"
+                description="Administra la información de tu negocio y códigos de invitación"
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Información del negocio */}

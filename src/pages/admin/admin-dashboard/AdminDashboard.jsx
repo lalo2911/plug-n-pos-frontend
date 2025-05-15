@@ -15,6 +15,7 @@ import { InviteEmployeesCard } from './InviteEmployeesCard';
 import { SalesSummaryCard } from './SalesSummaryCard';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
+import PageHeader from '../PageHeader';
 
 // Utilidades
 import { formatCurrency } from '../../../utils/formatters';
@@ -77,12 +78,10 @@ function AdminDashboard() {
 
     return (
         <div className="space-y-6 select-none">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold">Dashboard</h1>
-                    <p className="text-gray-500">Bienvenido de nuevo, {currentUser?.name}</p>
-                </div>
-            </div>
+            <PageHeader
+                title="Dashboard"
+                description={`Bienvenido de nuevo, ${currentUser?.name}`}
+            />
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

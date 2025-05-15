@@ -4,8 +4,8 @@ import { useOrderDetails } from '../../../../hooks/useOrderDetails';
 import { useProducts } from '../../../../hooks/useProducts';
 import { useEmployees } from '../../../../hooks/useEmployees';
 import SearchBar from '../SearchBar';
-import PageHeader from '../PageHeader';
 import OrdersTable from './OrdersTable';
+import PageHeader from '../../PageHeader';
 import OrderDetailsDialog from './OrderDetailsDialog';
 import { toast } from "sonner";
 

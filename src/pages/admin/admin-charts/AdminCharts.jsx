@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import useDashboardData from '../../../hooks/useDashboardData';
 
+import PageHeader from '../PageHeader';
+
 // Componentes de tarjetas
 import TotalSalesCard from './TotalSalesCard';
 import AverageTicketCard from './AverageTicketCard';
@@ -66,12 +68,10 @@ function AdminCharts() {
 
     return (
         <div className="space-y-6 select-none">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold">Panel de Métricas</h1>
-                    <p className="text-gray-500">Visualiza los datos clave de tu negocio</p>
-                </div>
-            </div>
+            <PageHeader
+                title="Panel de Métricas"
+                description="Visualiza los datos clave de tu negocio"
+            />
 
             {/* Resumen de ventas */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

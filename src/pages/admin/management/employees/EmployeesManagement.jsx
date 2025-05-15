@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useEmployees } from '../../../../hooks/useEmployees';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchBar from '../SearchBar';
-import PageHeader from '../PageHeader';
+import PageHeader from '../../PageHeader';
 import EmployeesList from './EmployeesList';
 
 function EmployeesManagement() {
