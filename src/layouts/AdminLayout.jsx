@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+import { getCookie } from "../lib/cookies"
 import { Outlet, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { User, LogOut } from "lucide-react"
@@ -19,6 +21,8 @@ function AdminLayout() {
     const { currentUser, logout } = useAuth()
     const navigate = useNavigate()
 
+    const sidebarDefaultOpen = getCookie("sidebar_state") === "true"
+
     const getInitials = (name) => {
         if (!name) return "U"
         return name
@@ -30,7 +34,7 @@ function AdminLayout() {
     }
 
     return (
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={sidebarDefaultOpen} className="select-none">
             <AppSidebar />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 select-none">
@@ -48,7 +52,7 @@ function AdminLayout() {
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="select-none">
                                 <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => navigate("/admin/profile")}>

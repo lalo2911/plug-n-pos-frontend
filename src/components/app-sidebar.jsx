@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useBusiness } from '../hooks/useBusiness';
 import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag, ChevronsUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -55,7 +54,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <div className="flex items-center select-none">
+                            <div className="flex items-center">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Store className="size-4" />
                                 </div>
@@ -72,7 +71,7 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarMenu className="select-none">
+                <SidebarMenu>
                     {menuItems.map((item) => (
                         <SidebarMenuItem key={item.path}>
                             <SidebarMenuButton asChild tooltip={item.label}>
