@@ -29,7 +29,7 @@ import ProductsManagement from './pages/admin/management/products/ProductsManage
 import CategoriesManagement from './pages/admin/management/categories/CategoriesManagement';
 import OrdersManagement from './pages/admin/management/orders/OrdersManagement';
 import AdminCharts from './pages/admin/admin-charts/AdminCharts';
-import BusinessSettings from './pages/admin/BusinessSettings';
+import BusinessSettings from './pages/admin/business-settings/BusinessSettings';
 
 // Configurar React Query
 const queryClient = new QueryClient({
