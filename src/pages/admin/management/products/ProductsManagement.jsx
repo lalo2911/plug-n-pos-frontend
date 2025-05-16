@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useProducts } from '../../../../hooks/useProducts';
-import { Card } from "@/components/ui/card";
 import SearchBar from '../SearchBar';
 import ProductsList from './ProductsList';
 import PageHeader from '../../PageHeader';
@@ -82,16 +81,14 @@ function ProductsManagement() {
                 placeholder="Buscar productos por nombre o descripción..."
             />
 
-            <Card>
-                <ProductsList
-                    filteredProducts={filteredProducts}
-                    isLoading={isLoading}
-                    error={error}
-                    openEditDialog={openEditDialog}
-                    openDeleteDialog={openDeleteDialog}
-                    productsCount={products?.length}
-                />
-            </Card>
+            <ProductsList
+                filteredProducts={filteredProducts}
+                isLoading={isLoading}
+                error={error}
+                openEditDialog={openEditDialog}
+                openDeleteDialog={openDeleteDialog}
+                productsCount={products?.length}
+            />
 
             <AddProductDialog
                 isOpen={isAddDialogOpen}

@@ -1,4 +1,4 @@
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from 'lucide-react';
 import ProductListItem from './ProductListItem';
 
@@ -11,7 +11,7 @@ function ProductsList({
     productsCount
 }) {
     return (
-        <>
+        <Card>
             <CardHeader className="mt-4">
                 <CardTitle>Inventario de Productos</CardTitle>
                 <CardDescription>
@@ -56,7 +56,7 @@ function ProductsList({
                     </div>
                 )}
             </CardContent>
-        </>
+        </Card>
     );
 }
 
