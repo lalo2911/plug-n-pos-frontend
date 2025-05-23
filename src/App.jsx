@@ -23,13 +23,13 @@ import Profile from './pages/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
 import NotFound from './pages/NotFound';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import EmployeesManagement from './pages/admin/EmployeesManagement';
-import ProductsManagement from './pages/admin/ProductsManagement';
-import CategoriesManagement from './pages/admin/CategoriesManagement';
-import OrdersManagement from './pages/admin/OrdersManagement';
-import AdminCharts from './pages/admin/AdminCharts';
-import BusinessSettings from './pages/admin/BusinessSettings';
+import AdminDashboard from './pages/admin/admin-dashboard/AdminDashboard';
+import EmployeesManagement from './pages/admin/management/employees/EmployeesManagement';
+import ProductsManagement from './pages/admin/management/products/ProductsManagement';
+import CategoriesManagement from './pages/admin/management/categories/CategoriesManagement';
+import OrdersManagement from './pages/admin/management/orders/OrdersManagement';
+import AdminCharts from './pages/admin/admin-charts/AdminCharts';
+import BusinessSettings from './pages/admin/business-settings/BusinessSettings';
 
 // Configurar React Query
 const queryClient = new QueryClient({
