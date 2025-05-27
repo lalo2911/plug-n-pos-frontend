@@ -13,9 +13,9 @@ import { AuthProvider } from './context/AuthContext';
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
 import AdminLayout from './layouts/AdminLayout';
-import Login from './pages/Login';
+import Login from './pages/auth/Login';
 import LoginSuccess from './pages/LoginSuccess';
-import Register from './pages/Register';
+import Register from './pages/auth/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import OwnerRoute from './components/OwnerRoute';
 import Setup from './pages/setup/Setup';
