@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 function AuthLayout({ title, description, children, footerContent }) {
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 p-4 select-none">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4 select-none">
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-2 text-center mt-4">
                     <CardTitle className="text-3xl font-bold">{title}</CardTitle>

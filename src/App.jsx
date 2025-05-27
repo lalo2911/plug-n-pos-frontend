@@ -14,7 +14,7 @@ import { AuthProvider } from './context/AuthContext';
 import RootLayout from './layouts/RootLayout';
 import AdminLayout from './layouts/AdminLayout';
 import Login from './pages/auth/Login';
-import LoginSuccess from './pages/LoginSuccess';
+import LoginSuccess from './pages/auth/LoginSuccess';
 import Register from './pages/auth/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import OwnerRoute from './components/OwnerRoute';
