@@ -23,9 +23,14 @@ function Register() {
 
     const registerMutation = useMutation({
         mutationFn: (userData) => authApi.register(userData),
-        onSuccess: (data) => {
-            login(data.data);
-            navigate('/');
+        onSuccess: async (data) => {
+            try {
+                // data.data debe contener { accessToken, user }
+                await login(data.data);
+                navigate('/');
+            } catch (error) {
+                console.error('Error durante el proceso de registro:', error);
+            }
         },
         onError: (error) => {
             console.error('Error de registro:', error);

@@ -23,9 +23,14 @@ function Login() {
 
     const loginMutation = useMutation({
         mutationFn: (credentials) => authApi.login(credentials),
-        onSuccess: (data) => {
-            login(data.data);
-            navigate('/');
+        onSuccess: async (data) => {
+            try {
+                // data.data debe contener { accessToken, user }
+                await login(data.data);
+                navigate('/');
+            } catch (error) {
+                console.error('Error durante el proceso de login:', error);
+            }
         },
         onError: (error) => {
             console.error('Error de inicio de sesión:', error);

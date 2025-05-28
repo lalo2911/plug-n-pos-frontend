@@ -11,35 +11,38 @@ export const authApi = {
         return response.data;
     },
 
-    getProfile: async () => {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
+    logout: async () => {
+        const response = await apiClient.post('/auth/logout');
+        return response.data;
+    },
 
-        if (!token) {
-            throw new Error('No authentication token found');
-        }
+    logoutAllDevices: async () => {
+        const response = await apiClient.post('/auth/logout-all');
+        return response.data;
+    },
 
-        const response = await apiClient.get('/auth/profile', {
-            headers: {
+    refreshToken: async () => {
+        const response = await apiClient.post('/auth/refresh');
+        return response.data;
+    },
+
+    getProfile: async (token = null) => {
+        const config = {};
+
+        // Si se proporciona un token específico (para Google Auth), usarlo
+        if (token) {
+            config.headers = {
                 Authorization: `Bearer ${token}`,
-            },
-        });
+            };
+        }
+        // Si no, el interceptor agregará automáticamente el token desde el contexto
 
+        const response = await apiClient.get('/auth/profile', config);
         return response.data;
     },
 
     updateProfile: async (userData) => {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-
-        if (!token) {
-            throw new Error('No authentication token found');
-        }
-
-        const response = await apiClient.put('/auth/profile', userData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
+        const response = await apiClient.put('/auth/profile', userData);
         return response.data;
     },
 
