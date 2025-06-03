@@ -21,6 +21,13 @@ export const setAuthContextRef = (authContext) => {
 // Interceptor para agregar el token a las solicitudes
 apiClient.interceptors.request.use(
     (config) => {
+        // Evitar agregar Authorization en /auth/exchange-code
+        if (
+            config.url.includes('/auth/exchange-code')
+        ) {
+            return config;
+        }
+
         // Obtener el access token desde el contexto de auth
         if (authContextRef && typeof authContextRef.getAccessToken === 'function') {
             const token = authContextRef.getAccessToken();

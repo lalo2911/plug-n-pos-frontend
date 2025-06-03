@@ -21,16 +21,6 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-            // Verificar si hay un token en la URL (para la redirección de Google)
-            const url = new URL(window.location.href);
-            const urlToken = url.searchParams.get('token');
-
-            if (urlToken && window.location.pathname === '/login/success') {
-                // Para Google Auth, el token viene en la URL
-                await handleGoogleAuthToken(urlToken);
-                return;
-            }
-
             // Solo intentar silent login si NO estamos en rutas de auth públicas
             const publicAuthRoutes = ['/login', '/register'];
             const currentPath = window.location.pathname;
@@ -45,26 +35,6 @@ export const AuthProvider = ({ children }) => {
             clearAuthState();
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleGoogleAuthToken = async (token) => {
-        try {
-            // Para Google Auth, el token viene como access token
-            accessTokenRef.current = token;
-
-            // Obtener datos del usuario
-            const userResponse = await authApi.getProfile(token);
-
-            setCurrentUser(userResponse.data);
-            setIsAuthenticated(true);
-
-            // Limpiar la URL del token
-            window.history.replaceState({}, document.title, '/login/success');
-
-        } catch (error) {
-            console.error('Error handling Google auth token:', error);
-            throw error;
         }
     };
 

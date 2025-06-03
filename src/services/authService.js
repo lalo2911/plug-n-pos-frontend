@@ -26,17 +26,13 @@ export const authApi = {
         return response.data;
     },
 
-    getProfile: async (token = null) => {
-        const config = {};
+    // Intercambiar código temporal por datos de autenticación
+    exchangeAuthCode: async (code) => {
+        const response = await apiClient.post('/auth/exchange-code', { code });
+        return response.data;
+    },
 
-        // Si se proporciona un token específico (para Google Auth), usarlo
-        if (token) {
-            config.headers = {
-                Authorization: `Bearer ${token}`,
-            };
-        }
-        // Si no, el interceptor agregará automáticamente el token desde el contexto
-
+    getProfile: async () => {
         const response = await apiClient.get('/auth/profile', config);
         return response.data;
     },
