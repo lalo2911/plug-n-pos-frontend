@@ -108,7 +108,7 @@ function Register() {
 
                 <Button
                     type="submit"
-                    className="w-full"
+                    className="w-full cursor-pointer"
                     disabled={registerMutation.isPending}
                 >
                     {registerMutation.isPending ? 'Registrando...' : 'Crear Cuenta'}

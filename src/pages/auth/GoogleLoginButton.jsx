@@ -18,7 +18,7 @@ function GoogleLoginButton({ onGoogleLogin }) {
             <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="w-full cursor-pointer"
                 onClick={onGoogleLogin}
             >
                 <svg className="h-5 w-5" viewBox="0 0 48 48">

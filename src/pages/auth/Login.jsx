@@ -95,7 +95,7 @@ function Login() {
 
                 <Button
                     type="submit"
-                    className="w-full"
+                    className="w-full cursor-pointer"
                     tabIndex={3}
                     disabled={loginMutation.isPending}
                 >
