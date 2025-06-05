@@ -10,9 +10,9 @@ import {
 
 // Componentes modulares
 import { StatsCard } from './StatsCard';
-import { TopProductsCard } from './TopProductsCard';
 import { InviteEmployeesCard } from './InviteEmployeesCard';
 import { SalesSummaryCard } from './SalesSummaryCard';
+import WorkdayControls from './WorkdayControls';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import PageHeader from '../PageHeader';
@@ -46,7 +46,6 @@ function AdminDashboard() {
     // Datos del dashboard
     const salesData = dashboardSummary?.sales || {};
     const inventoryData = dashboardSummary?.inventory || {};
-    const topProducts = dashboardSummary?.topProducts || [];
 
     // Configuración de las tarjetas de estadísticas
     const statsCards = [
@@ -98,8 +97,8 @@ function AdminDashboard() {
 
             {/* Main Content Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Top Products */}
-                <TopProductsCard products={topProducts} formatCurrency={formatCurrency} />
+                {/* Control de Jornada */}
+                <WorkdayControls />
 
                 {/* Invite Employees */}
                 <InviteEmployeesCard generateInviteCode={generateInviteCode} />

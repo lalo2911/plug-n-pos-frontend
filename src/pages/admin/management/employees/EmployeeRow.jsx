@@ -1,9 +1,38 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Mail } from 'lucide-react';
-import { getInitials, getAccountType, formatRegisterDate } from '../../../../utils/formatters'
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Mail, Power } from 'lucide-react';
+import { getInitials, getAccountType, formatRegisterDate } from '../../../../utils/formatters';
+import { useWorkday } from '../../../../hooks/useWorkday';
+import { toast } from "sonner"
 
 function EmployeeRow({ employee }) {
+    // Usar el hook con el ID del empleado específico
+    const {
+        workdayStatus: employeeStatus,
+        isLoadingStatus,
+        startWorkday,
+        endWorkday
+    } = useWorkday(employee._id);
+
+    const isActive = employeeStatus?.isActive || false;
+
+    // Manejar cambio de estado
+    const handleToggleWorkday = async () => {
+        try {
+            if (isActive) {
+                await endWorkday.mutateAsync(employee._id);
+                toast.info(`La jornada laboral de ${employee.name} ha sido finalizada.`)
+            } else {
+                await startWorkday.mutateAsync(employee._id);
+                toast.success(`La jornada laboral de ${employee.name} ha sido iniciada.`)
+            }
+        } catch (error) {
+            toast.error('No se pudo actualizar el estado de la jornada.')
+        }
+    };
+
     return (
         <tr className="border-b transition-colors hover:bg-muted/50">
             <td className="p-4 align-middle">
@@ -33,6 +62,31 @@ function EmployeeRow({ employee }) {
             </td>
             <td className="p-4 align-middle text-gray-500">
                 {formatRegisterDate(employee.createdAt)}
+            </td>
+            <td className="p-4 align-middle">
+                <Badge variant={isActive ? "success" : "secondary"} className={isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+                    {isActive ? 'Activo' : 'Inactivo'}
+                </Badge>
+            </td>
+            <td className="p-4 align-middle text-right">
+                <div className="flex items-center justify-end space-x-2">
+                    <Switch
+                        className="cursor-pointer"
+                        checked={isActive}
+                        onCheckedChange={handleToggleWorkday}
+                        disabled={isLoadingStatus || employee.role === 'owner' || startWorkday.isLoading || endWorkday.isLoading}
+                        aria-label="Toggle workday status"
+                    />
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="cursor-pointer"
+                        onClick={handleToggleWorkday}
+                        disabled={isLoadingStatus || employee.role === 'owner' || startWorkday.isLoading || endWorkday.isLoading}
+                    >
+                        <Power className={`h-4 w-4 ${isActive ? 'text-red-500' : 'text-green-500'}`} />
+                    </Button>
+                </div>
             </td>
         </tr>
     );
