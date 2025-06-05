@@ -6,7 +6,7 @@ const CategoryTabs = ({ categories, isLoading }) => {
     return (
         <div className="mb-4 overflow-x-auto pb-2">
             <TabsList className="h-auto flex-nowrap min-w-max">
-                <TabsTrigger value="all">Todos</TabsTrigger>
+                <TabsTrigger value="all" className="cursor-pointer">Todos</TabsTrigger>
                 {isLoading ? (
                     Array(4).fill(0).map((_, i) => (
                         <div key={i} className="px-8 py-2">
@@ -18,6 +18,7 @@ const CategoryTabs = ({ categories, isLoading }) => {
                         <TabsTrigger
                             key={category._id}
                             value={category._id}
+                            className="cursor-pointer"
                         >
                             {category.name}
                         </TabsTrigger>

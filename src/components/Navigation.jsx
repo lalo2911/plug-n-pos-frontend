@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -9,16 +8,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { UserCircle, Settings, LogOut } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
 
 function Navigation() {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
 
     const handleProfileClick = () => {
         navigate('/profile');
@@ -28,7 +22,7 @@ function Navigation() {
         <div className="fixed top-4 right-4 z-50">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
+                    <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 cursor-pointer">
                         <Avatar className="h-12 w-12 border-2 border-white hover:shadow-md transition-shadow">
                             {currentUser?.avatar ? (
                                 <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
@@ -65,7 +59,7 @@ function Navigation() {
                         <Settings className="mr-2 h-4 w-4" />
                         <span>Configurar perfil</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                    <DropdownMenuItem onClick={logout} className="cursor-pointer">
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Cerrar sesión</span>
                     </DropdownMenuItem>
