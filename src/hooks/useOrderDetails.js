@@ -9,6 +9,7 @@ export function useOrderDetails() {
         queryKey: ['orderDetails'],
         queryFn: () => orderDetailService.getAll(),
         select: (data) => data.data, // Extrae el objeto data de la respuesta
+        enabled: false, // No se ejecuta automáticamente
     });
 
     // Obtener un detalle de orden por ID
