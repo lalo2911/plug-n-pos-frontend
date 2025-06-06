@@ -6,16 +6,25 @@ function WorkdayStatus({ isWorkdayActive, isLoading, workdayStatus }) {
 
     // Show toast notification when workday status changes
     useEffect(() => {
+        const justCompleted = sessionStorage.getItem('orderJustCompleted');
+
+        if (justCompleted) {
+            setTimeout(() => {
+                sessionStorage.removeItem('orderJustCompleted');
+            }, 300);
+            return;
+        }
+
         if (!isLoading && workdayStatus && !hasShownToast) {
             if (isWorkdayActive) {
                 toast.success('¡Tu jornada laboral está activa!', {
-                    description: 'Puedes registrar pedidos normalmente.',
-                    duration: 4000,
+                    id: 'workday-toast',
+                    description: 'Puedes registrar pedidos normalmente.'
                 });
             } else {
                 toast.warning('El día laboral no ha comenzado', {
-                    description: 'Espera a que el dueño active el día laboral para poder registrar pedidos.',
-                    duration: 6000,
+                    id: 'workday-toast',
+                    description: 'Espera a que el dueño active el día laboral para poder registrar pedidos.'
                 });
             }
             setHasShownToast(true);

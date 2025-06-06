@@ -52,6 +52,7 @@ function PaymentSummary() {
                     description: "El pedido ha sido registrado exitosamente",
                 });
                 clearCart();
+                sessionStorage.setItem('orderJustCompleted', 'true');
                 navigate('/');
             },
             onError: (error) => {
