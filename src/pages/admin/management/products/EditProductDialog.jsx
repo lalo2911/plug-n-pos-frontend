@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -19,6 +20,8 @@ function EditProductDialog({
     updateProduct,
     selectedProduct
 }) {
+    const scrollContainerRef = useRef(null);
+
     // Manejar actualizar producto
     const handleUpdateProduct = () => {
         if (!formData.name.trim() || !formData.price || !formData.category_id) {
@@ -51,7 +54,7 @@ function EditProductDialog({
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className="max-w-md">
+            <DialogContent ref={scrollContainerRef} className="max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Editar Producto</DialogTitle>
                     <DialogDescription>
@@ -62,6 +65,7 @@ function EditProductDialog({
                 <ProductForm
                     formData={formData}
                     setFormData={setFormData}
+                    scrollRef={scrollContainerRef}
                 />
 
                 <DialogFooter>

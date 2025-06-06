@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit, ImageIcon, Trash } from 'lucide-react';
@@ -5,6 +6,8 @@ import { useCategories } from '../../../../hooks/useCategories';
 
 function ProductListItem({ product, openEditDialog, openDeleteDialog }) {
     const { categories } = useCategories();
+    const [imageError, setImageError] = useState(false);
+    const [imageLoading, setImageLoading] = useState(true);
 
     // Formatear precio
     const formatPrice = (price) => {
@@ -20,17 +23,36 @@ function ProductListItem({ product, openEditDialog, openDeleteDialog }) {
         return category ? category.name : 'Sin categoría';
     };
 
+    // Manejar error de imagen
+    const handleImageError = () => {
+        setImageError(true);
+        setImageLoading(false);
+    };
+
+    // Manejar carga de imagen
+    const handleImageLoad = () => {
+        setImageLoading(false);
+    };
+
     return (
         <tr className="border-b transition-colors hover:bg-muted/50">
             <td className="p-4 align-middle">
                 <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center">
-                        {product.image_url ? (
-                            <img
-                                src={product.image_url}
-                                alt={product.name}
-                                className="h-10 w-10 object-cover rounded-md"
-                            />
+                    <div className="h-10 w-10 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
+                        {product.image_url && !imageError ? (
+                            <>
+                                {imageLoading && (
+                                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-md" />
+                                )}
+                                <img
+                                    src={product.image_url}
+                                    alt={product.name}
+                                    className="h-10 w-10 object-cover rounded-md"
+                                    onError={handleImageError}
+                                    onLoad={handleImageLoad}
+                                    loading="lazy"
+                                />
+                            </>
                         ) : (
                             <ImageIcon className="h-5 w-5 text-gray-400" />
                         )}

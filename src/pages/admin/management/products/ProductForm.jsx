@@ -3,8 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCategories } from '../../../../hooks/useCategories';
+import ImageUpload from './ImageUpload';
 
-function ProductForm({ formData, setFormData }) {
+function ProductForm({ formData, setFormData, scrollRef }) {
     const { categories } = useCategories();
 
     // Manejar cambios en el formulario
@@ -21,6 +22,14 @@ function ProductForm({ formData, setFormData }) {
         setFormData(prev => ({
             ...prev,
             category_id: value
+        }));
+    };
+
+    // Manejar cambio de imagen
+    const handleImageChange = (file) => {
+        setFormData(prev => ({
+            ...prev,
+            image: file
         }));
     };
 
@@ -82,16 +91,12 @@ function ProductForm({ formData, setFormData }) {
                 />
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="image_url">URL de imagen (opcional)</Label>
-                <Input
-                    id="image_url"
-                    name="image_url"
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                    value={formData.image_url}
-                    onChange={handleFormChange}
-                />
-            </div>
+            <ImageUpload
+                onImageChange={handleImageChange}
+                currentImageUrl={formData.image_url}
+                label="Imagen del producto"
+                scrollRef={scrollRef}
+            />
         </div>
     );
 }

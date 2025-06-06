@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -19,6 +20,8 @@ function AddProductDialog({
     createProduct,
     resetForm
 }) {
+    const scrollContainerRef = useRef(null);
+
     // Manejar crear producto
     const handleCreateProduct = () => {
         if (!formData.name.trim() || !formData.price || !formData.category_id) {
@@ -44,9 +47,15 @@ function AddProductDialog({
         });
     };
 
+    // Manejar cierre del diálogo
+    const handleClose = () => {
+        resetForm();
+        setIsOpen(false);
+    };
+
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className="max-w-md">
+        <Dialog open={isOpen} onOpenChange={handleClose}>
+            <DialogContent ref={scrollContainerRef} className="max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Agregar Producto</DialogTitle>
                     <DialogDescription>
@@ -57,10 +66,11 @@ function AddProductDialog({
                 <ProductForm
                     formData={formData}
                     setFormData={setFormData}
+                    scrollRef={scrollContainerRef}
                 />
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" onClick={handleClose}>
                         Cancelar
                     </Button>
                     <Button
