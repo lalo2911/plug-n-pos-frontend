@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { workdayService } from '../services/workdayService';
-import { useAuth } from '../context/AuthContext';
+import { workdayService } from '@/services/workdayService';
+import { useAuth } from '@/context/AuthContext';
 
 export function useWorkday(userId = null) {
     const queryClient = useQueryClient();

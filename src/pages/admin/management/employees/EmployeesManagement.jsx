@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useEmployees } from '../../../../hooks/useEmployees';
-import { useWorkday } from '../../../../hooks/useWorkday';
+import { useEmployees } from '@/hooks/useEmployees';
+import { useWorkday } from '@/hooks/useWorkday';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import SearchBar from '../SearchBar';

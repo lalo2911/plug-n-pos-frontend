@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useProducts } from '../../hooks/useProducts';
-import { useCategories } from '../../hooks/useCategories';
-import { useWorkday } from '../../hooks/useWorkday';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
+import { useWorkday } from '@/hooks/useWorkday';
+import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import CategoryTabs from './CategoryTabs';
 import ProductList from './ProductList';
 import CartSidebar from './CartSidebar';

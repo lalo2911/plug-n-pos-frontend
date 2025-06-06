@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
-import { useCreateOrder } from '../../hooks/useCreateOrder';
+import { useCart } from '@/context/CartContext';
+import { useCreateOrder } from '@/hooks/useCreateOrder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';

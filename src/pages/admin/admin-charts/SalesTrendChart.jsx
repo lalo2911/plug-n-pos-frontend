@@ -13,7 +13,7 @@ import {
     ChartTooltipContent
 } from "@/components/ui/chart";
 import ChartContainer from './ChartContainer';
-import { formatShortDate, formatLongDate } from '../../../utils/formatters';
+import { formatShortDate, formatLongDate } from '@/utils/formatters';
 
 /**
  * Componente de gráfica de tendencia de ventas

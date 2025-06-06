@@ -1,6 +1,6 @@
 import { Activity } from 'lucide-react';
 import SummaryCard from './SummaryCard';
-import { formatCurrency } from '../../../utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 
 /**
  * Componente de tarjeta de ventas totales

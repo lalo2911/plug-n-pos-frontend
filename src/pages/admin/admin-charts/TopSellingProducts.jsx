@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatCurrency } from '../../../utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 
 /**
  * Componente de productos más vendidos

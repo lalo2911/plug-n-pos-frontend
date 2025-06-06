@@ -3,8 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Mail, Power } from 'lucide-react';
-import { getInitials, getAccountType, formatRegisterDate } from '../../../../utils/formatters';
-import { useWorkday } from '../../../../hooks/useWorkday';
+import { getInitials, getAccountType, formatRegisterDate } from '@/utils/formatters';
+import { useWorkday } from '@/hooks/useWorkday';
 import { toast } from "sonner"
 
 function EmployeeRow({ employee }) {

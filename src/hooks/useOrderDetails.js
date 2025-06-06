@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { orderDetailService } from '../services/orderDetailService';
+import { orderDetailService } from '@/services/orderDetailService';
 
 export function useOrderDetails() {
     const queryClient = useQueryClient();

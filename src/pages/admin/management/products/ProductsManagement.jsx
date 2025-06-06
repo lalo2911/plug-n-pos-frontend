@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProducts } from '../../../../hooks/useProducts';
+import { useProducts } from '@/hooks/useProducts';
 import SearchBar from '../SearchBar';
 import ProductsList from './ProductsList';
 import PageHeader from '../../PageHeader';

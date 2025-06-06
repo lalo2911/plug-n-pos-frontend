@@ -11,7 +11,7 @@ import {
     ChartTooltipContent
 } from "@/components/ui/chart";
 import ChartContainer from './ChartContainer';
-import { formatHour } from '../../../utils/formatters';
+import { formatHour } from '@/utils/formatters';
 
 /**
  * Componente de gráfica de ventas por hora

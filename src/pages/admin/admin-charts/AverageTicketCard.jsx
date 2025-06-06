@@ -1,6 +1,6 @@
 import { TrendingUp } from 'lucide-react';
 import SummaryCard from './SummaryCard';
-import { formatCurrency } from '../../../utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 
 /**
  * Componente de tarjeta de ticket promedio

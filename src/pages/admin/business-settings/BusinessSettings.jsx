@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PageHeader from '../PageHeader';
-import { useBusiness } from '../../../hooks/useBusiness';
+import { useBusiness } from '@/hooks/useBusiness';
 import { toast } from "sonner";
 
 import BusinessForm from './BusinessForm';
