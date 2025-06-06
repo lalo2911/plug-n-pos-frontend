@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import { useOrders } from '../../hooks/useOrders';
+import { useCreateOrder } from '../../hooks/useCreateOrder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -23,7 +23,7 @@ function PaymentSummary() {
     // Determinar si es cambio o falta
     const isShortage = changeAmount < 0;
 
-    const { createOrder } = useOrders();
+    const createOrder = useCreateOrder();
 
     const handleFinishOrder = () => {
         if (payment === '' || isNaN(paymentAmount) || isShortage) {
