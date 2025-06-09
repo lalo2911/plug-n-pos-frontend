@@ -4,28 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Mail, Power } from 'lucide-react';
 import { getInitials, getAccountType, formatRegisterDate } from '@/utils/formatters';
-import { useWorkday } from '@/hooks/useWorkday';
 import { toast } from "sonner"
 
-function EmployeeRow({ employee }) {
-    // Usar el hook con el ID del empleado específico
-    const {
-        workdayStatus: employeeStatus,
-        isLoadingStatus,
-        startWorkday,
-        endWorkday
-    } = useWorkday(employee._id);
-
-    const isActive = employeeStatus?.isActive || false;
+function EmployeeRow({ employee, onStartWorkday, onEndWorkday, isUpdating }) {
+    const isActive = employee.workdayStatus || false;
 
     // Manejar cambio de estado
     const handleToggleWorkday = async () => {
         try {
             if (isActive) {
-                await endWorkday.mutateAsync(employee._id);
+                await onEndWorkday(employee._id);
                 toast.info(`La jornada laboral de ${employee.name} ha sido finalizada.`)
             } else {
-                await startWorkday.mutateAsync(employee._id);
+                await onStartWorkday(employee._id);
                 toast.success(`La jornada laboral de ${employee.name} ha sido iniciada.`)
             }
         } catch (error) {
@@ -74,7 +65,7 @@ function EmployeeRow({ employee }) {
                         className="cursor-pointer"
                         checked={isActive}
                         onCheckedChange={handleToggleWorkday}
-                        disabled={isLoadingStatus || employee.role === 'owner' || startWorkday.isLoading || endWorkday.isLoading}
+                        disabled={employee.role === 'owner' || isUpdating}
                         aria-label="Toggle workday status"
                     />
                     <Button
@@ -82,7 +73,7 @@ function EmployeeRow({ employee }) {
                         size="icon"
                         className="cursor-pointer"
                         onClick={handleToggleWorkday}
-                        disabled={isLoadingStatus || employee.role === 'owner' || startWorkday.isLoading || endWorkday.isLoading}
+                        disabled={employee.role === 'owner' || isUpdating}
                     >
                         <Power className={`h-4 w-4 ${isActive ? 'text-red-500' : 'text-green-500'}`} />
                     </Button>

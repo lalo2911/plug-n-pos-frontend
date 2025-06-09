@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useEmployees } from '@/hooks/useEmployees';
+import { useEmployeesWorkday } from '@/hooks/useEmployeesWorkday';
 import { useWorkday } from '@/hooks/useWorkday';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
@@ -17,13 +17,20 @@ function EmployeesManagement() {
         isLoading,
         isError,
         error,
-    } = useEmployees();
+        startAllWorkday,
+        endAllWorkday,
+        startEmployeeWorkday,
+        endEmployeeWorkday,
+    } = useEmployeesWorkday();
 
     const {
-        isWorkdayActive,
-        startWorkday,
-        endWorkday
-    } = useWorkday(null);
+        isWorkdayActive
+    } = useWorkday({
+        userId: null,
+        enableSSE: false,
+        enablePolling: true,
+        role: 'owner'
+    });
 
     // Filtrar empleados por término de búsqueda
     const filteredEmployees = employees?.filter(employee =>
@@ -33,7 +40,7 @@ function EmployeesManagement() {
 
     const handleStartAllWorkday = async () => {
         try {
-            await startWorkday.mutateAsync();
+            await startAllWorkday.mutateAsync();
             toast.success('La jornada laboral ha sido iniciada para todos los empleados.')
         } catch (error) {
             toast.error('No se pudo iniciar la jornada laboral.')
@@ -42,7 +49,7 @@ function EmployeesManagement() {
 
     const handleEndAllWorkday = async () => {
         try {
-            await endWorkday.mutateAsync();
+            await endAllWorkday.mutateAsync();
             toast.info('La jornada laboral ha sido finalizada para todos los empleados.')
         } catch (error) {
             toast.error('No se pudo finalizar la jornada laboral.')
@@ -58,16 +65,16 @@ function EmployeesManagement() {
                     <>
                         <Button
                             variant={
-                                isWorkdayActive || startWorkday.isLoading || endWorkday.isLoading
+                                isWorkdayActive || startAllWorkday.isLoading || endAllWorkday.isLoading
                                     ? "secondary"
                                     : "default"
                             }
                             title="Iniciar Jornada"
                             className="cursor-pointer"
                             onClick={handleStartAllWorkday}
-                            disabled={isWorkdayActive || startWorkday.isLoading || endWorkday.isLoading}
+                            disabled={isWorkdayActive || startAllWorkday.isLoading || endAllWorkday.isLoading}
                         >
-                            {startWorkday.isLoading ? (
+                            {startAllWorkday.isLoading ? (
                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                             ) : (
                                 <Play className="h-4 w-4 mr-2" />
@@ -76,16 +83,16 @@ function EmployeesManagement() {
                         </Button>
                         <Button
                             variant={
-                                !isWorkdayActive || startWorkday.isLoading || endWorkday.isLoading
+                                !isWorkdayActive || startAllWorkday.isLoading || endAllWorkday.isLoading
                                     ? "secondary"
                                     : "default"
                             }
                             title="Finalizar Jornada"
                             className="cursor-pointer"
                             onClick={handleEndAllWorkday}
-                            disabled={!isWorkdayActive || startWorkday.isLoading || endWorkday.isLoading}
+                            disabled={!isWorkdayActive || startAllWorkday.isLoading || endAllWorkday.isLoading}
                         >
-                            {endWorkday.isLoading ? (
+                            {endAllWorkday.isLoading ? (
                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                             ) : (
                                 <Square className="h-4 w-4 mr-2" />
@@ -116,6 +123,9 @@ function EmployeesManagement() {
                         isLoading={isLoading}
                         isError={isError}
                         error={error}
+                        onStartWorkday={startEmployeeWorkday.mutateAsync}
+                        onEndWorkday={endEmployeeWorkday.mutateAsync}
+                        isUpdating={startEmployeeWorkday.isLoading || endEmployeeWorkday.isLoading}
                     />
                 </CardContent>
             </Card>

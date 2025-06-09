@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
-function WorkdayStatus({ isWorkdayActive, isLoading, workdayStatus }) {
+function WorkdayStatus({
+    isWorkdayActive,
+    isLoading,
+    workdayStatus
+}) {
     const [hasShownToast, setHasShownToast] = useState(false);
 
     // Show toast notification when workday status changes
@@ -35,6 +39,8 @@ function WorkdayStatus({ isWorkdayActive, isLoading, workdayStatus }) {
     useEffect(() => {
         setHasShownToast(false);
     }, [isWorkdayActive]);
+
+    return null;
 }
 
 export default WorkdayStatus;

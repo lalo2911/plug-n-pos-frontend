@@ -9,7 +9,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { WorkdayProvider } from './context/WorkdayContext';
 import { setAuthContextRef } from './services/apiService';
 
 // Importar páginas
@@ -90,11 +89,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AuthContextProvider>
-          <WorkdayProvider>
-            <CartProvider>
-              <RouterProvider router={router} />
-            </CartProvider>
-          </WorkdayProvider>
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
         </AuthContextProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

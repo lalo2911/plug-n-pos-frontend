@@ -11,8 +11,12 @@ function WorkdayControls() {
         isWorkdayActive,
         isLoadingStatus,
         startWorkday,
-        endWorkday
-    } = useWorkday(null);
+        endWorkday,
+    } = useWorkday({
+        userId: null,
+        enableSSE: false,
+        role: 'owner'
+    });
 
     const handleStartAllWorkday = async () => {
         try {
