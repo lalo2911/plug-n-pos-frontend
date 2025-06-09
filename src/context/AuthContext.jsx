@@ -13,9 +13,49 @@ export const AuthProvider = ({ children }) => {
     // Almacenar access token solo en memoria
     const accessTokenRef = useRef(null);
 
+    // Broadcast Channel para comunicación entre pestañas
+    const authChannelRef = useRef(null)
+
     useEffect(() => {
+        // Inicializar Broadcast Channel
+        initializeBroadcastChannel();
+
+        // Inicializar autenticación
         initializeAuth();
+
+        // Cleanup al desmontar
+        return () => {
+            if (authChannelRef.current) {
+                authChannelRef.current.close();
+            }
+        };
     }, []);
+
+    const initializeBroadcastChannel = () => {
+        // Verificar si el navegador soporta Broadcast Channel
+        if (typeof BroadcastChannel !== 'undefined') {
+            authChannelRef.current = new BroadcastChannel('auth-channel');
+
+            // Escuchar mensajes de otras pestañas
+            authChannelRef.current.addEventListener('message', (event) => {
+                handleBroadcastMessage(event.data);
+            });
+        }
+    };
+
+    const handleBroadcastMessage = (data) => {
+        if (data.type === 'LOGOUT') {
+            console.log('Logout signal received from another tab');
+            clearAuthState();
+            window.location.href = '/login';
+        }
+    };
+
+    const broadcastMessage = (type, payload = null) => {
+        if (authChannelRef.current) {
+            authChannelRef.current.postMessage({ type, payload });
+        }
+    };
 
     const initializeAuth = async () => {
         try {
@@ -30,7 +70,7 @@ export const AuthProvider = ({ children }) => {
                 await attemptSilentLogin();
             }
         } catch (error) {
-            console.error('Error during auth initialization:', error);
+            console.error('Error during auth initialization');
             // Si falla la inicialización, limpiar cualquier estado de auth
             clearAuthState();
         } finally {
@@ -51,7 +91,7 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             // Si falla el refresh, no hay problema - usuario no está autenticado
-            console.debug('Silent login failed:', error.message);
+            console.debug('Silent login failed');
             return false;
         }
     };
@@ -69,17 +109,21 @@ export const AuthProvider = ({ children }) => {
 
             return true;
         } catch (error) {
-            console.error('Login error:', error);
+            console.error('Login error');
             throw error;
         }
     };
 
     const logout = async () => {
         try {
+            // Notificar a otras pestañas ANTES de hacer la llamada al servidor
+            // para que se actualicen inmediatamente
+            broadcastMessage('LOGOUT');
+
             // Llamar al endpoint de logout para invalidar el refresh token
             await authApi.logout();
         } catch (error) {
-            console.error('Error during logout:', error);
+            console.error('Error during logout');
             // Continuar con el logout local incluso si falla el servidor
         } finally {
             // Limpiar estado local
@@ -120,7 +164,7 @@ export const AuthProvider = ({ children }) => {
 
             return accessTokenRef.current;
         } catch (error) {
-            console.error('Error refreshing expired token:', error);
+            console.error('Error refreshing expired token');
             await logout();
             return null;
         }
