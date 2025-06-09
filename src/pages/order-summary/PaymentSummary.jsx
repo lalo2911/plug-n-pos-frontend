@@ -131,7 +131,14 @@ function PaymentSummary() {
                 >
                     Terminar pedido
                 </Button>
-                <Button variant="outline" className="w-full" asChild>
+                <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                        sessionStorage.setItem('justCameFromAddProducts', 'true');
+                    }}
+                    asChild
+                >
                     <Link to="/">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Agregar productos

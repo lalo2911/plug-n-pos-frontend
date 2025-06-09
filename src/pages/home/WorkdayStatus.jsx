@@ -11,10 +11,12 @@ function WorkdayStatus({
     // Show toast notification when workday status changes
     useEffect(() => {
         const justCompleted = sessionStorage.getItem('orderJustCompleted');
+        const fromAddProducts = sessionStorage.getItem('justCameFromAddProducts');
 
-        if (justCompleted) {
+        if (justCompleted || fromAddProducts) {
             setTimeout(() => {
                 sessionStorage.removeItem('orderJustCompleted');
+                sessionStorage.removeItem('justCameFromAddProducts');
             }, 300);
             return;
         }
