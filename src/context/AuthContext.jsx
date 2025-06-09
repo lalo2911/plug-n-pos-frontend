@@ -84,6 +84,8 @@ export const AuthProvider = ({ children }) => {
         } finally {
             // Limpiar estado local
             clearAuthState();
+            // Borrar carrito del localStorage
+            localStorage.removeItem('cart');
             // Redirigir a login
             window.location.href = '/login';
         }
