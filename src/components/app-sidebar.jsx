@@ -26,7 +26,7 @@ import {
 export function AppSidebar() {
     const { currentUser, logout } = useAuth()
     const { userBusiness } = useBusiness();
-    const { isMobile } = useSidebar();
+    const { isMobile, toggleSidebar } = useSidebar();
     const location = useLocation();
 
     const menuItems = [
@@ -78,7 +78,12 @@ export function AppSidebar() {
                         return (
                             <SidebarMenuItem key={item.path}>
                                 <SidebarMenuButton asChild tooltip={item.label} isActive={isActive}>
-                                    <NavLink to={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        onClick={() => {
+                                            if (isMobile) toggleSidebar()
+                                        }}
+                                    >
                                         <item.icon />
                                         <span>{item.label}</span>
                                     </NavLink>
