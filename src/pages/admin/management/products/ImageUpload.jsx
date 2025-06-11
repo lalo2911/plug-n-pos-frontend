@@ -1,83 +1,89 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Upload, X, ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-function ImageUpload({ onImageChange, currentImageUrl = null, label = "Imagen del producto", scrollRef }) {
+function ImageUpload({ onImageChange, currentImageUrl = null, label = "Imagen del producto" }) {
     const [preview, setPreview] = useState(currentImageUrl);
     const [isDragging, setIsDragging] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
+    const maxSize = 5
 
-    const handleFileSelect = (file) => {
-        if (file && file.type.startsWith('image/')) {
-            // Validar tamaño (5MB máximo)
-            if (file.size > 5 * 1024 * 1024) {
-                toast.error('El archivo es demasiado grande. Máximo 5MB.');
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
+    const handleFileSelect = useCallback(
+        (file) => {
+            if (file && file.type.startsWith("image/")) {
+                // Validar tamaño
+                if (file.size > maxSize * 1024 * 1024) {
+                    toast.error(`El archivo es demasiado grande. Máximo ${maxSize}MB.`)
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = ""
+                    }
+                    return
                 }
-                return;
+
+                // Crear preview
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    const result = e.target?.result
+                    setPreview(result)
+                    setSelectedFile(file)
+                }
+                reader.readAsDataURL(file)
+
+                // Notificar al componente padre
+                onImageChange(file)
             }
+        },
+        [maxSize, onImageChange]
+    )
 
-            // Crear preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setPreview(e.target.result);
-                setSelectedFile(file);
-            };
-            reader.readAsDataURL(file);
+    const handleDrop = useCallback(
+        (e) => {
+            e.preventDefault()
+            setIsDragging(false)
+            const file = e.dataTransfer.files[0]
+            if (file) {
+                handleFileSelect(file)
+            }
+        },
+        [handleFileSelect]
+    )
 
-            // Notificar al componente padre
-            onImageChange(file);
-        }
-    };
+    const handleDragOver = useCallback((e) => {
+        e.preventDefault()
+        setIsDragging(true)
+    }, [])
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files[0];
-        handleFileSelect(file);
-    };
+    const handleDragLeave = useCallback((e) => {
+        e.preventDefault()
+        setIsDragging(false)
+    }, [])
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        setIsDragging(true);
-    };
+    const handleFileInput = useCallback(
+        (e) => {
+            const file = e.target.files?.[0]
+            if (file) {
+                handleFileSelect(file)
+            }
+        },
+        [handleFileSelect]
+    )
 
-    const handleDragLeave = (e) => {
-        e.preventDefault();
-        setIsDragging(false);
-    };
-
-    const handleFileInput = (e) => {
-        const file = e.target.files[0];
-        handleFileSelect(file);
-    };
-
-    const removeImage = () => {
-        const scrollTop = scrollRef?.current?.scrollTop;
-
-        setPreview(null);
-        onImageChange(null);
-        setSelectedFile(null);
+    const removeImage = useCallback(() => {
+        setPreview(null)
+        onImageChange(null)
+        setSelectedFile(null)
 
         if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = ""
         }
+    }, [onImageChange])
 
-        // Restaurar scroll en el siguiente ciclo del event loop
-        setTimeout(() => {
-            if (scrollTop !== undefined && scrollRef?.current) {
-                scrollRef.current.scrollTop = scrollTop;
-            }
-        }, 0);
-    };
-
-    const openFileDialog = () => {
-        fileInputRef.current?.click();
-    };
+    const openFileDialog = useCallback(() => {
+        fileInputRef.current?.click()
+    }, [])
 
     return (
         <div className="space-y-2">
@@ -124,7 +130,7 @@ function ImageUpload({ onImageChange, currentImageUrl = null, label = "Imagen de
                         Arrastra una imagen aquí o haz clic para seleccionar
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                        JPG, PNG, WebP - Máximo 5MB
+                        JPG, PNG, WebP - Máximo {maxSize}MB
                     </p>
                 </div>
             )}

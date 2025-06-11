@@ -106,6 +106,7 @@ function ProductsManagement() {
                 setFormData={setFormData}
                 updateProduct={updateProduct}
                 selectedProduct={selectedProduct}
+                resetForm={resetForm}
             />
 
             <DeleteProductDialog

@@ -43,7 +43,7 @@ function CategoriesManagement() {
                 toast.success("Categoría creada", {
                     description: "La categoría ha sido creada exitosamente"
                 });
-                setCategoryName('');
+                resetForm();
                 setIsAddDialogOpen(false);
             },
             onError: (error) => {
@@ -73,6 +73,7 @@ function CategoriesManagement() {
                     toast.success("Categoría actualizada", {
                         description: "La categoría ha sido actualizada exitosamente",
                     });
+                    resetForm();
                     setIsEditDialogOpen(false);
                 },
                 onError: (error) => {
@@ -106,6 +107,11 @@ function CategoriesManagement() {
         category.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Resetear formulario
+    const resetForm = () => {
+        setCategoryName('');
+    };
+
     // Abrir modal de edición
     const openEditDialog = (category) => {
         setSelectedCategory(category);
@@ -135,6 +141,7 @@ function CategoriesManagement() {
                 setCategoryName={setCategoryName}
                 onSave={handleCreateCategory}
                 isPending={createCategory.isPending}
+                resetForm={resetForm}
             />
 
             <EditCategoryDialog
@@ -144,6 +151,7 @@ function CategoriesManagement() {
                 setCategoryName={setCategoryName}
                 onUpdate={handleUpdateCategory}
                 isPending={updateCategory.isPending}
+                resetForm={resetForm}
             />
 
             <DeleteCategoryDialog
