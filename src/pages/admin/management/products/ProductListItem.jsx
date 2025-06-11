@@ -67,7 +67,7 @@ function ProductListItem({ product, openEditDialog, openDeleteDialog }) {
                     </div>
                 </div>
             </td>
-            <td className="p-4 align-middle">
+            <td className="p-4 align-middle hidden md:table-cell">
                 <Badge variant="outline">
                     {getCategoryName(product.category_id)}
                 </Badge>

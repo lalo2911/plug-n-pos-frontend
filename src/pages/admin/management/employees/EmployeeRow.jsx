@@ -35,23 +35,23 @@ function EmployeeRow({ employee, onStartWorkday, onEndWorkday, isUpdating }) {
                     <span className="font-medium">{employee.name}</span>
                 </div>
             </td>
-            <td className="p-4 align-middle">
+            <td className="p-4 align-middle hidden md:table-cell">
                 <div className="flex items-center">
                     <Mail className="h-4 w-4 mr-2 text-gray-400" />
                     {employee.email}
                 </div>
             </td>
-            <td className="p-4 align-middle">
+            <td className="p-4 align-middle hidden md:table-cell">
                 <Badge variant="outline">
                     {getAccountType(employee)}
                 </Badge>
             </td>
-            <td className="p-4 align-middle">
+            <td className="p-4 align-middle hidden md:table-cell">
                 <Badge variant={employee.role === 'owner' ? 'default' : 'outline'}>
                     {employee.role === 'owner' ? 'Dueño' : 'Empleado'}
                 </Badge>
             </td>
-            <td className="p-4 align-middle text-gray-500">
+            <td className="p-4 align-middle text-gray-500 hidden md:table-cell">
                 {formatRegisterDate(employee.createdAt)}
             </td>
             <td className="p-4 align-middle">

@@ -32,11 +32,13 @@ function EmployeesManagement() {
         role: 'owner'
     });
 
-    // Filtrar empleados por término de búsqueda
-    const filteredEmployees = employees?.filter(employee =>
-        (employee.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (employee.email || '').toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Filtrar empleados excluyendo al owner y por término de búsqueda
+    const filteredEmployees = employees
+        ?.filter(employee => employee.role !== 'owner')
+        .filter(employee =>
+            (employee.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (employee.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
     const handleStartAllWorkday = async () => {
         try {
@@ -114,7 +116,7 @@ function EmployeesManagement() {
                 <CardHeader className="mt-4">
                     <CardTitle>Lista de Empleados</CardTitle>
                     <CardDescription>
-                        {employees?.length} empleados registrados en tu negocio
+                        {filteredEmployees?.length} empleados registrados en tu negocio
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="mb-4">
