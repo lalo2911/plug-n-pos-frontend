@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 function OrdersManagement() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [isOrderDetailsDialogOpen, setIsOrderDetailsDialogOpen] = useState(false);
+    const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [orderDetails, setOrderDetails] = useState([]);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
@@ -35,7 +35,7 @@ function OrdersManagement() {
             setOrderDetails([]);
         } finally {
             setIsLoadingDetails(false);
-            setIsOrderDetailsDialogOpen(true);
+            setIsOrderDetailsOpen(true);
         }
     };
 
@@ -74,8 +74,8 @@ function OrdersManagement() {
             />
 
             <OrderDetailsDialog
-                open={isOrderDetailsDialogOpen}
-                onClose={() => setIsOrderDetailsDialogOpen(false)}
+                open={isOrderDetailsOpen}
+                onClose={() => setIsOrderDetailsOpen(false)}
                 selectedOrder={selectedOrder}
                 orderDetails={orderDetails}
                 isLoadingDetails={isLoadingDetails}
