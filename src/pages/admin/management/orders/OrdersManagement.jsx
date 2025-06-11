@@ -39,7 +39,7 @@ function OrdersManagement() {
         }
     };
 
-    const filteredOrders = orders?.filter(order => {
+    const filteredOrders = (orders?.filter(order => {
         const employeeName = getEmployeeNameById(order.user_id)?.toLowerCase() || '';
         const orderDate = new Date(order.createdAt).toLocaleDateString() || '';
         return (
@@ -48,7 +48,7 @@ function OrdersManagement() {
             employeeName.includes(searchTerm.toLowerCase()) ||
             orderDate.includes(searchTerm.toLowerCase())
         );
-    }) || [];
+    }) || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     return (
         <div className="space-y-6">

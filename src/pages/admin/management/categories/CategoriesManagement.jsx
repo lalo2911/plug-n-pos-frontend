@@ -102,10 +102,9 @@ function CategoriesManagement() {
         });
     };
 
-    // Filtrar categorías por término de búsqueda
-    const filteredCategories = categories?.filter(category =>
+    const filteredCategories = (categories?.filter(category =>
         category.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ) || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     // Resetear formulario
     const resetForm = () => {
