@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }) => {
 
     const handleBroadcastMessage = (data) => {
         if (data.type === 'LOGOUT') {
-            console.log('Logout signal received from another tab');
             clearAuthState();
             window.location.href = '/login';
         }
