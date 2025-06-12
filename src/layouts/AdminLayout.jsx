@@ -1,14 +1,13 @@
 import { getCookie } from "@/lib/cookies"
 import { Outlet, useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/AuthContext"
-import { User, LogOut } from "lucide-react"
+import { Settings, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -32,6 +31,10 @@ function AdminLayout() {
             .slice(0, 2)
     }
 
+    const handleProfileClick = () => {
+        navigate('/admin/profile');
+    };
+
     return (
         <SidebarProvider defaultOpen={sidebarDefaultOpen} className="select-none">
             <AppSidebar />
@@ -47,25 +50,31 @@ function AdminLayout() {
                                 <Button variant="ghost" className="relative h-10 w-10 rounded-full cursor-pointer">
                                     <Avatar>
                                         <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
-                                        <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
+                                        <AvatarFallback className="bg-indigo-100 text-indigo-800">
+                                            {getInitials(currentUser?.name)}
+                                        </AvatarFallback>
                                     </Avatar>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="select-none">
-                                <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                            <DropdownMenuContent align="end" className="w-56 select-none">
+                                <div className="flex items-center p-3 gap-3">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium">
+                                            {currentUser?.name || 'Usuario'}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate">
+                                            {currentUser?.email || ''}
+                                        </p>
+                                    </div>
+                                </div>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => navigate("/admin/profile")}>
-                                    <User className="mr-2 h-4 w-4" />
-                                    Perfil
+                                <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Configurar perfil</span>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => navigate("/admin/settings")}>
-                                    <User className="mr-2 h-4 w-4" />
-                                    Configuración
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive" onClick={logout}>
+                                <DropdownMenuItem className="cursor-pointer" onClick={logout}>
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    Cerrar sesión
+                                    <span>Cerrar sesión</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
