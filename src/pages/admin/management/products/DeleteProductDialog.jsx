@@ -1,22 +1,11 @@
 import { Loader2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { ResponsiveModal } from "@/pages/admin/management/ResponsiveModal";
 import { toast } from 'sonner';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
-function DeleteProductDialog({
-    isOpen,
-    setIsOpen,
-    deleteProduct,
-    selectedProduct
-}) {
+function DeleteProductDialog({ isOpen, setIsOpen, deleteProduct, selectedProduct }) {
+    const handleClose = () => setIsOpen(false);
+
     // Manejar eliminar producto
     const handleDeleteProduct = () => {
         deleteProduct.mutate(selectedProduct?._id, {
@@ -34,31 +23,39 @@ function DeleteProductDialog({
         });
     };
 
+    const footer = (
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0">
+            <Button variant="outline" onClick={handleClose}>
+                Cancelar
+            </Button>
+            <Button
+                onClick={handleDeleteProduct}
+                className="bg-red-500 hover:bg-red-600 text-white"
+                disabled={deleteProduct.isPending}
+            >
+                {deleteProduct.isPending ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Eliminando...
+                    </>
+                ) : (
+                    "Eliminar"
+                )}
+            </Button>
+        </div>
+    );
+
     return (
-        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Esta acción no se puede deshacer. ¿Realmente deseas eliminar el producto "{selectedProduct?.name}"?
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                        onClick={handleDeleteProduct}
-                        className="bg-red-500 hover:bg-red-600"
-                    >
-                        {deleteProduct.isPending ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Eliminando...
-                            </>
-                        ) : 'Eliminar'}
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+        <ResponsiveModal
+            isOpen={isOpen}
+            setIsOpen={handleClose}
+            title="¿Estás seguro?"
+            description="Esta acción no se puede deshacer."
+            footer={footer}
+            scrollable={false}
+        >
+            <p>¿Realmente deseas eliminar el producto "{selectedProduct?.name}"?</p>
+        </ResponsiveModal>
     );
 }
 

@@ -30,11 +30,10 @@ function ProductsManagement() {
         deleteProduct
     } = useProducts();
 
-    // Filtrar productos por término de búsqueda
-    const filteredProducts = products?.filter(product =>
+    const filteredProducts = (products?.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ) || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     // Resetear formulario
     const resetForm = () => {
@@ -106,6 +105,7 @@ function ProductsManagement() {
                 setFormData={setFormData}
                 updateProduct={updateProduct}
                 selectedProduct={selectedProduct}
+                resetForm={resetForm}
             />
 
             <DeleteProductDialog

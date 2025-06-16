@@ -20,7 +20,7 @@ import Register from './pages/auth/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import OwnerRoute from './components/OwnerRoute';
 import Setup from './pages/setup/Setup';
-import Profile from './pages/Profile';
+import Profile from './pages/profile/Profile';
 import Home from './pages/home/Home';
 import OrderSummary from './pages/order-summary/OrderSummary';
 import NotFound from './pages/NotFound';
@@ -67,6 +67,7 @@ const router = createBrowserRouter(
         <Route path="categories" element={<CategoriesManagement />} />
         <Route path="orders" element={<OrdersManagement />} />
         <Route path="charts" element={<AdminCharts />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<BusinessSettings />} />
       </Route>
     </Route>

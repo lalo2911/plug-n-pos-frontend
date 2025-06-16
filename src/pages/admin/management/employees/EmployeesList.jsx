@@ -40,10 +40,10 @@ function EmployeesList({
                 <thead className="[&_tr]:border-b">
                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Usuario</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Correo</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Tipo de Cuenta</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Rol</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Registro</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Correo</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Tipo de Cuenta</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Rol</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Registro</th>
                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Estado</th>
                         <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Acciones</th>
                     </tr>

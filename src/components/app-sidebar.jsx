@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom"
+import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/AuthContext"
 import { useBusiness } from '@/hooks/useBusiness';
 import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag, ChevronsUpDown } from "lucide-react"
@@ -26,8 +26,9 @@ import {
 export function AppSidebar() {
     const { currentUser, logout } = useAuth()
     const { userBusiness } = useBusiness();
-    const { isMobile } = useSidebar();
+    const { isMobile, toggleSidebar } = useSidebar();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
@@ -48,6 +49,10 @@ export function AppSidebar() {
             .toUpperCase()
             .slice(0, 2)
     }
+
+    const handleProfileClick = () => {
+        navigate('/admin/profile');
+    };
 
     return (
         <Sidebar collapsible="icon">
@@ -78,7 +83,12 @@ export function AppSidebar() {
                         return (
                             <SidebarMenuItem key={item.path}>
                                 <SidebarMenuButton asChild tooltip={item.label} isActive={isActive}>
-                                    <NavLink to={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        onClick={() => {
+                                            if (isMobile) toggleSidebar()
+                                        }}
+                                    >
                                         <item.icon />
                                         <span>{item.label}</span>
                                     </NavLink>
@@ -100,7 +110,9 @@ export function AppSidebar() {
                                 >
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
-                                        <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
+                                        <AvatarFallback className="bg-indigo-100 text-indigo-800">
+                                            {getInitials(currentUser?.name)}
+                                        </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight ml-3">
                                         <span className="truncate font-semibold">{currentUser?.name}</span>
@@ -110,25 +122,29 @@ export function AppSidebar() {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                className="w-56"
                                 side={isMobile ? "bottom" : "right"}
                                 align="end"
                                 sideOffset={4}
                             >
-                                <DropdownMenuItem onClick={() => window.location.href = "/admin/profile"}>
-                                    <Avatar className="h-8 w-8 mr-2">
-                                        <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
-                                        <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="grid flex-1">
-                                        <span className="font-semibold">{currentUser?.name}</span>
-                                        <span className="text-xs text-muted-foreground">Ver perfil</span>
+                                <div className="flex items-center p-3 gap-3">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium">
+                                            {currentUser?.name || 'Usuario'}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate">
+                                            {currentUser?.email || ''}
+                                        </p>
                                     </div>
-                                </DropdownMenuItem>
+                                </div>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive flex items-center" onClick={logout}>
+                                <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Configurar perfil</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer" onClick={logout}>
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    Cerrar sesión
+                                    <span>Cerrar sesión</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

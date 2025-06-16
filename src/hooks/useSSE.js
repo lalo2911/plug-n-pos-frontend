@@ -33,8 +33,6 @@ export function useSSE(endpoint, onMessage, enabled = true) {
             const url = new URL(`${baseUrl}${endpoint}`);
             url.searchParams.append('token', token);
 
-            // console.log('Connecting to SSE:', url.toString());
-
             // Para SSE, necesitamos incluir el token en la URL ya que no podemos usar headers personalizados
             const eventSource = new EventSource(url.toString(), {
                 withCredentials: true
@@ -43,7 +41,6 @@ export function useSSE(endpoint, onMessage, enabled = true) {
             eventSourceRef.current = eventSource;
 
             eventSource.onopen = () => {
-                // console.log('SSE connection opened');
                 setConnectionState('connected');
                 reconnectAttempts.current = 0;
             };
@@ -70,7 +67,6 @@ export function useSSE(endpoint, onMessage, enabled = true) {
                     reconnectAttempts.current++;
 
                     reconnectTimeoutRef.current = setTimeout(() => {
-                        // console.log(`Attempting to reconnect (attempt ${reconnectAttempts.current}/${maxReconnectAttempts})`);
                         connect();
                     }, delay);
                 } else {

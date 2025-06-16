@@ -37,7 +37,7 @@ function ProductsList({
                             <thead className="[&_tr]:border-b">
                                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                     <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Producto</th>
-                                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Categoría</th>
+                                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground hidden md:table-cell">Categoría</th>
                                     <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Precio</th>
                                     <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Acciones</th>
                                 </tr>

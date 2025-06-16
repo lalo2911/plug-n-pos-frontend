@@ -1,16 +1,8 @@
-import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-} from "@/components/ui/dialog";
 import ProductForm from './ProductForm';
+import { ResponsiveModal } from "@/pages/admin/management/ResponsiveModal";
 
 function AddProductDialog({
     isOpen,
@@ -20,8 +12,6 @@ function AddProductDialog({
     createProduct,
     resetForm
 }) {
-    const scrollContainerRef = useRef(null);
-
     // Manejar crear producto
     const handleCreateProduct = () => {
         if (!formData.name.trim() || !formData.price || !formData.category_id) {
@@ -53,40 +43,36 @@ function AddProductDialog({
         setIsOpen(false);
     };
 
+    const footer = (
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 space-y-2 space-y-reverse sm:space-y-0">
+            <Button variant="outline" onClick={handleClose}>
+                Cancelar
+            </Button>
+            <Button onClick={handleCreateProduct} disabled={createProduct.isPending}>
+                {createProduct.isPending ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Guardando...
+                    </>
+                ) : (
+                    "Guardar"
+                )}
+            </Button>
+        </div>
+    )
+
     return (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent ref={scrollContainerRef} className="max-w-md max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Agregar Producto</DialogTitle>
-                    <DialogDescription>
-                        Crea un nuevo producto para tu inventario.
-                    </DialogDescription>
-                </DialogHeader>
-
-                <ProductForm
-                    formData={formData}
-                    setFormData={setFormData}
-                    scrollRef={scrollContainerRef}
-                />
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={handleClose}>
-                        Cancelar
-                    </Button>
-                    <Button
-                        onClick={handleCreateProduct}
-                        disabled={createProduct.isPending}
-                    >
-                        {createProduct.isPending ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Guardando...
-                            </>
-                        ) : 'Guardar'}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ResponsiveModal
+            isOpen={isOpen}
+            setIsOpen={handleClose}
+            title="Agregar Producto"
+            description="Crea un nuevo producto para tu inventario."
+            footer={footer}
+            maxHeight="95vh"
+            scrollable={true}
+        >
+            <ProductForm formData={formData} setFormData={setFormData} />
+        </ResponsiveModal>
     );
 }
 
