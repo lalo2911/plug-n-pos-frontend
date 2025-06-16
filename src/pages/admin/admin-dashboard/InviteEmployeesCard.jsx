@@ -75,7 +75,7 @@ export function InviteEmployeesCard({ generateInviteCode }) {
                         <Button
                             onClick={handleGenerateInviteCode}
                             disabled={generateInviteCode.isPending}
-                            className="mt-2"
+                            className="mt-2 cursor-pointer"
                         >
                             {generateInviteCode.isPending ? (
                                 <>

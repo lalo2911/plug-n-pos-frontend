@@ -79,10 +79,7 @@ export const getInitials = (name) => {
 
 // Determinar el tipo de cuenta (local o Google)
 export const getAccountType = (employee) => {
-    if (employee?.googleId) {
-        return 'Google';
-    }
-    return 'Local';
+    return employee?.authSource === 'google' ? 'Google' : 'Local';
 };
 
 // Formatear fecha de registro

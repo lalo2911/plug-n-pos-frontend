@@ -39,13 +39,13 @@ function AdminLayout() {
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 select-none">
                     <div className="flex items-center gap-2">
-                        <SidebarTrigger className="-ml-1" />
+                        <SidebarTrigger className="-ml-1 cursor-pointer" />
                         <h1 className="text-xl font-semibold">Panel de Administración</h1>
                     </div>
                     <div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                                <Button variant="ghost" className="relative h-10 w-10 rounded-full cursor-pointer">
                                     <Avatar>
                                         <AvatarImage src={currentUser?.avatar || "/placeholder.svg"} alt={currentUser?.name} />
                                         <AvatarFallback>{getInitials(currentUser?.name)}</AvatarFallback>

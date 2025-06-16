@@ -36,6 +36,8 @@ function EmployeesList({ employees, isLoading, isError, error }) {
                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Tipo de Cuenta</th>
                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Rol</th>
                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Registro</th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Estado</th>
+                        <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">Acciones</th>
                     </tr>
                 </thead>
                 <tbody className="[&_tr:last-child]:border-0">
