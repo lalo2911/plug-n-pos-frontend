@@ -11,35 +11,34 @@ export const authApi = {
         return response.data;
     },
 
+    logout: async () => {
+        const response = await apiClient.post('/auth/logout');
+        return response.data;
+    },
+
+    logoutAllDevices: async () => {
+        const response = await apiClient.post('/auth/logout-all');
+        return response.data;
+    },
+
+    refreshToken: async () => {
+        const response = await apiClient.post('/auth/refresh');
+        return response.data;
+    },
+
+    // Intercambiar código temporal por datos de autenticación
+    exchangeAuthCode: async (code) => {
+        const response = await apiClient.post('/auth/exchange-code', { code });
+        return response.data;
+    },
+
     getProfile: async () => {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-
-        if (!token) {
-            throw new Error('No authentication token found');
-        }
-
-        const response = await apiClient.get('/auth/profile', {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
+        const response = await apiClient.get('/auth/profile', config);
         return response.data;
     },
 
     updateProfile: async (userData) => {
-        const token = JSON.parse(localStorage.getItem('user'))?.token;
-
-        if (!token) {
-            throw new Error('No authentication token found');
-        }
-
-        const response = await apiClient.put('/auth/profile', userData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
+        const response = await apiClient.put('/auth/profile', userData);
         return response.data;
     },
 

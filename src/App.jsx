@@ -8,14 +8,15 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { setAuthContextRef } from './services/apiService';
 
 // Importar páginas
 import RootLayout from './layouts/RootLayout';
 import AdminLayout from './layouts/AdminLayout';
-import Login from './pages/Login';
-import LoginSuccess from './pages/LoginSuccess';
-import Register from './pages/Register';
+import Login from './pages/auth/Login';
+import LoginSuccess from './pages/auth/LoginSuccess';
+import Register from './pages/auth/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import OwnerRoute from './components/OwnerRoute';
 import Setup from './pages/setup/Setup';
@@ -72,13 +73,26 @@ const router = createBrowserRouter(
   )
 );
 
+// Componente para establecer la referencia del contexto de auth
+function AuthContextProvider({ children }) {
+  const authContext = useAuth();
+
+  React.useEffect(() => {
+    setAuthContextRef(authContext);
+  }, [authContext]);
+
+  return children;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <CartProvider>
-          <RouterProvider router={router} />
-        </CartProvider>
+        <AuthContextProvider>
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
+        </AuthContextProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { authApi } from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -7,76 +8,132 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Almacenar access token solo en memoria
+    const accessTokenRef = useRef(null);
 
     useEffect(() => {
-        // Verificar si hay un usuario almacenado en localStorage
-        const storedUser = localStorage.getItem('user');
-
-        if (storedUser) {
-            setCurrentUser(JSON.parse(storedUser));
-        }
-
-        // Verificar si hay un token en la URL (para la redirección de Google)
-        const url = new URL(window.location.href);
-        const token = url.searchParams.get('token');
-
-        if (token && window.location.pathname === '/login/success') {
-            // Obtener datos del usuario con el token
-            fetchUserProfile(token);
-        }
-
-        setLoading(false);
+        initializeAuth();
     }, []);
 
-    const fetchUserProfile = async (token) => {
+    const initializeAuth = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            setLoading(true);
 
-            if (response.ok) {
-                const data = await response.json();
-                const user = { ...data.data, token };
-                localStorage.setItem('user', JSON.stringify(user));
-                setCurrentUser(user);
-                // La redirección se manejará en LoginSuccess.jsx
+            // Solo intentar silent login si NO estamos en rutas de auth públicas
+            const publicAuthRoutes = ['/login', '/register'];
+            const currentPath = window.location.pathname;
+
+            if (!publicAuthRoutes.includes(currentPath)) {
+                // Intentar obtener un nuevo access token usando el refresh token (silent login)
+                await attemptSilentLogin();
             }
         } catch (error) {
-            console.error('Error fetching user profile:', error);
+            console.error('Error during auth initialization:', error);
+            // Si falla la inicialización, limpiar cualquier estado de auth
+            clearAuthState();
+        } finally {
+            setLoading(false);
         }
     };
 
-    const login = (userData) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        setCurrentUser(userData);
+    const attemptSilentLogin = async () => {
+        try {
+            // Intentar refrescar el token usando la cookie httpOnly
+            const response = await authApi.refreshToken();
+
+            if (response.success && response.data.accessToken) {
+                accessTokenRef.current = response.data.accessToken;
+                setCurrentUser(response.data.user);
+                setIsAuthenticated(true);
+                return true;
+            }
+        } catch (error) {
+            // Si falla el refresh, no hay problema - usuario no está autenticado
+            console.debug('Silent login failed:', error.message);
+            return false;
+        }
     };
 
-    const logout = () => {
-        localStorage.removeItem('user');
+    const login = async (userData) => {
+        try {
+            // userData debe contener { accessToken, user }
+            if (!userData.accessToken || !userData.user) {
+                throw new Error('Invalid login data format');
+            }
+
+            accessTokenRef.current = userData.accessToken;
+            setCurrentUser(userData.user);
+            setIsAuthenticated(true);
+
+            return true;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    };
+
+    const logout = async () => {
+        try {
+            // Llamar al endpoint de logout para invalidar el refresh token
+            await authApi.logout();
+        } catch (error) {
+            console.error('Error during logout:', error);
+            // Continuar con el logout local incluso si falla el servidor
+        } finally {
+            // Limpiar estado local
+            clearAuthState();
+            // Redirigir a login
+            window.location.href = '/login';
+        }
+    };
+
+    const clearAuthState = () => {
+        accessTokenRef.current = null;
         setCurrentUser(null);
-        // En lugar de usar navigate, usar window.location
-        window.location.href = '/login';
-    };
-
-    const isAuthenticated = () => {
-        return !!currentUser;
+        setIsAuthenticated(false);
     };
 
     const updateUser = (userData) => {
         const updatedUser = { ...currentUser, ...userData };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
         setCurrentUser(updatedUser);
+    };
+
+    const getAccessToken = () => {
+        return accessTokenRef.current;
+    };
+
+    // Función para manejar cuando el access token expira
+    const handleTokenExpired = async () => {
+        try {
+            // Intentar refrescar el token
+            const refreshed = await attemptSilentLogin();
+
+            if (!refreshed) {
+                // Si no se puede refrescar, hacer logout
+                await logout();
+                return null;
+            }
+
+            return accessTokenRef.current;
+        } catch (error) {
+            console.error('Error refreshing expired token:', error);
+            await logout();
+            return null;
+        }
     };
 
     const value = {
         currentUser,
         loading,
+        isAuthenticated,
         login,
         logout,
-        isAuthenticated,
-        updateUser
+        updateUser,
+        getAccessToken,
+        handleTokenExpired,
+        attemptSilentLogin
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
