@@ -1,6 +1,6 @@
 import { Calendar, ArrowUp, ArrowDown } from 'lucide-react';
 import SummaryCard from './SummaryCard';
-import { formatCurrency } from '../../../utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 import { cn } from '@/lib/utils';
 
 /**

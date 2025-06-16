@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { setupService } from '../services/setupService';
+import { setupService } from '@/services/setupService';
 
 export function useSetup() {
     // Mutación para configurar un propietario

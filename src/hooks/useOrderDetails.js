@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { orderDetailService } from '../services/orderDetailService';
+import { orderDetailService } from '@/services/orderDetailService';
 
 export function useOrderDetails() {
     const queryClient = useQueryClient();
@@ -9,6 +9,7 @@ export function useOrderDetails() {
         queryKey: ['orderDetails'],
         queryFn: () => orderDetailService.getAll(),
         select: (data) => data.data, // Extrae el objeto data de la respuesta
+        enabled: false, // No se ejecuta automáticamente
     });
 
     // Obtener un detalle de orden por ID

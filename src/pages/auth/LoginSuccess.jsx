@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { authApi } from '../../services/authService';
+import { useAuth } from '@/context/AuthContext';
+import { authApi } from '@/services/authService';
 
 function LoginSuccess() {
     const navigate = useNavigate();

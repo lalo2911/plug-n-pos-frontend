@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { metricService } from '../services/metricService';
+import { metricService } from '@/services/metricService';
 
 export function useMetrics(options = {}) {
     const {

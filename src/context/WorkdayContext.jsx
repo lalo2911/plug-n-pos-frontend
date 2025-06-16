@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useWorkday } from '../hooks/useWorkday';
+import { useWorkday } from '@/hooks/useWorkday';
 
 // Crear contexto
 const WorkdayContext = createContext();

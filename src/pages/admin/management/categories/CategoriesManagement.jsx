@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useCategories } from '../../../../hooks/useCategories';
-import { useProducts } from '../../../../hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
+import { useProducts } from '@/hooks/useProducts';
 import SearchBar from '../SearchBar';
 import CategoryList from './CategoryList';
 import PageHeader from '../../PageHeader';

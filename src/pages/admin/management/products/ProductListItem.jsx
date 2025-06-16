@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit, ImageIcon, Trash } from 'lucide-react';
-import { useCategories } from '../../../../hooks/useCategories';
+import { useCategories } from '@/hooks/useCategories';
 
 function ProductListItem({ product, openEditDialog, openDeleteDialog }) {
     const { categories } = useCategories();

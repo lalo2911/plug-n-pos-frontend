@@ -1,7 +1,15 @@
 import { Loader2 } from 'lucide-react';
 import EmployeeRow from './EmployeeRow';
 
-function EmployeesList({ employees, isLoading, isError, error }) {
+function EmployeesList({
+    employees,
+    isLoading,
+    isError,
+    error,
+    onStartWorkday,
+    onEndWorkday,
+    isUpdating
+}) {
     if (isLoading) {
         return (
             <div className="flex justify-center items-center py-8">
@@ -42,7 +50,13 @@ function EmployeesList({ employees, isLoading, isError, error }) {
                 </thead>
                 <tbody className="[&_tr:last-child]:border-0">
                     {employees.map((employee) => (
-                        <EmployeeRow key={employee._id} employee={employee} />
+                        <EmployeeRow
+                            key={employee._id}
+                            employee={employee}
+                            onStartWorkday={onStartWorkday}
+                            onEndWorkday={onEndWorkday}
+                            isUpdating={isUpdating}
+                        />
                     ))}
                 </tbody>
             </table>

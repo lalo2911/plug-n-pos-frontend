@@ -1,6 +1,6 @@
-import { useAuth } from '../../../context/AuthContext';
-import { useBusiness } from '../../../hooks/useBusiness';
-import { useMetrics } from '../../../hooks/useMetrics';
+import { useAuth } from '@/context/AuthContext';
+import { useBusiness } from '@/hooks/useBusiness';
+import { useMetrics } from '@/hooks/useMetrics';
 import {
     BadgeDollarSign,
     ShoppingBag,
@@ -18,7 +18,7 @@ import { ErrorState } from './ErrorState';
 import PageHeader from '../PageHeader';
 
 // Utilidades
-import { formatCurrency } from '../../../utils/formatters';
+import { formatCurrency } from '@/utils/formatters';
 
 function AdminDashboard() {
     const { currentUser } = useAuth();

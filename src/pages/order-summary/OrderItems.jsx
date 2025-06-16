@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ShoppingBag } from 'lucide-react';
 import CartItem from './CartItem';

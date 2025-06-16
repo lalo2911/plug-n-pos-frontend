@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '@/context/CartContext';
 import { Badge } from '@/components/ui/badge';
 import EmptyCart from './EmptyCart';
 import OrderItems from './OrderItems';

@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { authApi } from '../../services/authService';
-import { useAuth } from '../../context/AuthContext';
+import { authApi } from '@/services/authService';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from "@/components/ui/button";
 
 import AuthLayout from './AuthLayout';

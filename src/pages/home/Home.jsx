@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useProducts } from '../../hooks/useProducts';
-import { useCategories } from '../../hooks/useCategories';
-import { useWorkday } from '../../hooks/useWorkday';
-import { useCart } from '../../context/CartContext';
-import { useAuth } from '../../context/AuthContext';
+import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
+import { useWorkday } from '@/hooks/useWorkday';
+import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import CategoryTabs from './CategoryTabs';
 import ProductList from './ProductList';
 import CartSidebar from './CartSidebar';
@@ -24,12 +24,18 @@ const Home = () => {
     // Get cart context
     const { cart, cartTotal, addToCart, removeFromCart, clearCart, updateQuantity } = useCart();
 
-    // Get workday status for current user specifically (not general business status)
+    // Get workday status for current user specifically
+    const userId = currentUser?._id ?? null;
     const {
         isWorkdayActive,
         isLoadingStatus: isLoadingWorkday,
         workdayStatus
-    } = useWorkday(currentUser?._id);
+    } = useWorkday({
+        userId,
+        enableSSE: true,
+        enablePolling: false,
+        role: 'employee'
+    });
 
     // Fetch categories
     const { categories, isLoading: categoriesLoading } = useCategories();
@@ -51,7 +57,7 @@ const Home = () => {
         <div className="relative pb-16 md:pb-0 max-w-full select-none">
             <h1 className="text-3xl font-bold mb-6">Productos</h1>
 
-            {/* Workday Status Banner - Pass user-specific workday data */}
+            {/* Workday Status Banner */}
             <WorkdayStatus
                 isWorkdayActive={isWorkdayActive}
                 isLoading={isLoadingWorkday}

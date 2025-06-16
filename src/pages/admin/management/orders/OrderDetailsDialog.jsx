@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { User, Calendar, Package, ImageIcon, Loader2 } from "lucide-react";
-import { formatOrderDate, formatPrice, getShortId } from "../../../../utils/formatters";
+import { formatOrderDate, formatPrice, getShortId } from "@/utils/formatters";
 
 function OrderDetailsDialog({ open, onClose, selectedOrder, orderDetails, isLoadingDetails, getEmployeeNameById, getProductInfo }) {
     if (!selectedOrder) return null;

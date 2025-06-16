@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
-import { useBusiness } from '../hooks/useBusiness';
+import { useAuth } from "@/context/AuthContext"
+import { useBusiness } from '@/hooks/useBusiness';
 import { Store, Package, ListOrdered, Users, Settings, LogOut, LayoutDashboard, ChartNoAxesCombined, LucideTag, ChevronsUpDown } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from '@/components/ui/skeleton';

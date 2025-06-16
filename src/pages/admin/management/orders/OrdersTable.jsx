@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Loader2, User, Calendar, Eye } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatOrderDate, formatPrice, getShortId } from '../../../../utils/formatters';
+import { formatOrderDate, formatPrice, getShortId } from '@/utils/formatters';
 
 function OrdersTable({ orders, isLoading, isError, error, filteredOrders, getEmployeeNameById, onViewDetails }) {
     return (

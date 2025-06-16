@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useDashboardData from '../../../hooks/useDashboardData';
+import useDashboardData from '@/hooks/useDashboardData';
 
 import PageHeader from '../PageHeader';
 

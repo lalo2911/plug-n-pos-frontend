@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useOrders } from '../../../../hooks/useOrders';
-import { useOrderDetails } from '../../../../hooks/useOrderDetails';
-import { useProducts } from '../../../../hooks/useProducts';
-import { useEmployees } from '../../../../hooks/useEmployees';
+import { useOrders } from '@/hooks/useOrders';
+import { useOrderDetails } from '@/hooks/useOrderDetails';
+import { useProducts } from '@/hooks/useProducts';
+import { useEmployees } from '@/hooks/useEmployees';
 import SearchBar from '../SearchBar';
 import OrdersTable from './OrdersTable';
 import PageHeader from '../../PageHeader';
