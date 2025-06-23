@@ -95,7 +95,6 @@ function App() {
           </CartProvider>
         </AuthContextProvider>
       </AuthProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
