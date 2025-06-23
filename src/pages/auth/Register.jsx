@@ -29,11 +29,11 @@ function Register() {
                 await login(data.data);
                 navigate('/');
             } catch (error) {
-                console.error('Error durante el proceso de registro:', error);
+                console.error('Error durante el proceso de registro');
             }
         },
         onError: (error) => {
-            console.error('Error de registro:', error);
+            console.error('Error de registro');
         },
     });
 

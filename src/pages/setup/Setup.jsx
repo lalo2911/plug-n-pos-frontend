@@ -74,7 +74,7 @@ function Setup() {
                 navigate('/admin');
             }
         } catch (error) {
-            console.error('Error al completar la configuración:', error);
+            console.error('Error al completar la configuración');
             toast.error(error.response?.data?.message || 'Hubo un error al guardar tu configuración');
         }
     };
@@ -102,7 +102,7 @@ function Setup() {
                 navigate('/');
             }
         } catch (error) {
-            console.error('Error al unirse al negocio:', error);
+            console.error('Error al unirse al negocio');
             toast.error(error.response?.data?.message || 'Error al procesar el código de invitación');
         }
     };
