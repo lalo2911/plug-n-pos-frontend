@@ -8,7 +8,7 @@ const loadCartFromStorage = () => {
         const storedCart = localStorage.getItem('cart');
         return storedCart ? JSON.parse(storedCart) : [];
     } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
+        console.error('Error loading cart from localStorage');
         return [];
     }
 };

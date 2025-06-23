@@ -47,11 +47,11 @@ function Login() {
                 await login(data.data);
                 navigate('/');
             } catch (error) {
-                console.error('Error durante el proceso de login:', error);
+                console.error('Error durante el proceso de login');
             }
         },
         onError: (error) => {
-            console.error('Error de inicio de sesión:', error);
+            console.error('Error de inicio de sesión');
 
             if (error?.response?.status === 429) {
                 setCustomErrorMessage("Demasiados intentos. Por favor, intenta de nuevo mas tarde.");
