@@ -1,9 +1,7 @@
-import React from 'react';
-
 function Footer() {
     return (
-        <footer className="bg-gray-800 text-white p-4 text-center">
-            <p>&copy; 2024 Mi Aplicación. Todos los derechos reservados.</p>
+        <footer className="bg-white text-gray-500 p-4 text-center">
+            <p>&copy; 2025 Plug n POS. Todos los derechos reservados.</p>
         </footer>
     );
 }
