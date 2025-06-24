@@ -184,7 +184,3 @@ npm run lint         # Linting con ESLint
 ## 🔗 Repositorios Relacionados
 
 - [Plug n POS Backend](https://github.com/lalo2911/plug-n-pos-backend) - API REST con Node.js y MongoDB
-
-## 🌐 Demo en Vivo
-
-> 🚧 **Próximamente**: Demo disponible en línea
