@@ -82,6 +82,7 @@ const Home = () => {
                                 isLoading={productsLoading}
                                 onAddToCart={addToCart}
                                 activeCategory={activeCategory}
+                                cart={cart}
                             />
                         </Tabs>
                     </div>
