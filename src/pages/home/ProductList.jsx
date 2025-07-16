@@ -3,7 +3,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { TabsContent } from '@/components/ui/tabs';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ products, isLoading, onAddToCart, activeCategory }) => {
+const ProductList = ({ products, isLoading, onAddToCart, onUpdateQuantity, activeCategory, cart }) => {
+    // Función para verificar si un producto está en el carrito
+    const isProductInCart = (productId) => {
+        return cart.some(item => item._id === productId);
+    };
+
+    // Función para obtener la cantidad de un producto en el carrito
+    const getCartQuantity = (productId) => {
+        const cartItem = cart.find(item => item._id === productId);
+        return cartItem ? cartItem.quantity : 0;
+    };
+
     return (
         <TabsContent value={activeCategory} className="mt-0">
             {isLoading ? (
@@ -21,6 +32,9 @@ const ProductList = ({ products, isLoading, onAddToCart, activeCategory }) => {
                             key={product._id}
                             product={product}
                             onAddToCart={onAddToCart}
+                            onUpdateQuantity={onUpdateQuantity}
+                            isInCart={isProductInCart(product._id)}
+                            cartQuantity={getCartQuantity(product._id)}
                         />
                     ))}
 
