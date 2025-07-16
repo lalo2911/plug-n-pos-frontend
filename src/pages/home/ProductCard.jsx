@@ -18,7 +18,7 @@ const ProductCard = ({ product, onAddToCart, isInCart, cartQuantity }) => {
     return (
         <Card
             className={`overflow-hidden cursor-pointer hover:shadow-md transition-all duration-200 relative aspect-square ${isInCart
-                ? 'ring-2 ring-gray-600 ring-offset-2 shadow-lg'
+                ? 'ring-2 ring-black ring-offset-2 shadow-lg'
                 : ''
                 }`}
             onClick={() => onAddToCart(product)}
@@ -44,7 +44,7 @@ const ProductCard = ({ product, onAddToCart, isInCart, cartQuantity }) => {
 
                 {isInCart && cartQuantity > 0 && (
                     <Badge
-                        className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-800 text-white min-w-[1.5rem] h-6 flex items-center justify-center"
+                        className="absolute top-2 right-2 bg-black text-white min-w-[1.5rem] h-6 flex items-center justify-center"
                         variant="default"
                     >
                         {cartQuantity}
