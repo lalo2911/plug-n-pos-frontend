@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import { useWorkday } from '@/hooks/useWorkday';
@@ -7,16 +8,14 @@ import { useAuth } from '@/context/AuthContext';
 import CategoryTabs from './CategoryTabs';
 import ProductList from './ProductList';
 import CartSidebar from './CartSidebar';
-import MobileCart from './MobileCart';
 import WorkdayStatus from './WorkdayStatus';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs } from '@/components/ui/tabs';
-import { ShoppingCart, AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 
 const Home = () => {
     const [activeCategory, setActiveCategory] = useState('all');
-    const [isCartOpen, setIsCartOpen] = useState(false);
 
     // Get auth context to get current user ID
     const { currentUser } = useAuth();
@@ -48,11 +47,6 @@ const Home = () => {
         activeCategory === 'all' || product.category_id === activeCategory
     );
 
-    // Toggle cart view on mobile
-    const toggleCart = (isOpen) => {
-        setIsCartOpen(isOpen ?? !isCartOpen);
-    };
-
     return (
         <div className="relative pb-16 md:pb-0 max-w-full select-none">
             <h1 className="text-3xl font-bold mb-6">Productos</h1>
@@ -81,6 +75,7 @@ const Home = () => {
                                 products={filteredProducts}
                                 isLoading={productsLoading}
                                 onAddToCart={addToCart}
+                                onUpdateQuantity={updateQuantity}
                                 activeCategory={activeCategory}
                                 cart={cart}
                             />
@@ -110,29 +105,26 @@ const Home = () => {
                 </div>
             )}
 
-            {/* Mobile Cart Button - Only show when workday is active */}
+            {/* Mobile Action Button - Only show when workday is active */}
             {isWorkdayActive && (
-                <div className="md:hidden fixed bottom-4 right-4 left-4 z-10">
-                    <Button
-                        className="w-full rounded-full shadow-lg"
-                        onClick={toggleCart}
-                    >
-                        <ShoppingCart className="mr-2 h-5 w-5" />
-                        Carrito <Badge className="ml-2">{cart.length}</Badge>
-                    </Button>
+                <div className="md:hidden">
+                    {cart.length > 0 && (
+                        <Link to="/order-summary">
+                            <Button
+                                size="lg"
+                                className="fixed bottom-4 right-4 w-16 h-16 rounded-full shadow-lg z-20 p-0"
+                            >
+                                <div className="flex flex-col items-center justify-center">
+                                    <ArrowRight className="h-6 w-6" />
+                                    <Badge className="absolute -top-2 -right-2 bg-gray-800 text-white min-w-[1.5rem] h-6 flex items-center justify-center">
+                                        {cart.length}
+                                    </Badge>
+                                </div>
+                            </Button>
+                        </Link>
+                    )}
                 </div>
             )}
-
-            {/* Mobile Cart Modal */}
-            <MobileCart
-                isOpen={isCartOpen}
-                cart={cart}
-                cartTotal={cartTotal}
-                onClose={toggleCart}
-                onRemoveItem={removeFromCart}
-                onUpdateQuantity={updateQuantity}
-                onClearCart={clearCart}
-            />
         </div>
     );
 };

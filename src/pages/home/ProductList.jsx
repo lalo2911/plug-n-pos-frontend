@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { TabsContent } from '@/components/ui/tabs';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ products, isLoading, onAddToCart, activeCategory, cart }) => {
+const ProductList = ({ products, isLoading, onAddToCart, onUpdateQuantity, activeCategory, cart }) => {
     // Función para verificar si un producto está en el carrito
     const isProductInCart = (productId) => {
         return cart.some(item => item._id === productId);
@@ -32,6 +32,7 @@ const ProductList = ({ products, isLoading, onAddToCart, activeCategory, cart })
                             key={product._id}
                             product={product}
                             onAddToCart={onAddToCart}
+                            onUpdateQuantity={onUpdateQuantity}
                             isInCart={isProductInCart(product._id)}
                             cartQuantity={getCartQuantity(product._id)}
                         />
