@@ -54,6 +54,7 @@ function PaymentSummary() {
         createOrder.mutate(paymentData, {
             onSuccess: () => {
                 toast.success("Pedido creado", {
+                    position:"top-right",
                     description: "El pedido ha sido registrado exitosamente",
                 });
                 clearCart();
