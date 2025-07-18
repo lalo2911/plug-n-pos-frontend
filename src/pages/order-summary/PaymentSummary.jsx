@@ -5,13 +5,14 @@ import { useCreateOrder } from '@/hooks/useCreateOrder';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
 function PaymentSummary() {
     const { cart, cartTotal, clearCart } = useCart();
     const [payment, setPayment] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
     const paymentInputRef = useRef(null);
     const navigate = useNavigate();
 
@@ -38,6 +39,13 @@ function PaymentSummary() {
             return;
         }
 
+        // Prevenir múltiples clicks
+        if (isProcessing) {
+            return;
+        }
+
+        setIsProcessing(true);
+
         const paymentData = {
             productos: cart.map(item => ({
                 id: item._id,
@@ -54,6 +62,7 @@ function PaymentSummary() {
         createOrder.mutate(paymentData, {
             onSuccess: () => {
                 toast.success("Pedido creado", {
+                    position: "top-right",
                     description: "El pedido ha sido registrado exitosamente",
                 });
                 clearCart();
@@ -64,6 +73,8 @@ function PaymentSummary() {
                 toast.error("Error", {
                     description: error.response?.data?.message || "No se pudo crear el pedido",
                 });
+                // Rehabilitar el botón si hay error
+                setIsProcessing(false);
             }
         });
     };
@@ -92,6 +103,7 @@ function PaymentSummary() {
                                 className="w-24 h-8 text-right"
                                 placeholder="0.00"
                                 ref={paymentInputRef}
+                                disabled={isProcessing}
                             />
                         </div>
                     </div>
@@ -100,15 +112,17 @@ function PaymentSummary() {
                             variant="outline"
                             size="sm"
                             onClick={() => setPayment(cartTotal.toFixed(2))}
+                            disabled={isProcessing}
                         >
                             Pago exacto
                         </Button>
-                        {[50, 100, 200].map((amount) => (
+                        {[50, 100, 200, 500].map((amount) => (
                             <Button
                                 key={amount}
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setPayment(amount.toFixed(2))}
+                                disabled={isProcessing}
                             >
                                 ${amount}
                             </Button>
@@ -126,24 +140,42 @@ function PaymentSummary() {
             <CardFooter className="flex flex-col gap-3 mb-4">
                 <Button
                     className="w-full py-5"
-                    disabled={isShortage || payment === ''}
+                    disabled={isShortage || payment === '' || isProcessing}
                     onClick={handleFinishOrder}
                 >
-                    Terminar pedido
+                    {isProcessing ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Procesando...
+                        </>
+                    ) : (
+                        'Terminar pedido'
+                    )}
                 </Button>
-                <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => {
-                        sessionStorage.setItem('justCameFromAddProducts', 'true');
-                    }}
-                    asChild
-                >
-                    <Link to="/">
+                {isProcessing ? (
+                    <Button
+                        variant="outline"
+                        className="w-full"
+                        disabled={true}
+                    >
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Agregar productos
-                    </Link>
-                </Button>
+                    </Button>
+                ) : (
+                    <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => {
+                            sessionStorage.setItem('justCameFromAddProducts', 'true');
+                        }}
+                        asChild
+                    >
+                        <Link to="/">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Agregar productos
+                        </Link>
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     );
