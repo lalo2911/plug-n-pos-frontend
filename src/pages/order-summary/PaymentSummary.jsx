@@ -103,7 +103,7 @@ function PaymentSummary() {
                         >
                             Pago exacto
                         </Button>
-                        {[50, 100, 200].map((amount) => (
+                        {[50, 100, 200, 500].map((amount) => (
                             <Button
                                 key={amount}
                                 variant="outline"
