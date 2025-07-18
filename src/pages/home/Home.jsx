@@ -12,7 +12,7 @@ import WorkdayStatus from './WorkdayStatus';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs } from '@/components/ui/tabs';
-import { AlertCircle, ArrowRight } from 'lucide-react';
+import { AlertCircle, ArrowRight, X } from 'lucide-react';
 
 const Home = () => {
     const [activeCategory, setActiveCategory] = useState('all');
@@ -105,23 +105,36 @@ const Home = () => {
                 </div>
             )}
 
-            {/* Mobile Action Button - Only show when workday is active */}
+            {/* Mobile Action Buttons - Only show when workday is active */}
             {isWorkdayActive && (
                 <div className="md:hidden">
                     {cart.length > 0 && (
-                        <Link to="/order-summary">
+                        <div className="fixed bottom-4 right-4 flex items-center gap-3 z-20 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            {/* Clear Cart Button */}
                             <Button
                                 size="lg"
-                                className="fixed bottom-4 right-4 w-16 h-16 rounded-full shadow-lg z-20 p-0"
+                                className="w-14 h-14 rounded-full shadow-lg p-0 transition-all duration-200 hover:scale-105 active:scale-95"
+                                onClick={clearCart}
+                                title="Vaciar carrito"
                             >
-                                <div className="flex flex-col items-center justify-center">
-                                    <ArrowRight className="h-6 w-6" />
-                                    <Badge className="absolute -top-2 -right-2 bg-gray-800 text-white min-w-[1.5rem] h-6 flex items-center justify-center">
-                                        {cart.length}
-                                    </Badge>
-                                </div>
+                                <X className="h-6 w-6" />
                             </Button>
-                        </Link>
+
+                            {/* Go to Summary Button */}
+                            <Link to="/order-summary">
+                                <Button
+                                    size="lg"
+                                    className="w-16 h-16 rounded-full shadow-lg p-0 transition-all duration-200 hover:scale-105 active:scale-95"
+                                >
+                                    <div className="flex flex-col items-center justify-center">
+                                        <ArrowRight className="h-6 w-6" />
+                                        <Badge className="absolute -top-2 -right-2 bg-gray-800 text-white min-w-[1.5rem] h-6 flex items-center justify-center">
+                                            {cart.length}
+                                        </Badge>
+                                    </div>
+                                </Button>
+                            </Link>
+                        </div>
                     )}
                 </div>
             )}
